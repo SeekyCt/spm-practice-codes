@@ -2,7 +2,7 @@
 A collection of code mods I've made to help with speedrunning practice and reverse engineering the game.
 
 ## Preview Video
-Coming soon.
+https://youtu.be/Eqa4RUWRF3E
 
 ## Installing
 See the [installation guide](https://github.com/SeekyCt/spm-practice-codes/blob/main/INSTALLING.md).
