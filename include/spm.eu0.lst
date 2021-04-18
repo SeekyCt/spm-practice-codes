@@ -1,0 +1,308 @@
+// Runtime.PPCEABI.H.a
+// __mem.c
+80004000:memcpy
+80004104:memset
+
+// mapdata.c
+// text
+800294e0:mapDataPtr
+// data
+804031b8:mapDataList
+
+// mobjdrv.c
+8002c8e8:mobjNameToPtrNoAssert
+// more
+
+// msgdrv.c
+8003270c:msgSearch
+// more
+
+// swdrv.c
+80037eac:swInit
+80037f48:swReInit
+80037fac:swSet
+80037fec:swGet
+80038034:swClear
+80038074:swByteSet
+800380f8:swByteGet
+8003811c:_swSet
+8003815c:_swGet
+800381a4:_swClear
+800381e4:_swByteSet
+800381f4:_swByteGet
+// more
+
+// windowdrv.c
+8003ab80:windowDispGX2_Waku_col
+// more
+
+// dispdrv.c
+8005af04:dispEntry
+// more
+
+// effdrv.c
+80061d78:func_80061d78
+
+// fadedrv.c
+800677f8:fadeIsFinish
+// more
+
+// icondrv.c
+800731b0:iconDispGx
+// more
+
+// itemdrv.c
+80078b3c:itemEntry
+
+// item_data.c
+803f5f98:itemDataTable
+// more
+
+// item_event_data.c
+803fbc10:itemEventDataTable
+// more
+
+// evtmgr.c
+800d87e4:evtGetWork
+800d8b88:evtEntry
+800d8df4:evtEntryType
+800d9060:evtChildEntry
+800d9370:evtBrotherEntry
+800d9b88:evtCheckId
+// more
+
+// evtmgr_cmd.c
+// text
+800dd500:evt_debug_put_msg
+800dd534:evt_debug_put_reg
+800de594:evtGetValue
+800de9b8:evtSetValue
+// bss
+8050ce30:evt_debug_put_reg_str
+// more
+
+// evt_fade.c
+800e7100:evt_fade_end_wait
+// more
+
+// evt_fairy.c
+800e8214:evt_fairy_flag_onoff
+// more
+
+// evt_guide.c
+800ea87c:evt_guide_flag2_onoff
+800ea984:evt_guide_check_flag0
+// more
+
+// evt_mario.c
+800ef4c0:evt_mario_flag8_onoff
+800ef650:evt_mario_key_off
+800ef62c:evt_mario_key_on
+800efa4c:evt_mario_get_pos
+800f25b0:evt_set_gravity
+// more
+
+// evt_mobj.c
+800f3608:evt_mobj_delete
+800f8be8:evt_mobj_blk
+// more
+
+// evt_msg.c
+800fba54:evt_msg_print
+800fbe74:evt_msg_continue
+// more
+
+// evt_npc.c
+8010a910:evt_npc_teleport_effect
+// more
+
+// evt_seq.c
+8010d028:evt_seq_set_seq
+8010d0a0:evt_seq_wait
+// more
+
+// mario.c
+80121f48:marioGetPtr
+80122b68:marioCtrlOffChk
+80122b7c:marioKeyOffChk
+8012b50c:marioSetGravity
+// more
+
+// mario_motion.c
+80146f0c:func_80146f0c
+// more
+
+// mario_pouch.c
+8014c088:pouchGetPtr
+8014d458:pouchGetHp
+8014d468:pouchAddHp
+8014d4f8:pouchGetXp
+8014d508:pouchAddXp
+8014df4c:pouchRemoveItem
+8014eb68:pouchRemoveShopItem
+8014f31c:pouchGetCurPixl
+8014fa20:pouchCountUseItems
+8014fad0:pouchCountKeyItems
+8014fb78:pouchCountShopItems
+8014fc20:pouchCountChars
+8014fc70:pouchCountPixls
+// more
+
+// seq_logo.c
+80179140:seq_logoMain
+// more
+
+// seq_game.c
+8017ce44:seq_gameInit
+// more
+
+// seqdrv.c
+// text
+8017bf2c:seqInit_SPMARIO
+8017bf6c:seqMain
+8017c074:seqSetSeq
+8017c084:seqGetSeq
+// data
+80512360:seqWork
+
+// pausewin.c
+801853cc:pausewinPauseGame
+80185510:pausewinUnpauseGame
+// more
+
+// charpixlitemwin.c
+80195f98:charPixlItemWinIsClosed
+// more
+
+// system.c
+8019d254:irand
+8019c54c:__assert2
+// more
+
+// fontmgr.c
+801a0070:FontDrawStart
+801a0150:FontDrawStart_alpha
+801a0228:FontDrawEdge
+801a0234:FontDrawEdgeOff
+801a0240:FontDrawRainbowColor
+801a02e0:FontDrawRainbowColorOff
+801a02e8:FontDrawNoise
+801a03f4:FontDrawNoiseOff
+801a0420:FontDrawColorIDX
+801a04b8:FontDrawColor
+801a0554:FontDrawColor_
+801a05dc:FontGetDrawColor
+801a05e4:FontDrawScale
+801a05fc:FontDrawCode
+801a09d4:FontDrawString
+801a151c:FontDrawMessage
+801a1d50:FontDrawMessageMtx
+801a28ac:FontGetMessageWidth
+// more
+
+// spmario.c
+// text
+801a7ddc:spmarioInit
+801a84d8:spmarioMain
+801a8748:spmarioDisp
+801a8770:spmarioSystemLevel
+801a87ec:spmarioGetSystemLevel
+801a87f4:viPostCallback
+801a898c:wiiDvdCheckThread
+801a8db4:wiiRumbleCheck
+// 801a9068
+// 801a9074
+// 801a9080
+// 801a908c
+// sdata
+805ae178:gp
+
+// seqdef.c
+804287a8:seq_data
+
+// memory.c
+// text
+801a626c:__memAlloc
+801a62f0:__memFree
+// data
+8042a408:size_table
+// sdata
+805ae168:memoryWp
+805ae16c:memorySwp
+// more
+
+// wpadmgr.c
+80237688:wpadGetButtonsHeld
+802376b0:wpadGetButtonsPressed
+802376c4:wpadGetButtonsHeldRepeat
+// more
+
+// spmario_snd.c
+8023c93c:spsndBGMOn
+// more
+
+// relmgr.c
+// text
+8023e434:relInit
+8023e444:loadRel
+8023e600:isRelLoaded
+// data
+805ae1a0:relHolder
+805ae1a4:relDecompName
+805ae1a8:relCompName
+
+// mtx.a
+// mtx.c
+8027a270:PSMTXIdentity
+// more
+
+// MSL_C.PPCEABI.bare.H.a
+// printf.c
+8025d098:sprintf
+// more
+// string.c
+8025a874:memmove
+8025e8fc:strcpy
+8025ea78:strcmp
+8025eb94:strncmp
+8025e784:sscanf
+80267018:strlen
+// more
+
+// os.a
+// OSCache.c
+80270050:DCFlushRange
+802700d8:ICInvalidateRange
+// more
+// OSError.c
+80270c60:OSReport
+802729b8:OSFatal
+// more
+// OSInterrupt.c
+80273ed8:OSDisableInterrupts
+80273f00:OSRestoreInterrupts
+// OSTime
+80278370:OSGetTime
+// more
+
+// mem.a
+// mem_expHeap.c
+80295cb8:MEMGetAllocatableSizeForExpHeapEx
+80295d90:MEMGetSizeForMBlockExpHeap
+
+// NAND.a
+8029983c:NANDCreateAsync
+802999dc:NANDDeleteAsync
+80299bdc:NANDReadAsync
+80299cbc:NANDWriteAsync
+8029a73c:NANDSafeOpenAsync
+8029ac98:NANDSafeCloseAsync
+8029bbe4:NANDChangeDirAsync
+8029bdf8:NANDGetHomeDir
+8029c5b0:NANDCheckAsync
+// more
+
+// lzss10.c
+802e2598:lzss10GetDecompSize
+802e25d8:lzss10Decompress
+802e270c:lzss10ParseHeader
