@@ -1,10 +1,7 @@
 #pragma once
 
 #include <types.h>
-
-#ifndef EvtScriptCode
-namespace spm::evtmgr { typedef s32 EvtScriptCode; }
-#endif
+#include <spm/evtmgr.h>
 
 #define EVT_BEGIN(name) \
 	const spm::evtmgr::EvtScriptCode name[] = {
