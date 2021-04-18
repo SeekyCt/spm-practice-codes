@@ -3,7 +3,7 @@ See the instructions for [Console](#Console) or [Dolphin](#Dolphin) depending on
 
 ## Console
 * Install the Homebrew Channel and Riivolution if you don't already have them.
-* Download the latest Riivolution zip for your version [here](https://github.com/SeekyCt/spm-practice-codes/releases).
+* Download the latest Riivolution zip [here](https://github.com/SeekyCt/spm-practice-codes/releases).
 * Extract the zip to the root of your SD card.
 * In Riivolution, enable the Practice Codes Mod option on the SPM Practice Codes page and make sure no other gecko code patches are enabled
     * If you want to use additional gecko codes, replace the GCT file for your version in the SpmPracticeCodes folder on the root of your SD card and make sure to include the rel loader code for your region from [here](https://github.com/SeekyCt/spm-rel-loader/tree/master/spm-rel-loader/loader).
