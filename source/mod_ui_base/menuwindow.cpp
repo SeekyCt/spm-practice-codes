@@ -98,6 +98,12 @@ void MenuWindow::close()
     delete this;
 }
 
+void MenuWindow::fullClose()
+{
+    sCurMenu = nullptr;
+    delete this;
+}
+
 void MenuWindow::buttonLinkVertical(MenuButton * top, MenuButton * bottom)
 {
     top->mNeighbours[MENUDIR_DOWN] = bottom;

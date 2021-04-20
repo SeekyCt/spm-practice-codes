@@ -182,4 +182,13 @@ void NandMenu::close()
     mShouldClose = true;
 }
 
+void NandMenu::fullClose()
+{
+    if (mTask != NandTask::NONE)
+        return;
+    
+    delete this;
+    MenuWindow::sCurMenu = nullptr;
+}
+
 }

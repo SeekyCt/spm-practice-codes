@@ -72,14 +72,20 @@ static void seq_gameInitOverride(spm::seqdrv::SeqWork * wp)
 static void seq_gameMainOverride(spm::seqdrv::SeqWork *wp)
 {
 	// Check if a window could be opened
-	if (spm::fadedrv::fadeIsFinish() && !spm::mario::marioCtrlOffChk() &&
-		!spm::mario::marioKeyOffChk() && spm::mario_motion::func_80146f0c() &&
-		(spm::effdrv::func_80061d78() == 0) && spm::charpixlitemwin::charPixlItemWinIsClosed())
+	if (spm::wpadmgr::wpadGetButtonsPressed(0) & WPAD_BTN_B)
 	{
-		// Open main menu if requested
-		if ((spm::wpadmgr::wpadGetButtonsPressed(0) & WPAD_BTN_B) && (MenuWindow::sCurMenu == nullptr)
-			&& (spm::spmario::spmarioGetSystemLevel() == 0))
-			MenuWindow::sCurMenu = new MainMenu();
+		if (MenuWindow::sCurMenu == nullptr)
+		{
+			if (spm::fadedrv::fadeIsFinish() && !spm::mario::marioCtrlOffChk() &&
+				!spm::mario::marioKeyOffChk() && spm::mario_motion::func_80146f0c() &&
+				(spm::effdrv::func_80061d78() == 0) && spm::charpixlitemwin::charPixlItemWinIsClosed()
+				&& (spm::spmario::spmarioGetSystemLevel() == 0))
+				MenuWindow::sCurMenu = new MainMenu();
+		}
+		else
+		{
+			MenuWindow::sCurMenu->fullClose();
+		}
 	}
 
     seq_gameReal.main(wp);

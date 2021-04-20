@@ -6,22 +6,24 @@
 #pragma once
 
 #include "mod_ui_base/menuwindow.h"
+#include "mod_ui_base/menuscrollerh.h"
 #include "nandsettings.h"
 
 namespace mod {
 
-struct HudOptionGroup
-{
-    MenuButton * label;
-    MenuButton * value;
-};
-
 class HudMenu : public MenuWindow
 {
 private:
-    HudOptionGroup mOptions[HUD_OPTION_COUNT];
+    char mDelayStr[9];
+    char mDecimalPlaceStr[2];
 
-    static bool optionToggle(MenuButton * button, void * param);
+    void updateDelayStr();
+    void updateDecimalPlaceStr();
+    void optionToggle(MenuButton * button, bool &setting);
+    void optionDelta(s8 &setting, int change);
+    static bool xyzIntervalToggle(MenuButton * button, void * param);
+    static void xyzDPUp(MenuScrollerH * scroller, void * param);
+    static void xyzDPDown(MenuScrollerH * scroller, void * param);
 
 protected:
     virtual void close() override;

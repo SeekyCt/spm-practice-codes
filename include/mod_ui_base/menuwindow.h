@@ -29,6 +29,7 @@ public:
     // Window::mPosX/Y are used for top left corner of window
 
     static MenuWindow * sCurMenu;
+    virtual void fullClose();
 
     MenuWindow();
     ~MenuWindow();

@@ -9,6 +9,7 @@
 #include <wii/NAND.h>
 #include <wii/OSError.h>
 #include <wii/stdio.h>
+#include <wii/string.h>
 
 namespace mod {
 
@@ -247,9 +248,24 @@ s32 evt_nandSettingsRead(spm::evtmgr::EvtEntry * entry, bool firstRun)
         // Handle settings version
         switch (settings->version)
         {
+            case 1:
+                NandSettingsV1 v1;
+                wii::string::memcpy(&v1, settings, sizeof(v1));
+                wii::OSError::OSReport("nandsettings: updating settings v1->2.\n");
+
+                // Move relocated settings
+                // hudMapDoor and hudXYZ are already in place
+                settings->mapChangeEffect = v1.mapChangeEffect;
+
+                // Initialise new settings
+                settings->xyzInterval = 4;
+                settings->xyzDP = 2;
+                break;
+
             case SETTINGS_VER:
                 wii::OSError::OSReport("nandsettings: settings version ok.\n");
                 break;
+
             default:
                 wii::OSError::OSFatal(&errorFg, &errorBg, "Settings file is too new!");
         }
@@ -398,8 +414,10 @@ void nandSettingsDefaults()
     for (int i = 0; i < LOG_OPTION_COUNT; i++)
         settings->logOptions[i] = LogType::NONE;
 
-    for (int i = 0; i < HUD_OPTION_COUNT; i++)
-        settings->hudOptions[i] = false;
+    settings->hudMapDoor = false;
+    settings->hudXYZ = false;
+    settings->xyzInterval = 4;
+    settings->xyzDP = 2;
     
     settings->mapChangeEffect = true;
 }

@@ -25,8 +25,7 @@ MapDoorWindow::MapDoorWindow()
 void MapDoorWindow::disp()
 {
 	// Don't draw over menu, if disabled or if not in game
-	if ((MenuWindow::sCurMenu != nullptr) || (spm::seqdrv::seqGetSeq() != spm::seqdrv::SEQ_GAME)
-      || !settings->hudOptions[OPTION_MAP_DOOR])
+	if ((MenuWindow::sCurMenu != nullptr) || (spm::seqdrv::seqGetSeq() != spm::seqdrv::SEQ_GAME) || !settings->hudMapDoor)
 		return;
 
     // Create strings

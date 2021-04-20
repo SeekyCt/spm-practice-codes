@@ -20,39 +20,55 @@ XYZWindow::XYZWindow()
     mPosY = 64.0f;
     mScale = 0.8f;
     mColour = {0, 0xff, 0, 0xff};
-    
-    // Init update delay properties
     mFrameCount = 0;
-    mFrameDelay = 3;
 }
 
 void XYZWindow::disp()
 {
-	// Don't draw over menu, if disabled or if not in game
-	if ((MenuWindow::sCurMenu != nullptr) || (spm::seqdrv::seqGetSeq() != spm::seqdrv::SEQ_GAME)
-      || !settings->hudOptions[OPTION_XYZ])
-		return;
+    // Don't draw over menu, if disabled or if not in game
+    if ((MenuWindow::sCurMenu != nullptr) || (spm::seqdrv::seqGetSeq() != spm::seqdrv::SEQ_GAME) || !settings->hudXYZ)
+        return;
 
-    // Update if delay has passed
-    if (mFrameCount++ > mFrameDelay)
+    // Update if interval has passed / is disabled
+    if (++mFrameCount > settings->xyzInterval)
     {
         // Reset
         mFrameCount = 0;
 
+        // Generate format for desired number of decimal places
+        char fmt[9];
+        wii::stdio::sprintf(fmt, "%%c: %%.%df", settings->xyzDP);
+
         // Create strings
         spm::mario::MarioWork * mp = spm::mario::marioGetPtr();
-        wii::stdio::sprintf(mMsgX, "x: %.2f", mp->position.x);
-        wii::stdio::sprintf(mMsgY, "y: %.2f", mp->position.y);
-        if (wii::string::strcmp(mMsgY + 3, "-0.00") == 0)
-            wii::string::memmove(mMsgY + 3, mMsgY + 4, 5);
-        wii::stdio::sprintf(mMsgZ, "z: %.2f", mp->position.z);
+        float * pos = reinterpret_cast<float *>(&mp->position);
+        for (int i = 0; i < 3; i++)
+        {
+            wii::stdio::sprintf(mMsgs[i], fmt, 'x' + i, pos[i]);
+
+            // Don't display negative zero since it'll often flicker between signs
+            if (mMsgs[i][0] == '-')
+            {
+                bool negativeZero = true;
+                for (int j = 0; j < 16; j++)
+                {
+                    char c = mMsgs[i][j];
+                    if ((c != '0') && (c != '.'))
+                    {
+                        if (c != 0)
+                            negativeZero = false;
+                        break;
+                    }
+                }
+                if (negativeZero)
+                    wii::string::memmove(mMsgs[i] + 3, mMsgs[i] + 4, 5);
+            }
+        }
     }
 
     // Draw strings
-    const f32 dist = FONT_HEIGHT * mScale;
-    drawString(mMsgX, mPosX, mPosY, &mColour, mScale, true);
-    drawString(mMsgY, mPosX, mPosY - dist, &mColour, mScale, true);
-    drawString(mMsgZ, mPosX, mPosY - (dist * 2), &mColour, mScale, true);
+    for (int i = 0; i < 3; i++)
+        drawString(mMsgs[i], mPosX, mPosY - ((FONT_HEIGHT * mScale) * i), &mColour, mScale, true);
 }
 
 }
