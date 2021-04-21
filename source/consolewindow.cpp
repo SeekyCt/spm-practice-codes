@@ -22,8 +22,8 @@ ConsoleWindow::ConsoleWindow()
 
 void ConsoleWindow::push(const char *text, ConsoleFreeCallback *cb, const wii::RGBA *colour)
 {
-	// Print to OSReport
-	wii::OSError::OSReport("(Console %x) %s\n", this, text);
+    // Print to OSReport
+    wii::OSError::OSReport("(Console %x) %s\n", this, text);
 
     // Handle colour
     wii::RGBA _colour;
@@ -38,59 +38,59 @@ void ConsoleWindow::push(const char *text, ConsoleFreeCallback *cb, const wii::R
 
 void ConsoleWindow::disp()
 {
-	// Don't draw over menu
-	if (MenuWindow::sCurMenu != nullptr)
-		return;
+    // Don't draw over menu
+    if (MenuWindow::sCurMenu != nullptr)
+        return;
 
-	// Initialise loop vars
-	ConsoleLine *line = mLines;
-	ConsoleLine *prevLine = nullptr;
-	float y = mPosY;
+    // Initialise loop vars
+    ConsoleLine *line = mLines;
+    ConsoleLine *prevLine = nullptr;
+    float y = mPosY;
 
     // Draw and update all lines
-	while (line != nullptr)
-	{
-		// Decrease alpha if lifetime within fading region
-		if (line->lifetime <= mFadeThreshhold)
-			line->colour.a -= 0xff / mFadeThreshhold;
-		
-		// Draw line if still on screen
-		if (y < 220.0f)
-	        drawString(line->line, mPosX, y, &line->colour, mScale, true);
+    while (line != nullptr)
+    {
+        // Decrease alpha if lifetime within fading region
+        if (line->lifetime <= mFadeThreshhold)
+            line->colour.a -= 0xff / mFadeThreshhold;
+        
+        // Draw line if still on screen
+        if (y < 220.0f)
+            drawString(line->line, mPosX, y, &line->colour, mScale, true);
 
-		// Increment y for next line
-		y += mScale * (FONT_HEIGHT + 5.0f);
+        // Increment y for next line
+        y += mScale * (FONT_HEIGHT + 5.0f);
 
-		// Decrement life timer, free if last item
-		if (line->lifetime-- == 0)
-		{
-			// Keep a temporary copy of line to free
-			ConsoleLine *temp = line;
-			
-			// Move to next line
-			line = line->next;
+        // Decrement life timer, free if last item
+        if (line->lifetime-- == 0)
+        {
+            // Keep a temporary copy of line to free
+            ConsoleLine *temp = line;
+            
+            // Move to next line
+            line = line->next;
 
-			// Call free callback on this line if needed
-			if (temp->freeCallback != nullptr)
-				temp->freeCallback(temp->line);
+            // Call free callback on this line if needed
+            if (temp->freeCallback != nullptr)
+                temp->freeCallback(temp->line);
 
-			// Free this line
-			delete temp;
+            // Free this line
+            delete temp;
 
-			if (prevLine != nullptr)
-				// Replace previous item in list's next pointer
-				prevLine->next = line;
-			else
-				// This was the first item in the list, update start pointer
-				mLines = line;
-		}
-		else 
-		{
-			// Move to next line
-			prevLine = line;
-			line = line->next;
-		}
-	}
+            if (prevLine != nullptr)
+                // Replace previous item in list's next pointer
+                prevLine->next = line;
+            else
+                // This was the first item in the list, update start pointer
+                mLines = line;
+        }
+        else 
+        {
+            // Move to next line
+            prevLine = line;
+            line = line->next;
+        }
+    }
 }
 
 }
