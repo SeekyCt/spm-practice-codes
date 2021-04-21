@@ -54,8 +54,9 @@ void ConsoleWindow::disp()
 		if (line->lifetime <= mFadeThreshhold)
 			line->colour.a -= 0xff / mFadeThreshhold;
 		
-		// Draw line
-        drawString(line->line, mPosX, y, &line->colour, mScale, true);
+		// Draw line if still on screen
+		if (y < 220.0f)
+	        drawString(line->line, mPosX, y, &line->colour, mScale, true);
 
 		// Increment y for next line
 		y += mScale * (FONT_HEIGHT + 5.0f);
