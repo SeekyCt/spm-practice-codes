@@ -94,13 +94,13 @@ bool evtCheckId(s32 id);
     spm::evtmgr::evtGetWork()->gf[(id) / 32] &= ~(1 << ((id) % 32))
 
 #define EVT_DECLARE_USER_FUNC(name, parameter_count) \
-	constexpr int name##_parameter_count = (parameter_count); \
-	s32 name(spm::evtmgr::EvtEntry * evt, bool isFirstCall);
+    constexpr int name##_parameter_count = (parameter_count); \
+    s32 name(spm::evtmgr::EvtEntry * evt, bool isFirstCall);
 
 #define EVT_DEFINE_USER_FUNC(name) \
-	s32 name(spm::evtmgr::EvtEntry * evt, bool isFirstCall)
+    s32 name(spm::evtmgr::EvtEntry * evt, bool isFirstCall)
 
 #define EVT_DECLARE(name) \
-	extern const spm::evtmgr::EvtScriptCode name[];
+    extern const spm::evtmgr::EvtScriptCode name[];
 
 }
