@@ -23,6 +23,7 @@
 #include <spm/seqdef.h>
 #include <spm/seqdrv.h>
 #include <spm/spmario.h>
+#include <spm/spmario_snd.h>
 #include <spm/wpadmgr.h>
 #include <wii/ipc.h>
 #include <wii/OSError.h>
@@ -132,6 +133,10 @@ void main()
 
     // Thanks to TheLordScruffy for telling me about this
     isDolphin = wii::IPC::IOS_Open("/sys", 1) == -106;
+
+    // Fix dolphin hanging on game shutdown
+    if (isDolphin)
+        writeWord(spm::spmario_snd::spsndExit, 0, BLR);
 
     romfontExpand();
     exceptionPatch();

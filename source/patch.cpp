@@ -23,4 +23,12 @@ void _writeBranch(void * ptr, void * destination, bool link)
     clear_DC_IC_Cache(ptr, sizeof(u32));
 }
 
+void _writeWord(void * ptr, u32 value)
+{
+    u32 * p = reinterpret_cast<u32 *>(ptr);
+    *p = value;
+
+    clear_DC_IC_Cache(ptr, sizeof(u32));
+}
+
 }

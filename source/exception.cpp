@@ -4,12 +4,15 @@
 #include <types.h>
 #include <spm/fontmgr.h>
 #include <spm/romfont.h>
+#include <spm/spmario.h>
 #include <wii/DEMOInit.h>
 #include <wii/gx.h>
 #include <wii/mtx.h>
 #include <wii/OSError.h>
+#include <wii/OSReset.h>
 #include <wii/OSThread.h>
 #include <wii/string.h>
+#include <wii/vi.h>
 
 namespace mod {
 
@@ -77,6 +80,9 @@ static f32 getBottomY(char * msg)
 
 extern "C" void exceptionMessageHandler(char * msg)
 {
+    // spm::wpadmgr::wpadAllRumbleOff(0);
+    // spm::spmario_snd::spsndExit();
+
     // Stop all other threads
     wii::OSThread::OSThread * p = wii::OSThread::currentThread->prev;
     while (p != nullptr)
@@ -101,6 +107,18 @@ extern "C" void exceptionMessageHandler(char * msg)
     f32 scale = isDolphin ? 0.7f : 0.55f; // dolphin uses a custom font for copyright reasons
     while (true)
     {
+        // Check if power button was pressed
+        if (spm::spmario::doShutdown)
+        {
+            wii::VI::VISetBlack(1);
+            wii::VI::VIFlush();
+            wii::VI::VIWaitForRetrace();
+            wii::VI::VIWaitForRetrace();
+            wii::VI::VIWaitForRetrace();
+            wii::OSReset::OSShutdownSystem();
+            while (true) {};
+        }
+
         // Start frame
         wii::Mtx44 mtx;
         wii::DEMOInit::DEMOBeforeRender();
@@ -196,8 +214,6 @@ void exceptionPatch()
     writeBranchLink(wii::OSContext::OSDumpContext, 0x1ac, exceptionOSReportForwarder);
     writeBranchLink(wii::OSContext::OSDumpContext, 0x1fc, exceptionOSReportForwarder);
     writeBranchLink(wii::OSContext::OSDumpContext, 0x220, exceptionOSReportForwarder);
-
-    *(int *)0 = 0;
 }
 
 }

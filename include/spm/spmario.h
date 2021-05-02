@@ -45,6 +45,7 @@ static_assert(sizeof(SpmarioGlobals) == 0x1b08);
 extern "C" {
 
 extern SpmarioGlobals * gp;
+extern bool doShutdown;
 
 void spmarioInit();
 void spmarioMain();
@@ -54,10 +55,10 @@ s32 spmarioGetSystemLevel();
 // viPostCallback
 // wiiDvdCheckThread
 // wiiRumbleCheck
-// 801a9068
-// 801a9074
-// 801a9080
-// 801a908c
+// restartGame
+// shutdownConsole
+// restartGame2
+// returnToWiiMenu
 
 }
 

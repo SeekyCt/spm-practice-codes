@@ -231,6 +231,8 @@
 // 801a908c
 // sdata
 805ae178:gp
+// sbss
+805ae9c1:doShutdown
 
 // seqdef.c
 804287a8:seq_data
@@ -258,6 +260,7 @@
 // more
 
 // spmario_snd.c
+80238598:spsndExit
 8023c93c:spsndBGMOn
 // more
 
@@ -310,6 +313,9 @@
 // OSInterrupt.c
 80273ed8:OSDisableInterrupts
 80273f00:OSRestoreInterrupts
+// OSReset.c
+80275fd4:OSShutdownSystem
+// more
 // OSThread.c
 80277ffc:OSSuspendThread
 // OSTime
@@ -320,6 +326,13 @@
 // mtx.c
 8027a270:PSMTXIdentity
 8027afac:C_MTXOrtho
+// more
+
+// vi.a
+// vi.c
+802837a8:VIWaitForRetrace
+8028472c:VIFlush
+802848ac:VISetBlack
 // more
 
 // gx.a
