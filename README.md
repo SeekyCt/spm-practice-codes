@@ -13,6 +13,12 @@ See the [manual](https://github.com/SeekyCt/spm-practice-codes/blob/main/MANUAL.
 ## Bugs and Suggestions
 If you come across any bugs or have any suggestions for features, feel free to create an issue or contact me about it on Discord (Seeky#4628).
 
+## Branches
+### main
+The main branch contains the source of the latest release of the mod.
+### dev
+The dev contains in-development features and usually isn't ported to or tested on regions other than PAL.
+
 ## Building
 To compile this yourself, you'll need the following:
 * devkitPPC
