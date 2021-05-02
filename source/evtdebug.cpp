@@ -64,18 +64,10 @@ static s32 debugPutReg(s32 ret)
 void evtDebugPatch()
 {
     // Replace debug_put_msg
-    patch::writeBranch(
-        reinterpret_cast<void *>(spm::evtmgr_cmd::evt_debug_put_msg),
-        reinterpret_cast<void *>(debugPutMsg),
-        false
-    );
+    writeBranch(spm::evtmgr_cmd::evt_debug_put_msg, 0, debugPutMsg);
 
     // Hook on the blr of debug_put_reg
-    patch::writeBranch(
-        reinterpret_cast<void *>(reinterpret_cast<u32>(spm::evtmgr_cmd::evt_debug_put_reg) + 0x7b4),
-        reinterpret_cast<void *>(debugPutReg),
-        false
-    );
+    writeBranch(spm::evtmgr_cmd::evt_debug_put_reg, 0x7b4, debugPutReg);
 }
 
 }

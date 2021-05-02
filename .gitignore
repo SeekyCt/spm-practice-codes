@@ -2,3 +2,5 @@
 *.rel
 .vscode
 build.*
+*.bat
+porting

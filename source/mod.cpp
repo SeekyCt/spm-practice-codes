@@ -1,12 +1,14 @@
 #include "mod_ui_base/window.h"
 #include "consolewindow.h"
 #include "evtdebug.h"
+#include "exception.h"
 #include "mainmenu.h"
 #include "mapdoorwindow.h"
 #include "mod.h"
 #include "patch.h"
 #include "mapselectmenu.h"
 #include "nandsettings.h"
+#include "romfontexpand.h"
 #include "scriptlog.h"
 #include "scriptvarlog.h"
 #include "titletextwindow.h"
@@ -22,10 +24,14 @@
 #include <spm/seqdrv.h>
 #include <spm/spmario.h>
 #include <spm/wpadmgr.h>
+#include <wii/ipc.h>
 #include <wii/OSError.h>
+#include <wii/stdio.h>
 #include <wii/wpad.h>
 
 namespace mod {
+
+bool isDolphin;
 
 /*
     seq_title hooks
@@ -123,6 +129,12 @@ void spmarioMainPatch()
 void main()
 {
     wii::OSError::OSReport(MOD_VERSION": main running\n");
+
+    // Thanks to TheLordScruffy for telling me about this
+    isDolphin = wii::IPC::IOS_Open("/sys", 1) == -106;
+
+    romfontExpand();
+    exceptionPatch();
 
     ConsoleWindow::sInstance = new ConsoleWindow();
     MapDoorWindow::sInstance = new MapDoorWindow();

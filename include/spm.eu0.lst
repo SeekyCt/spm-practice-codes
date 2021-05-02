@@ -1,3 +1,7 @@
+// OS Globals
+800000e4:currentThread
+// more
+
 // Runtime.PPCEABI.H.a
 // __mem.c
 80004000:memcpy
@@ -179,6 +183,9 @@
 8019c54c:__assert2
 // more
 
+// debug.c
+8019e33c:OSPanic
+
 // fontmgr.c
 801a0070:FontDrawStart
 801a0150:FontDrawStart_alpha
@@ -199,6 +206,14 @@
 801a1d50:FontDrawMessageMtx
 801a28ac:FontGetMessageWidth
 // more
+
+// romfont.c
+// text
+801a773c:romFontPrintGX
+801a7c44:romFontGetWidth
+// more
+// sdata
+805ae170:romfontWp
 
 // spmario.c
 // text
@@ -231,6 +246,11 @@
 805ae16c:memorySwp
 // more
 
+// DEMOInit.c
+801a94c8:DEMOBeforeRender
+801a9590:DEMODoneRender
+// more
+
 // wpadmgr.c
 80237688:wpadGetButtonsHeld
 802376b0:wpadGetButtonsPressed
@@ -251,11 +271,6 @@
 805ae1a4:relDecompName
 805ae1a8:relCompName
 
-// mtx.a
-// mtx.c
-8027a270:PSMTXIdentity
-// more
-
 // MSL_C.PPCEABI.bare.H.a
 // printf.c
 8025d098:sprintf
@@ -274,21 +289,52 @@
 80270050:DCFlushRange
 802700d8:ICInvalidateRange
 // more
+// OSContext.c
+80270934:OSDumpContext
+// more
 // OSError.c
+// text
 80270c60:OSReport
+80270f78:__OSUnhandledException
 802729b8:OSFatal
+// more
+// rodata
+804ea600:exceptionMsg1
+804ea6ac:exceptionMsg2
+804ea710:exceptionMsg3
+// OSFont.c
+80273494:OSGetFontEncode
+80273868:OSLoadFont
+80273c48:OSGetFontTexel
 // more
 // OSInterrupt.c
 80273ed8:OSDisableInterrupts
 80273f00:OSRestoreInterrupts
+// OSThread.c
+80277ffc:OSSuspendThread
 // OSTime
 80278370:OSGetTime
+// more
+
+// mtx.a
+// mtx.c
+8027a270:PSMTXIdentity
+8027afac:C_MTXOrtho
+// more
+
+// gx.a
+// GXTransform.c
+80294214:GXSetProjection
 // more
 
 // mem.a
 // mem_expHeap.c
 80295cb8:MEMGetAllocatableSizeForExpHeapEx
 80295d90:MEMGetSizeForMBlockExpHeap
+
+// ipc.a
+80298268:IOS_Open
+// more
 
 // NAND.a
 8029983c:NANDCreateAsync

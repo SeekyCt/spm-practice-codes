@@ -5,7 +5,11 @@
 namespace mod::patch {
 
 void clear_DC_IC_Cache(void * ptr, u32 size);
-void writeBranch(void * ptr, void *destination, bool link = false);
+void _writeBranch(void * ptr, void * destination, bool link = false);
+#define writeBranch(ptr, offset, destination) \
+    patch::_writeBranch((void *)((u32)(ptr) + offset), (void *)(destination))
+#define writeBranchLink(ptr, offset, destination) \
+    patch::_writeBranch((void *)((u32)(ptr) + offset), (void *)(destination), true)
 
 template<typename Func, typename Dest>
 Func hookFunction(Func function, Dest destination)
@@ -19,10 +23,10 @@ Func hookFunction(Func function, Dest destination)
     clear_DC_IC_Cache(&trampoline[0], sizeof(u32));
 
     // Branch to original function past hook
-    writeBranch(&trampoline[1], &instructions[1]);
+    _writeBranch(&trampoline[1], &instructions[1]);
     
     // Write actual hook
-    writeBranch(&instructions[0], reinterpret_cast<void *>(static_cast<Func>(destination)));
+    _writeBranch(&instructions[0], reinterpret_cast<void *>(static_cast<Func>(destination)));
     
     return reinterpret_cast<Func>(trampoline);
 }
