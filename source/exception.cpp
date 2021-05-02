@@ -4,7 +4,6 @@
 #include <types.h>
 #include <spm/fontmgr.h>
 #include <spm/romfont.h>
-#include <wii/db.h>
 #include <wii/DEMOInit.h>
 #include <wii/gx.h>
 #include <wii/mtx.h>
@@ -198,6 +197,8 @@ void exceptionPatch()
     writeBranchLink(wii::OSContext::OSDumpContext, 0x1ac, exceptionOSReportForwarder);
     writeBranchLink(wii::OSContext::OSDumpContext, 0x1fc, exceptionOSReportForwarder);
     writeBranchLink(wii::OSContext::OSDumpContext, 0x220, exceptionOSReportForwarder);
+
+    *(int *)0 = 0;
 }
 
 }
