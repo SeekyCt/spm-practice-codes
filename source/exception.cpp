@@ -10,7 +10,6 @@
 #include <wii/OSError.h>
 #include <wii/OSThread.h>
 #include <wii/string.h>
-#include <wii/vi.h>
 
 namespace mod {
 
