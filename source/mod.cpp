@@ -152,6 +152,7 @@ void main()
     evtVarLogPatch();
     evtDebugPatch();
     nandSettingsPatch();
+    MapSelectMenu::scanEntrances();
 }
 
 }

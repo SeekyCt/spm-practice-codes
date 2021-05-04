@@ -7,6 +7,7 @@
 #include <types.h>
 #include <spm/evtmgr.h>
 #include <spm/evtmgr_cmd.h>
+#include <spm/evt_door.h>
 #include <spm/evt_fade.h>
 #include <spm/evt_fairy.h>
 #include <spm/evt_guide.h>
@@ -14,19 +15,28 @@
 #include <spm/evt_npc.h>
 #include <spm/evt_seq.h>
 #include <spm/mario_pouch.h>
+#include <spm/mapdata.h>
 #include <spm/seqdrv.h>
 #include <spm/spmario.h>
 #include <spm/wpadmgr.h>
+#include <wii/OSError.h>
 #include <wii/string.h>
 #include <wii/stdio.h>
 #include <wii/wpad.h>
 
 namespace mod {
 
+struct EntranceNameList
+{
+    int count;
+    const char * names[];
+};
+
 struct MapGroup
 {
     char name[4];
     u16 count;
+    EntranceNameList ** entranceNames;
 };
 
 // TODO: korea maps?
@@ -422,6 +432,103 @@ void MapSelectMenu::close()
     // Change back to parent menu
     delete MenuWindow::sCurMenu;
     MenuWindow::sCurMenu = new MainMenu();
+}
+
+static EntranceNameList * scanScript(const int * script)
+{
+    spm::evt_door::DoorDesc * doors = nullptr;
+    int doorCount = 0;
+    spm::evt_door::DokanDesc * dokans = nullptr;
+    int dokanCount = 0;
+    spm::evt_door::MapDoorDesc * mapDoors = nullptr;
+    int mapDoorCount = 0;
+    
+    int cmdn;
+    int cmd = 0;
+    while (cmd != 1) // endscript
+    {
+        const short * p = reinterpret_cast<const short *>(script);
+        cmd = p[1];
+        cmdn = p[0];
+
+        if (cmd == 0x5c) // user_func
+        {
+            u32 func = script[1];
+            if (func == (u32) spm::evt_door::evt_door_set_door_descs)
+            {
+                doors = reinterpret_cast<spm::evt_door::DoorDesc *>(script[2]);
+                doorCount = script[3];
+            }
+            else if (func == (u32) spm::evt_door::evt_door_set_dokan_descs)
+            {
+                
+                dokans = reinterpret_cast<spm::evt_door::DokanDesc *>(script[2]);
+                dokanCount = script[3];
+            }
+            else if (func == (u32) spm::evt_door::evt_door_set_map_door_descs)
+            {
+                mapDoors = reinterpret_cast<spm::evt_door::MapDoorDesc *>(script[2]);
+                mapDoorCount = script[3];
+            }
+        }
+
+        script += cmdn + 1;
+    }
+
+    int entranceCount = doorCount + dokanCount + mapDoorCount;
+    
+    if (entranceCount == 0)
+        return nullptr;
+    
+    EntranceNameList * list = reinterpret_cast<EntranceNameList *>(new int[entranceCount + 1]);
+    list->count = entranceCount;
+
+    int n = 0;
+    for (int i = 0; i < doorCount; i++)
+        list->names[n++] = doors[i].name;
+    for (int i = 0; i < dokanCount; i++)
+        list->names[n++] = dokans[i].name;
+    for (int i = 0; i < mapDoorCount; i++)
+        list->names[n++] = mapDoors[i].name;
+
+    return list;
+}
+
+void MapSelectMenu::scanEntrances()
+{
+    for (u32 i = 0; i < ARRAY_SIZEOF(groups); i++)
+    {
+        groups[i].entranceNames = new EntranceNameList * [groups[i].count];
+        for (int j = 0; j < groups[i].count; j++)
+        {
+            char name[32];
+            wii::stdio::sprintf(name, "%s_%02d", groups[i].name, j + 1);
+
+            spm::mapdata::MapData * md = spm::mapdata::mapDataPtr(name);
+            if ((md != nullptr) && (md->script != nullptr))
+                groups[i].entranceNames[j] = scanScript((int *) md->script);
+            else
+                groups[i].entranceNames[j] = nullptr;
+        }
+    }
+
+    /*
+    for (u32 i = 0; i < ARRAY_SIZEOF(groups); i++)
+    {
+        EntranceNameList ** lists = groups[i].entranceNames;
+        for (int j = 0; j < groups[i].count; j++)
+        {
+            EntranceNameList * list = lists[j];
+            if (list == nullptr)
+                continue;
+
+            wii::OSError::OSReport("%s_%02d %x:\n", groups[i].name, j + 1, list);
+            
+            for (int n = 0; n < list->count; n++)
+                wii::OSError::OSReport("\t%s\n", list->names[n]);
+        }
+    }
+    */
 }
 
 }

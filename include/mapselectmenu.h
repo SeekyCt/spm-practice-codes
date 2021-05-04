@@ -41,6 +41,7 @@ public:
 
     MapSelectMenu();
     static void onMapChanged();
+    static void scanEntrances();
 };
 
 }
