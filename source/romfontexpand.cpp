@@ -11,8 +11,8 @@ namespace mod {
 
 using namespace spm::romfont;
 
-char newChars[][2] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "(",
-                      ")", "=", "j", "H", "J", "K", "Q", "X", "Y", "Z"};
+char newChars[][2] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "<", ">", "[", "]",
+                      "(", ")", "=", "j", "H", "J", "K", "Q", "X", "Y", "Z", "_"};
 
 #define NEW_CHAR_COUNT ARRAY_SIZEOF(newChars)
 
