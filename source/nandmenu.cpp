@@ -121,7 +121,7 @@ void NandMenu::disp()
 void NandMenu::spawnButtons()
 {
     // Create buttons
-    f32 y = 180;
+    f32 y = 170;
     mButtonPtrs[0] = new MenuButton(this, "Load Settings from NAND", -330.0f, y, loadSettings, this);
     y -= FONT_HEIGHT + 5;
     mButtonPtrs[1] = new MenuButton(this, "Save Settings to NAND", -330.0f, y, saveSettings, this);

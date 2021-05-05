@@ -17,7 +17,7 @@ namespace mod {
 MainMenu::MainMenu()
 {
     const f32 optionsX = -330.0f;
-    f32 y = 180;
+    f32 y = 170;
     int n = 0;
     mOptions[n++] = new MenuButton(this, "Change Map", optionsX, y,
         [](MenuButton * button, void * param)
