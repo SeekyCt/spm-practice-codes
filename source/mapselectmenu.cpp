@@ -56,6 +56,7 @@ static MapGroup groups[] = {
 };
 
 char MapSelectMenu::sFullMapStr[7];
+char MapSelectMenu::sDoorStr[32];
 bool MapSelectMenu::playEffectThisMapChange = false;
 
 void MapSelectMenu::updateGroupDisp()
@@ -70,14 +71,24 @@ void MapSelectMenu::updateMapDisp()
     wii::stdio::sprintf(mMapStr, "%02d", mMap);
 }
 
+void MapSelectMenu::updateEntranceDisp()
+{
+    // Change message to current entrance name
+    if (mEntrance == 0)
+        mEntranceDisp->mMsg = "default";
+    else
+        mEntranceDisp->mMsg = groups[mGroup].entranceNames[mMap - 1]->names[mEntrance - 1];
+}
+
 void MapSelectMenu::groupUp(MenuScroller * scroller, void * param)
 {
     (void) scroller;
 
-    // Decrement group and reset map
+    // Decrement group and reset map & entrance
     MapSelectMenu * instance = reinterpret_cast<MapSelectMenu *>(param);
-    instance->mMap = 1;
     instance->mGroup -= 1;
+    instance->mMap = 1;
+    instance->mEntrance = 0;
 
     // Loop around if the end of the group list is reached
     if (instance->mGroup < 0)
@@ -86,6 +97,7 @@ void MapSelectMenu::groupUp(MenuScroller * scroller, void * param)
     // Update displays
     instance->updateGroupDisp();
     instance->updateMapDisp();
+    instance->updateEntranceDisp();
 }
 
 void MapSelectMenu::groupDown(MenuScroller * scroller, void * param)
@@ -94,8 +106,9 @@ void MapSelectMenu::groupDown(MenuScroller * scroller, void * param)
 
     // Increment group and reset map
     MapSelectMenu * instance = reinterpret_cast<MapSelectMenu *>(param);
-    instance->mMap = 1;
     instance->mGroup += 1;
+    instance->mMap = 1;
+    instance->mEntrance = 0;
 
     // Loop around if the end of the group list is reached
     if (instance->mGroup >= (int) ARRAY_SIZEOF(groups))
@@ -104,6 +117,7 @@ void MapSelectMenu::groupDown(MenuScroller * scroller, void * param)
     // Update displays
     instance->updateGroupDisp();
     instance->updateMapDisp();
+    instance->updateEntranceDisp();
 }
 
 void MapSelectMenu::mapUp(MenuScroller * button, void * param)
@@ -165,10 +179,11 @@ void MapSelectMenu::mapUp(MenuScroller * button, void * param)
         }
     }
 
-    // Store new map number and display
+    // Store new map number, reset entrance and update display
     instance->mMap = map;
+    instance->mEntrance = 0;
     instance->updateMapDisp();
-
+    instance->updateEntranceDisp();
 }
 
 void MapSelectMenu::mapDown(MenuScroller * scroller, void * param)
@@ -230,9 +245,43 @@ void MapSelectMenu::mapDown(MenuScroller * scroller, void * param)
         }
     }
 
-    // Store new map number and display
+    // Store new map number, reset entrance and update display
     instance->mMap = map;
+    instance->mEntrance = 0;
     instance->updateMapDisp();
+    instance->updateEntranceDisp();
+}
+
+void MapSelectMenu::entranceUp(MenuScroller * scroller, void * param)
+{
+    (void) scroller;
+
+    // Decrement entrance
+    MapSelectMenu * instance = reinterpret_cast<MapSelectMenu *>(param);
+    instance->mEntrance -= 1;
+
+    // Loop around if the end of the entrance list is reached
+    if (instance->mEntrance < 0)
+        instance->mEntrance = groups[instance->mGroup].entranceNames[instance->mMap - 1]->count;
+
+    // Update display
+    instance->updateEntranceDisp();
+}
+
+void MapSelectMenu::entranceDown(MenuScroller * scroller, void * param)
+{
+    (void) scroller;
+
+    // Increment entrance
+    MapSelectMenu * instance = reinterpret_cast<MapSelectMenu *>(param);
+    instance->mEntrance += 1;
+
+    // Loop around if the end of the group list is reached
+    if (instance->mEntrance > groups[instance->mGroup].entranceNames[instance->mMap - 1]->count)
+        instance->mEntrance = 0;
+    
+    // Update display
+    instance->updateEntranceDisp();
 }
 
 bool MapSelectMenu::doMapChange(MenuButton * button, void * param)
@@ -284,7 +333,7 @@ static EVT_BEGIN(map_change_effect)
     WAIT_FRM(60)
 
     // Change map
-    USER_FUNC(spm::evt_seq::evt_seq_set_seq, 3, PTR(MapSelectMenu::sFullMapStr), 0)
+    USER_FUNC(spm::evt_seq::evt_seq_set_seq, 3, PTR(MapSelectMenu::sFullMapStr), PTR(MapSelectMenu::sDoorStr))
 
 RETURN()
 EVT_END()
@@ -337,17 +386,27 @@ void MapSelectMenu::_doMapChange()
     // Build map string
     wii::stdio::sprintf(sFullMapStr, "%s_%02d", groups[mGroup].name, mMap);
 
+    // Prepare door string
+    if (mEntrance == 0)
+        wii::string::strcpy(sDoorStr, "");
+    else
+        wii::string::strcpy(sDoorStr, groups[mGroup].entranceNames[mMap - 1]->names[mEntrance - 1]);
+
     if (settings->mapChangeEffect)
     {
-        // Signal to play animation if enabled
-        playEffectThisMapChange = true;
+        // Signal to play re-appear animation if enabled and not using a normal entrance
+        spm::mapdata::MapData * md = spm::mapdata::mapDataPtr(sFullMapStr);
+        bool hasDefaultEntrance = (md != nullptr) ? (md->fallbackDoorName != nullptr) : false;
+        if ((mEntrance == 0) && !hasDefaultEntrance)
+            playEffectThisMapChange = true;
 
-        // Run script
+        // Run script with effects
         spm::evtmgr::evtEntry(map_change_effect, 0, 0);
     }
     else
     {
-        spm::seqdrv::seqSetSeq(spm::seqdrv::SEQ_MAPCHANGE, sFullMapStr, 0);
+        // Change map with no teleport effect
+        spm::seqdrv::seqSetSeq(spm::seqdrv::SEQ_MAPCHANGE, sFullMapStr, sDoorStr);
     }
 }
 
@@ -408,22 +467,33 @@ MapSelectMenu::MapSelectMenu()
     }
 
     // Position constants
-    const f32 groupDispX = -50.0f;
+    const f32 mapLabelX = -180.0f;
+    const f32 groupDispX = mapLabelX + 70.0f;
     const f32 mapDispX = groupDispX + 60.0f;
+    const f32 entranceLabelX = mapDispX + 50.0f;
+    const f32 entranceDispX = entranceLabelX + 140.0f;
     const f32 dispsY = 20.0f;
     
     // Init display buttons
+    new MenuButton(this, "Map:", mapLabelX, dispsY);
     mGroupDisp = new MenuScroller(
         this, groups[mGroup].name, groupDispX, dispsY, 20.0f, groupUp, groupDown, this, doMapChange, this
     );
-    wii::stdio::sprintf(mMapStr, "%02d", mMap);
+    updateMapDisp(); // generates mMapStr
     mMapDisp = new MenuScroller(
         this, mMapStr, mapDispX, dispsY, 10.0f, mapUp, mapDown, this, doMapChange, this
     );
+
+    new MenuButton(this, "Entrance:", entranceLabelX, dispsY);
+    mEntranceDisp = new MenuScroller(
+        this, "default", entranceDispX, dispsY, 30.0f, entranceUp, entranceDown, this, doMapChange, this
+    );
+
     buttonLinkHorizontal(mGroupDisp, mMapDisp);
+    buttonLinkHorizontal(mMapDisp, mEntranceDisp);
 
     // Set starting button and title
-    mCurButton = mGroupDisp;
+    mCurButton = mMapDisp;
     mTitle = "Map Select";
 }
 
@@ -436,6 +506,13 @@ void MapSelectMenu::close()
 
 static EntranceNameList * scanScript(const int * script)
 {
+    if (script == nullptr)
+    {
+        EntranceNameList * list = reinterpret_cast<EntranceNameList *>(new int[1]);
+        list->count = 0;
+        return list;
+    }
+
     spm::evt_door::DoorDesc * doors = nullptr;
     int doorCount = 0;
     spm::evt_door::DokanDesc * dokans = nullptr;
@@ -477,9 +554,6 @@ static EntranceNameList * scanScript(const int * script)
 
     int entranceCount = doorCount + dokanCount + mapDoorCount;
     
-    if (entranceCount == 0)
-        return nullptr;
-    
     EntranceNameList * list = reinterpret_cast<EntranceNameList *>(new int[entranceCount + 1]);
     list->count = entranceCount;
 
@@ -505,30 +579,10 @@ void MapSelectMenu::scanEntrances()
             wii::stdio::sprintf(name, "%s_%02d", groups[i].name, j + 1);
 
             spm::mapdata::MapData * md = spm::mapdata::mapDataPtr(name);
-            if ((md != nullptr) && (md->script != nullptr))
-                groups[i].entranceNames[j] = scanScript((int *) md->script);
-            else
-                groups[i].entranceNames[j] = nullptr;
+            int * script = md != nullptr ? (int *) md->script : nullptr;
+            groups[i].entranceNames[j] = scanScript(script);
         }
     }
-
-    /*
-    for (u32 i = 0; i < ARRAY_SIZEOF(groups); i++)
-    {
-        EntranceNameList ** lists = groups[i].entranceNames;
-        for (int j = 0; j < groups[i].count; j++)
-        {
-            EntranceNameList * list = lists[j];
-            if (list == nullptr)
-                continue;
-
-            wii::OSError::OSReport("%s_%02d %x:\n", groups[i].name, j + 1, list);
-            
-            for (int n = 0; n < list->count; n++)
-                wii::OSError::OSReport("\t%s\n", list->names[n]);
-        }
-    }
-    */
 }
 
 }
