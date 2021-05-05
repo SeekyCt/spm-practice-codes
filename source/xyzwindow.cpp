@@ -47,10 +47,10 @@ void XYZWindow::disp()
             wii::stdio::sprintf(mMsgs[i], fmt, 'x' + i, pos[i]);
 
             // Don't display negative zero since it'll often flicker between signs
-            if (mMsgs[i][0] == '-')
+            if (mMsgs[i][3] == '-')
             {
                 bool negativeZero = true;
-                for (int j = 0; j < 16; j++)
+                for (int j = 4; j < 16; j++)
                 {
                     char c = mMsgs[i][j];
                     if ((c != '0') && (c != '.'))
