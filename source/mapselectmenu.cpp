@@ -19,6 +19,7 @@
 #include <spm/seqdrv.h>
 #include <spm/spmario.h>
 #include <spm/wpadmgr.h>
+#include <spm/rel/machi.h>
 #include <wii/OSError.h>
 #include <wii/string.h>
 #include <wii/stdio.h>
@@ -506,6 +507,7 @@ void MapSelectMenu::close()
 
 static EntranceNameList * scanScript(const int * script)
 {
+    // Return an empty list if there's no script
     if (script == nullptr)
     {
         EntranceNameList * list = reinterpret_cast<EntranceNameList *>(new int[1]);
@@ -513,13 +515,17 @@ static EntranceNameList * scanScript(const int * script)
         return list;
     }
 
+    // Initialise entrance type information
     spm::evt_door::DoorDesc * doors = nullptr;
     int doorCount = 0;
     spm::evt_door::DokanDesc * dokans = nullptr;
     int dokanCount = 0;
     spm::evt_door::MapDoorDesc * mapDoors = nullptr;
     int mapDoorCount = 0;
+    spm::machi::ElvDesc * elvs = nullptr;
+    int elvCount = 0;
     
+    // Find entrances
     int cmdn;
     int cmd = 0;
     while (cmd != 1) // endscript
@@ -547,12 +553,18 @@ static EntranceNameList * scanScript(const int * script)
                 mapDoors = reinterpret_cast<spm::evt_door::MapDoorDesc *>(script[2]);
                 mapDoorCount = script[3];
             }
+            else if (func == (u32) spm::machi::evt_machi_set_elv_descs)
+            {
+                elvs = reinterpret_cast<spm::machi::ElvDesc *>(script[2]);
+                elvCount = script[3];
+            }
         }
 
         script += cmdn + 1;
     }
 
-    int entranceCount = doorCount + dokanCount + mapDoorCount;
+    // Create list
+    int entranceCount = doorCount + dokanCount + mapDoorCount + elvCount;
     
     EntranceNameList * list = reinterpret_cast<EntranceNameList *>(new int[entranceCount + 1]);
     list->count = entranceCount;
@@ -564,20 +576,28 @@ static EntranceNameList * scanScript(const int * script)
         list->names[n++] = dokans[i].name;
     for (int i = 0; i < mapDoorCount; i++)
         list->names[n++] = mapDoors[i].name;
+    for (int i = 0; i < elvCount; i++)
+        list->names[n++] = elvs[i].name;
 
     return list;
 }
 
 void MapSelectMenu::scanEntrances()
 {
+    // Scan all maps for their entrances
     for (u32 i = 0; i < ARRAY_SIZEOF(groups); i++)
     {
+        // Create list pointer array for this group
         groups[i].entranceNames = new EntranceNameList * [groups[i].count];
+
+        // Run for all maps in this group
         for (int j = 0; j < groups[i].count; j++)
         {
+            // Generate map name string
             char name[32];
             wii::stdio::sprintf(name, "%s_%02d", groups[i].name, j + 1);
 
+            // Generate list for this map
             spm::mapdata::MapData * md = spm::mapdata::mapDataPtr(name);
             int * script = md != nullptr ? (int *) md->script : nullptr;
             groups[i].entranceNames[j] = scanScript(script);

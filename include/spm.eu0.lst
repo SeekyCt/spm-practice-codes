@@ -1,6 +1,9 @@
-// OS Globals
+/* OS Globals */
+
 800000e4:currentThread
 // more
+
+/* Dol */
 
 // Runtime.PPCEABI.H.a
 // __mem.c
@@ -275,8 +278,8 @@
 8023e434:relInit
 8023e444:loadRel
 8023e600:isRelLoaded
-// data
-805ae1a0:relHolder
+// sdata
+805ae1a0:relWp
 805ae1a4:relDecompName
 805ae1a8:relCompName
 
@@ -371,3 +374,9 @@
 802e2598:lzss10GetDecompSize
 802e25d8:lzss10Decompress
 802e270c:lzss10ParseHeader
+
+/* Rel */
+
+// machi.c
+80c4abe0:evt_machi_set_elv_descs
+// more

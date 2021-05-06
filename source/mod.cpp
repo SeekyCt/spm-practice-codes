@@ -16,14 +16,17 @@
 
 #include <types.h>
 #include <spm/charpixlitemwin.h>
+#include <spm/codesections.h>
 #include <spm/effdrv.h>
 #include <spm/fadedrv.h>
 #include <spm/mario.h>
 #include <spm/mario_motion.h>
+#include <spm/relmgr.h>
 #include <spm/seqdef.h>
 #include <spm/seqdrv.h>
 #include <spm/spmario.h>
 #include <spm/spmario_snd.h>
+#include <spm/system.h>
 #include <spm/wpadmgr.h>
 #include <wii/ipc.h>
 #include <wii/OSError.h>
@@ -140,6 +143,9 @@ void main()
 
     romfontExpand();
     exceptionPatch();
+
+    assertf(spm::relmgr::relWp->relFile == (void *) REL_LOAD_ADDR, "relF loaded at unexpected address 0x%x",
+            (u32) spm::relmgr::relWp->relFile);
 
     ConsoleWindow::sInstance = new ConsoleWindow();
     MapDoorWindow::sInstance = new MapDoorWindow();
