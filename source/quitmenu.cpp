@@ -1,0 +1,57 @@
+#include "mod_ui_base/centredbutton.h"
+#include "quitmenu.h"
+#include "mainmenu.h"
+
+#include <types.h>
+#include <spm/fontmgr.h>
+#include <spm/seqdrv.h>
+#include <wii/OSError.h>
+
+namespace mod {
+
+QuitMenu::QuitMenu()
+{
+    // Create buttons
+    CentredButton * top = new CentredButton(this, "Yes", 40.0f, 
+        [](MenuButton * button, void * param)
+        {
+            (void) button;
+            (void) param;
+
+            spm::seqdrv::seqSetSeq(spm::seqdrv::SEQ_MAPCHANGE, "title", "");
+
+            delete MenuWindow::sCurMenu;
+            MenuWindow::sCurMenu = nullptr;
+            return false;
+        }
+    );
+    CentredButton * bottom = new CentredButton(this, "No", 0.0f,
+        [](MenuButton * button, void * param)
+        {
+            (void) button;
+
+            *(int *)0x80000198 = 0;
+            QuitMenu * instance = reinterpret_cast<QuitMenu *>(param);
+            instance->close();
+
+            return false;
+        }, 
+        this
+    );
+    wii::OSError::OSReport("bottom %x\n", bottom);
+    buttonLinkVertical(top, bottom);
+    
+    // Set title and selected button
+    mCurButton = bottom;
+    mTitle = "Are you sure you want to return to Title Screen?";
+}
+
+void QuitMenu::close()
+{
+    // Change back to parent menu
+    delete MenuWindow::sCurMenu;
+    MenuWindow::sCurMenu = new MainMenu();
+    return;
+}
+
+}
