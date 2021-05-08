@@ -30,6 +30,7 @@
 #include <spm/wpadmgr.h>
 #include <wii/ipc.h>
 #include <wii/OSError.h>
+#include <wii/string.h>
 #include <wii/stdio.h>
 #include <wii/wpad.h>
 
@@ -137,6 +138,17 @@ void main()
     // Thanks to TheLordScruffy for telling me about this
     isDolphin = wii::IPC::IOS_Open("/sys", 1) == -106;
 
+    // If they ever fix that, it'll be in a version that's definitely new enough to have /dev/dolphin
+    if (!isDolphin)
+    {
+        int ret = wii::IPC::IOS_Open("/dev/dolphin", 0);
+        if (ret >= 0)
+        {
+            isDolphin = true;
+            wii::IPC::IOS_Close(ret);
+        }
+    }
+    
     // Fix dolphin hanging on game shutdown
     if (isDolphin)
         writeWord(spm::spmario_snd::spsndExit, 0, BLR);
