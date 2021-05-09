@@ -267,7 +267,9 @@ s32 evt_nandSettingsRead(spm::evtmgr::EvtEntry * entry, bool firstRun)
                 break;
 
             default:
-                wii::OSError::OSFatal(&errorFg, &errorBg, "Settings file is too new!");
+                wii::OSError::OSReport("nandsettings: settings file too new, using defaults\n");
+                nandSettingsDefaults();
+                break;
         }
         spm::evtmgr_cmd::evtSetValue(entry, entry->pCurData[0], asyncResult.val);
         return 2;
@@ -432,7 +434,7 @@ bool loadOnBoot()
         evtId = spm::evtmgr::evtEntryType(nand_settings_load, 0, 0, 0)->id;
         wii::OSError::OSReport("nandsettings: starting evt script\n");
     }
-    else if ((evtId != -2) && spm::evtmgr::evtCheckId(evtId) == false)
+    else if ((evtId != -2) && (spm::evtmgr::evtCheckId(evtId) == false))
     {
         // If it didn't succeed, use defaults
         if (!nandSettingsSuccess)
