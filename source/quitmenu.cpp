@@ -30,7 +30,6 @@ QuitMenu::QuitMenu()
         {
             (void) button;
 
-            *(int *)0x80000198 = 0;
             QuitMenu * instance = reinterpret_cast<QuitMenu *>(param);
             instance->close();
 
