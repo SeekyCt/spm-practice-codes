@@ -516,8 +516,6 @@ static EntranceNameList * scanScript(const int * script)
     }
 
     // Initialise entrance type information
-    spm::evt_door::DoorDesc * doors = nullptr;
-    int doorCount = 0;
     spm::evt_door::DokanDesc * dokans = nullptr;
     int dokanCount = 0;
     spm::evt_door::MapDoorDesc * mapDoors = nullptr;
@@ -537,14 +535,8 @@ static EntranceNameList * scanScript(const int * script)
         if (cmd == 0x5c) // user_func
         {
             u32 func = script[1];
-            if (func == (u32) spm::evt_door::evt_door_set_door_descs)
+            if (func == (u32) spm::evt_door::evt_door_set_dokan_descs)
             {
-                doors = reinterpret_cast<spm::evt_door::DoorDesc *>(script[2]);
-                doorCount = script[3];
-            }
-            else if (func == (u32) spm::evt_door::evt_door_set_dokan_descs)
-            {
-                
                 dokans = reinterpret_cast<spm::evt_door::DokanDesc *>(script[2]);
                 dokanCount = script[3];
             }
@@ -564,14 +556,12 @@ static EntranceNameList * scanScript(const int * script)
     }
 
     // Create list
-    int entranceCount = doorCount + dokanCount + mapDoorCount + elvCount;
+    int entranceCount = dokanCount + mapDoorCount + elvCount;
     
     EntranceNameList * list = reinterpret_cast<EntranceNameList *>(new int[entranceCount + 1]);
     list->count = entranceCount;
 
     int n = 0;
-    for (int i = 0; i < doorCount; i++)
-        list->names[n++] = doors[i].name;
     for (int i = 0; i < dokanCount; i++)
         list->names[n++] = dokans[i].name;
     for (int i = 0; i < mapDoorCount; i++)
