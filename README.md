@@ -17,7 +17,7 @@ If you come across any bugs or have any suggestions for features, feel free to c
 ### main
 The main branch contains the source of the latest release of the mod.
 ### dev
-The dev contains in-development features and usually isn't ported to or tested on regions other than PAL.
+The dev branch contains in-development features and usually isn't ported to or tested on regions other than PAL.
 
 ## Building
 To compile this yourself, you'll need the following:
