@@ -5,6 +5,8 @@
 
 namespace spm::romfont {
 
+// This file was heavily changed in the Korean version to be NW4R based
+#ifndef SPM_KR0 
 struct RomfontEntry
 {
     u8 image[0x120];
@@ -21,10 +23,13 @@ struct RomfontWork
     int useSJIS;
 };
 static_assert(sizeof(RomfontWork) == 0xc);
+#endif
 
 extern "C" {
 
+#ifndef SPM_KR0
 extern RomfontWork * romfontWp;
+#endif
 
 void romFontPrintGX(f32 x, f32 y, f32 scale, const wii::RGBA &colour, const char * msg, ...);
 int romFontGetWidth(const char * message);

@@ -1,6 +1,6 @@
 /*
     Exception
-    Patches to display exception information on console
+    Patches to display exception information on screen
 */
 
 #pragma once

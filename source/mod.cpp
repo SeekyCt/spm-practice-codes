@@ -148,6 +148,8 @@ void main()
             wii::IPC::IOS_Close(ret);
         }
     }
+
+    wii::OSError::OSReport("isDolphin: %d\n", isDolphin);
     
     // Fix dolphin hanging on game shutdown
     if (isDolphin)
