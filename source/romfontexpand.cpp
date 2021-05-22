@@ -1,8 +1,10 @@
 #include "util.h"
 
 #include <types.h>
+#include <spm/memory.h>
 #include <spm/romfont.h>
 #include <wii/OSCache.h>
+#include <wii/OSError.h>
 #include <wii/OSFont.h>
 #include <wii/stdio.h>
 #include <wii/string.h>
@@ -18,18 +20,18 @@ char newChars[][2] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "<", ">"
 
 void romfontExpand()
 {
-    // Allocate memory to load font
-    u8 * fontHeader;
-    u8 * temp;
+    // Allocate memory to load font, there's not enough space in heap 0 for the jp allocations
+    void * fontHeader;
+    void * temp;
     if (wii::OSFont::OSGetFontEncode() == 1)
     {
-        fontHeader = new u8[0x90ee4];
-        temp = new u8[0x4d000];
+        fontHeader = spm::memory::__memAlloc(1, 0x90ee4);
+        temp = spm::memory::__memAlloc(1, 0x4d000);
     }
     else
     {
-        fontHeader = new u8[0x10120];
-        temp = new u8[0x3000];
+        fontHeader = spm::memory::__memAlloc(1, 0x10120);
+        temp = spm::memory::__memAlloc(1, 0x3000);
     }
 
     // Load font
@@ -51,8 +53,8 @@ void romfontExpand()
     }
 
     // Free font working memory
-    delete[] fontHeader;
-    delete[] temp;
+    spm::memory::__memFree(1, fontHeader);
+    spm::memory::__memFree(1, temp);
 
     // Replace old entry array
     delete[] romfontWp->entries;
