@@ -77,7 +77,7 @@ HudMenu::HudMenu()
     OPTION("Map & Door Name Display", settings->hudMapDoor);
     OPTION("Position Display", settings->hudXYZ);
 
-    new MenuButton(this, "XYZ Update Delay", labelX, y, nullptr, nullptr, false, scale);
+    new MenuButton(this, "Position Update Delay", labelX, y, nullptr, nullptr, false, scale);
     updateDelayStr();
     options[i++] = new MenuScrollerH(this, mDelayStr, scrollerX, y, arrowXDiff,
         [](MenuScrollerH * scroller, void * param)
@@ -96,7 +96,7 @@ HudMenu::HudMenu()
     );
     y -= yDiff;
 
-    new MenuButton(this, "XYZ Decimal Places", labelX, y, nullptr, nullptr, false, scale);
+    new MenuButton(this, "Position Decimal Places", labelX, y, nullptr, nullptr, false, scale);
     updateDecimalPlaceStr();
     options[i++] = new MenuScrollerH(this, mDecimalPlaceStr, scrollerX, y, arrowXDiff,
         [](MenuScrollerH * scroller, void * param)

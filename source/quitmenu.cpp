@@ -37,7 +37,6 @@ QuitMenu::QuitMenu()
         }, 
         this
     );
-    wii::OSError::OSReport("bottom %x\n", bottom);
     buttonLinkVertical(top, bottom);
     
     // Set title and selected button

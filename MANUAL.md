@@ -3,12 +3,14 @@
 ## Opening the Menu
 The menu can currently be opened at any time the game's pause menu can (although this is probably going to be made less strict in a future version) by pressing `B`.
 
-The menu can then be navigated with the D-Pad, `2` to select and `1` to exit.
+The menu can then be navigated with the D-Pad, `2` to select, `1` to go back, and `B` to fully close the menu from any section.
 
 ## Map Warping
-The `Change Map` option in the menu allows you to warp to any map by its internal name.
+The `Change Map` option in the menu allows you to warp to any map with an entrance of your choice by their internal names.
 
-The first 3 letters of the name are the area (such as `he1` for 1-1, `ta3` for 3-3, `mac` for Flipside) and the 2 numbers are the number of the map within that area. These can scrolled through using the D-Pad. Once you've chosen the map you'd like to warp to, press `2`.
+The first 3 letters of the name are the area (such as `he1` for 1-1, `ta3` for 3-3, `mac` for Flipside) and the 2 numbers are the number of the map within that area. The entrance column allows you to choose how the room is entered, with the `default` option using the default entrance for the map if it has one, or spawning you at the default coordinates for the map otherwise. These can scrolled through using the D-Pad.
+
+Once you've chosen the map you'd like to warp to and the entrance you'd like to use, press `2`.
 
 A full list of map names can be found [here](https://docs.google.com/document/d/10w4CS5oNBOHHYtM9OrNUYM7GIqNxIaR-b_Sr8FSG7Pk/edit). 
 
@@ -22,6 +24,10 @@ The Map & Door Name Display shows the current map name (without the underscore s
 
 ### Position
 The Position Display shows your current co-ordinates in the top left of the screen.
+
+The `Position Update Delay` option allows you to change the amount of frames between each time the coordinates are read and the display is updated.
+
+The `Position Decimal Places` option allows you to set how many decimal places the coordinates are displayed to.
 
 ## Logging Options
 The `Edit Logging Options` option in the menu allows you to enable and disable various things being printed to an on-screen console or OSReport (for Dolphin). The list can be navigated with the D-Pad and `2` can be pressed to switch between Enabled and Disabled.
@@ -49,3 +55,6 @@ The `Manage Saved Settings` option in the menu allows you to save your settings 
 
 ## Return to Title Screen
 The `Return to Title Screen` option allows you to return to the main menu without needing to game over or reboot.
+
+## Exception Handler
+When the game crashes or sets of an OSPanic, a custom exception handler will be displayed on screen showing debugging information. Unlike regular crashes, the power button can still be used to turn off the game as normal when the exception handler runs. This is currently not supported in the Korean version.
