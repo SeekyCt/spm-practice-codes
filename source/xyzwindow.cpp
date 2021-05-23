@@ -50,7 +50,8 @@ void XYZWindow::disp()
             if (mMsgs[i][3] == '-')
             {
                 bool negativeZero = true;
-                for (int j = 4; j < 16; j++)
+                int len = wii::string::strlen(mMsgs[i]);
+                for (int j = 4; j < len; j++)
                 {
                     char c = mMsgs[i][j];
                     if ((c != '0') && (c != '.'))
@@ -61,7 +62,7 @@ void XYZWindow::disp()
                     }
                 }
                 if (negativeZero)
-                    wii::string::memmove(mMsgs[i] + 3, mMsgs[i] + 4, 5);
+                    wii::string::memmove(mMsgs[i] + 3, mMsgs[i] + 4, len - 4 + 1);
             }
         }
     }

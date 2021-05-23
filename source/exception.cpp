@@ -17,6 +17,9 @@
 
 namespace mod {
 
+// Romfont changed significantly in the Korean version so the exception handler won't work there currently
+#ifndef SPM_KR0
+
 extern "C" {
     bool inOSPanic = false;
     char exceptionWorkingText[256];
@@ -24,9 +27,6 @@ extern "C" {
     void OSPanicForwarder();
     void exceptionOSReportForwarder();
 }
-
-// Romfont changed significantly in the Korean version so the exception handler won't work there currently
-#ifndef SPM_KR0
 
 static bool inException = false;
 static char exceptionText[4096];
@@ -219,11 +219,14 @@ void exceptionPatch()
     writeBranchLink(wii::OSContext::OSDumpContext, 0x1fc, exceptionOSReportForwarder);
     writeBranchLink(wii::OSContext::OSDumpContext, 0x220, exceptionOSReportForwarder);
 }
+
 #else
+
 void exceptionPatch()
 {
 
 }
+
 #endif
 
 }
