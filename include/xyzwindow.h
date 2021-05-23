@@ -12,13 +12,10 @@ class XYZWindow : public Window
 {
 protected:
     virtual void disp() override;
-    char mMsgX[16];
-    char mMsgY[16];
-    char mMsgZ[16];
+    char mMsgs[3][32];
     wii::RGBA mColour;
     f32 mScale;
-    u32 mFrameCount;
-    u32 mFrameDelay;
+    int mFrameCount;
     
 public:
     // Window::mPosX/Y are used for top left corner of window

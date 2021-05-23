@@ -15,5 +15,6 @@ struct Vec3
 };
 
 typedef f32 Mtx34[3][4];
+typedef f32 Mtx44[4][4];
 
 }

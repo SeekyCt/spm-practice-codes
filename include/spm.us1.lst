@@ -1,3 +1,6 @@
+// OS Globals
+800000e4:currentThread
+
 // Automatically generated from spm.eu0.lst 
 80004000:memcpy
 80004104:memset
@@ -132,7 +135,7 @@
 8023C52C:relInit
 8023C53C:loadRel
 8023C6F8:isRelLoaded
-8056CA20:relHolder
+8056CA20:relWp
 8056CA24:relDecompName
 8056CA28:relCompName
 80278120:PSMTXIdentity
@@ -164,3 +167,35 @@
 802E0448:lzss10GetDecompSize
 802E0488:lzss10Decompress
 802E05BC:lzss10ParseHeader
+
+// new to v2
+800E27F8:evt_door_set_door_descs
+800E3770:evt_door_set_dokan_descs
+800E4300:evt_door_set_map_door_descs
+8019D60C:OSPanic
+801A6B60:romFontPrintGX
+801A7068:romFontGetWidth
+8056C9F0:romfontWp
+8056d241:doShutdown
+801A8784:DEMOBeforeRender
+801A884C:DEMODoneRender
+80236688:spsndExit
+8026E7E4:OSDumpContext
+8026EE28:__OSUnhandledException
+804A8E58:exceptionMsg1
+804A8F04:exceptionMsg2
+804A8F68:exceptionMsg3
+80271344:OSGetFontEncode
+80271718:OSLoadFont
+80271AF8:OSGetFontTexel
+80273E84:OSShutdownSystem
+80275EAC:OSSuspendThread
+80278120:PSMTXIdentity
+80278E5C:C_MTXOrtho
+80281658:VIWaitForRetrace
+802825DC:VIFlush
+8028275C:VISetBlack
+802920C4:GXSetProjection
+80296118:IOS_Open
+802962F8:IOS_Close
+80C09180:evt_machi_set_elv_descs

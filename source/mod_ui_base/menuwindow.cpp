@@ -34,7 +34,7 @@ MenuWindow::MenuWindow()
 
 MenuWindow::~MenuWindow()
 {
-    // List pointer set to null that buttons know not to remove themselves from it
+    // List pointer set to null so that buttons know not to remove themselves from it
     MenuButton * p = mButtons;
     mButtons = nullptr;
 
@@ -93,6 +93,12 @@ void MenuWindow::disp()
 }
 
 void MenuWindow::close()
+{
+    sCurMenu = nullptr;
+    delete this;
+}
+
+void MenuWindow::fullClose()
 {
     sCurMenu = nullptr;
     delete this;

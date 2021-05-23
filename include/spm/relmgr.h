@@ -2,18 +2,18 @@
 
 namespace spm::relmgr {
 
-struct RelHolder
+struct RelWork
 {
     void * relFile;
     void * bss;
     bool loaded;
 };
 
-static_assert(sizeof(RelHolder) == 0xc);
+static_assert(sizeof(RelWork) == 0xc);
 
 extern "C" {
 
-extern RelHolder * relHolder;
+extern RelWork * relWp;
 extern const char * relDecompName; // "relF.rel"
 extern const char * relCompName; // "relF.bin"
 

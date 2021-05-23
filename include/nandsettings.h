@@ -10,7 +10,7 @@
 
 namespace mod {
 
-#define SETTINGS_VER 1
+#define SETTINGS_VER 2
 #define SETTINGS_FILE_NAME "pcset.bin"
 
 enum class LogType : u8
@@ -29,19 +29,27 @@ enum LogOptions
 
 #define LOG_OPTION_COUNT 3
 
-enum HudOptions
+// Old versions for upgrading
+struct NandSettingsV1
 {
-    OPTION_MAP_DOOR = 0, // mapdoorwindow.cpp
-    OPTION_XYZ = 1 // xyzwindow.cpp
+    u32 version;
+    LogType logOptions[3]; 
+    bool hudOptions[2];
+    bool mapChangeEffect;
 };
 
-#define HUD_OPTION_COUNT 2
-
+// Latest
 struct NandSettings
 {
     u32 version;
+
     LogType logOptions[LOG_OPTION_COUNT]; 
-    bool hudOptions[HUD_OPTION_COUNT];
+
+    bool hudMapDoor;
+    bool hudXYZ;    
+    s8 xyzInterval;
+    s8 xyzDP;
+
     bool mapChangeEffect;
 };
 

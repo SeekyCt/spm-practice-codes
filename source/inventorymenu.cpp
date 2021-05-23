@@ -306,11 +306,11 @@ bool InventoryMenu::chooseDelete(MenuButton * button, void * param)
 {
     (void) button;
     InventoryMenu * instance = reinterpret_cast<InventoryMenu *>(param);
+    spm::mario_pouch::MarioPouchWork * pp = spm::mario_pouch::pouchGetPtr();
 
     if (instance->mMode == MODE_CHARS)
     {
         // pouchRemoveItem doesn't support characters
-        spm::mario_pouch::MarioPouchWork * pp = spm::mario_pouch::pouchGetPtr();
         for (int i = instance->mSlot; i < 4; i++)
             pp->characters[i] = pp->characters[i + 1];
         pp->characters[3].itemType = 0;
@@ -324,6 +324,10 @@ bool InventoryMenu::chooseDelete(MenuButton * button, void * param)
     }
     else
     {
+        // changing the currently selected pixl causes crashes
+        if (instance->mMode == MODE_PIXLS)
+            pp->pixls[instance->mSlot].selected = false;
+
         spm::mario_pouch::pouchRemoveItem(instance->getId(instance->mSlot));
     }
     instance->mSlot = 0;
@@ -404,6 +408,7 @@ void InventoryMenu::setId(int id)
             pp->characters[mSlot].itemType = id;
             break;
         case MODE_PIXLS:
+            pp->pixls[mSlot].selected = false;
             pp->pixls[mSlot].itemType = id;
             break;
         default:

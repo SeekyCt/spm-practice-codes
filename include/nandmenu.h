@@ -41,6 +41,8 @@ protected:
     virtual void disp() override;
 
 public:
+    virtual void fullClose() override;
+    
     NandMenu();
 };
 

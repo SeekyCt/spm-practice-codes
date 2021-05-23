@@ -28,5 +28,6 @@ To compile this yourself, you'll need the following:
 Once that's set up you can use `make rgX` to build region `rg` ('eu', 'us', 'jp' or 'kr') revision `X` (0-1 for eu & jp, 0-2 for us, 0 for kr) or just `make` to build for all regions and revisions.
 
 ## Credits
-* JohnP55 for help and suggestions creating the map change teleport effect.
 * This mod was made using the [SPM Rel Loader](https://github.com/SeekyCt/spm-rel-loader), which is based on the TTYD rel loader by PistonMiner, Zephiles, Jdaster64 and JasperRLZ.
+* JohnP55 for help and suggestions creating the map change teleport effect.
+* TheLordScruffy for the dolphin detection method.

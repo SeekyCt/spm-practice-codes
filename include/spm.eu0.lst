@@ -1,3 +1,10 @@
+/* OS Globals */
+
+800000e4:currentThread
+// more
+
+/* Dol */
+
 // Runtime.PPCEABI.H.a
 // __mem.c
 80004000:memcpy
@@ -79,6 +86,12 @@
 800de9b8:evtSetValue
 // bss
 8050ce30:evt_debug_put_reg_str
+// more
+
+// evt_door.c
+800e2610:evt_door_set_door_descs
+800e3588:evt_door_set_dokan_descs
+800e4118:evt_door_set_map_door_descs
 // more
 
 // evt_fade.c
@@ -179,6 +192,9 @@
 8019c54c:__assert2
 // more
 
+// debug.c
+8019e33c:OSPanic
+
 // fontmgr.c
 801a0070:FontDrawStart
 801a0150:FontDrawStart_alpha
@@ -200,6 +216,14 @@
 801a28ac:FontGetMessageWidth
 // more
 
+// romfont.c
+// text
+801a773c:romFontPrintGX
+801a7c44:romFontGetWidth
+// more
+// sdata
+805ae170:romfontWp
+
 // spmario.c
 // text
 801a7ddc:spmarioInit
@@ -216,6 +240,8 @@
 // 801a908c
 // sdata
 805ae178:gp
+// sbss
+805ae9c1:doShutdown
 
 // seqdef.c
 804287a8:seq_data
@@ -231,6 +257,11 @@
 805ae16c:memorySwp
 // more
 
+// DEMOInit.c
+801a94c8:DEMOBeforeRender
+801a9590:DEMODoneRender
+// more
+
 // wpadmgr.c
 80237688:wpadGetButtonsHeld
 802376b0:wpadGetButtonsPressed
@@ -238,6 +269,7 @@
 // more
 
 // spmario_snd.c
+80238598:spsndExit
 8023c93c:spsndBGMOn
 // more
 
@@ -246,15 +278,10 @@
 8023e434:relInit
 8023e444:loadRel
 8023e600:isRelLoaded
-// data
-805ae1a0:relHolder
+// sdata
+805ae1a0:relWp
 805ae1a4:relDecompName
 805ae1a8:relCompName
-
-// mtx.a
-// mtx.c
-8027a270:PSMTXIdentity
-// more
 
 // MSL_C.PPCEABI.bare.H.a
 // printf.c
@@ -274,21 +301,63 @@
 80270050:DCFlushRange
 802700d8:ICInvalidateRange
 // more
+// OSContext.c
+80270934:OSDumpContext
+// more
 // OSError.c
+// text
 80270c60:OSReport
+80270f78:__OSUnhandledException
 802729b8:OSFatal
+// more
+// rodata
+804ea600:exceptionMsg1
+804ea6ac:exceptionMsg2
+804ea710:exceptionMsg3
+// OSFont.c
+80273494:OSGetFontEncode
+80273868:OSLoadFont
+80273c48:OSGetFontTexel
 // more
 // OSInterrupt.c
 80273ed8:OSDisableInterrupts
 80273f00:OSRestoreInterrupts
+// OSReset.c
+80275fd4:OSShutdownSystem
+// more
+// OSThread.c
+80277ffc:OSSuspendThread
 // OSTime
 80278370:OSGetTime
+// more
+
+// mtx.a
+// mtx.c
+8027a270:PSMTXIdentity
+8027afac:C_MTXOrtho
+// more
+
+// vi.a
+// vi.c
+802837a8:VIWaitForRetrace
+8028472c:VIFlush
+802848ac:VISetBlack
+// more
+
+// gx.a
+// GXTransform.c
+80294214:GXSetProjection
 // more
 
 // mem.a
 // mem_expHeap.c
 80295cb8:MEMGetAllocatableSizeForExpHeapEx
 80295d90:MEMGetSizeForMBlockExpHeap
+
+// ipc.a
+80298268:IOS_Open
+80298448:IOS_Close
+// more
 
 // NAND.a
 8029983c:NANDCreateAsync
@@ -306,3 +375,9 @@
 802e2598:lzss10GetDecompSize
 802e25d8:lzss10Decompress
 802e270c:lzss10ParseHeader
+
+/* Rel */
+
+// machi.c
+80c4abe0:evt_machi_set_elv_descs
+// more

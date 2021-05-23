@@ -24,14 +24,13 @@ MapDoorWindow::MapDoorWindow()
 
 void MapDoorWindow::disp()
 {
-	// Don't draw over menu, if disabled or if not in game
-	if ((MenuWindow::sCurMenu != nullptr) || (spm::seqdrv::seqGetSeq() != spm::seqdrv::SEQ_GAME)
-      || !settings->hudOptions[OPTION_MAP_DOOR])
-		return;
+    // Don't draw over menu, if disabled or if not in game
+    if ((MenuWindow::sCurMenu != nullptr) || (spm::seqdrv::seqGetSeq() != spm::seqdrv::SEQ_GAME) || !settings->hudMapDoor)
+        return;
 
     // Create strings
-	wii::stdio::sprintf(mMapMsg, "map: %s", spm::spmario::gp->mapName);
-	wii::stdio::sprintf(mDoorMsg, "door: %s", spm::spmario::gp->doorName);
+    wii::stdio::sprintf(mMapMsg, "map: %s", spm::spmario::gp->mapName);
+    wii::stdio::sprintf(mDoorMsg, "door: %s", spm::spmario::gp->doorName);
 
     // Draw strings
     drawString(mMapMsg, mPosX, mPosY, &mColour, mScale, true);
