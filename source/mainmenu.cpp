@@ -10,6 +10,7 @@
 #include "statmenu.h"
 
 #include <types.h>
+#include <spm/evtmgr.h>
 #include <spm/fontmgr.h>
 
 namespace mod {
@@ -111,6 +112,25 @@ MainMenu::MainMenu()
 
             delete MenuWindow::sCurMenu;
             MenuWindow::sCurMenu = new QuitMenu();
+            return false;
+        }
+    );
+    y -= FONT_HEIGHT + 5;
+    mOptions[n++] = new MenuButton(this, "Save Game", optionsX, y,
+        [](MenuButton * button, void * param)
+        {
+            // Parameters aren't needed
+            (void) button;
+            (void) param;
+
+            // Close menu
+            delete MenuWindow::sCurMenu;
+            MenuWindow::sCurMenu = nullptr;
+
+            // Run save script
+            spm::evtmgr::evtEntry((spm::evtmgr::EvtScriptCode *) 0x8041b6d8, 0, 0);
+
+            // Signal that the menu was closed
             return false;
         }
     );
