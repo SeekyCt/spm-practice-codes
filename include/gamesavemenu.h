@@ -9,8 +9,6 @@
 
 namespace mod {
 
-#define MAIN_MENU_OPTION_COUNT 9
-
 class GameSaveMenu : public MenuWindow
 {
 private:

@@ -43,7 +43,7 @@ struct MapGroup
 // TODO: korea maps?
 static MapGroup groups[] = {
     {"aa1",  2}, {"aa2",  2}, {"aa3",  1}, {"aa4",  1}, // cutscene
-    {"bos",  1}, {"dos",  1}, {"dan", 70}, {"mac", 30}, // misc
+    {"bos",  1}, {"dos",  1},/* {"dan", 70}, */{"mac", 30}, // misc
     {"he1",  6}, {"he2",  9}, {"he3",  8}, {"he4", 12}, // chapter 1
     {"mi1", 11}, {"mi2", 11}, {"mi3",  6}, {"mi4", 15}, // chapter 2
     {"ta1",  9}, {"ta2",  6}, {"ta3",  8}, {"ta4", 15}, // chapter 3
@@ -135,6 +135,7 @@ void MapSelectMenu::mapUp(MenuScroller * button, void * param)
     {
         map = 1;
     }
+    /*
     else if (wii::string::strcmp(groups[group].name, "dan") == 0)
     {
         // dan is missing 5-10, 15-20, 25-29, 31-40, 45-60, 65-69
@@ -160,6 +161,7 @@ void MapSelectMenu::mapUp(MenuScroller * button, void * param)
                 break;
         }
     }
+    */
     else if (wii::string::strcmp(groups[group].name, "mac") == 0)
     {
         // mac is missing 10, 13, 20-21, 23-29
@@ -201,6 +203,7 @@ void MapSelectMenu::mapDown(MenuScroller * scroller, void * param)
     {
         map = groups[group].count;
     }
+    /*
     else if (wii::string::strcmp(groups[group].name, "dan") == 0)
     {
         // dan is missing 5-10, 15-20, 25-29, 31-40, 45-60, 65-69
@@ -226,6 +229,7 @@ void MapSelectMenu::mapDown(MenuScroller * scroller, void * param)
                 break;
         }
     }
+    */
     else if (wii::string::strcmp(groups[group].name, "mac") == 0)
     {
         // mac is missing 10, 13, 20-21, 23-29
@@ -299,15 +303,6 @@ bool MapSelectMenu::doMapChange(MenuButton * button, void * param)
     return false;
 }
 
-EVT_DECLARE_USER_FUNC(evt_get_cur_pixl, 1)
-
-int evt_get_cur_pixl(spm::evtmgr::EvtEntry * entry, bool firstRun)
-{
-    int pixl = spm::mario_pouch::pouchGetCurPixl();
-    spm::evtmgr_cmd::evtSetValue(entry, entry->pCurData[0], pixl);
-    return 2;
-}
-
 // Script to animate the player vanishing and change the map
 static EVT_BEGIN(map_change_effect)
 
@@ -334,9 +329,9 @@ static EVT_BEGIN(map_change_effect)
     WAIT_FRM(60)
 
     // Change map
-    USER_FUNC(spm::evt_seq::evt_seq_set_seq, 3, PTR(MapSelectMenu::sFullMapStr), PTR(MapSelectMenu::sDoorStr))
+    USER_FUNC(spm::evt_seq::evt_seq_set_seq, spm::seqdrv::SEQ_MAPCHANGE, PTR(MapSelectMenu::sFullMapStr), PTR(MapSelectMenu::sDoorStr))
 
-RETURN()
+    RETURN()
 EVT_END()
 
 // Script to animate the player reappearing

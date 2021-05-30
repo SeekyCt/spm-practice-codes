@@ -6,6 +6,7 @@
 #include "mainmenu.h"
 #include "mod.h"
 #include "nandmenu.h"
+#include "pitselectmenu.h"
 #include "quitmenu.h"
 #include "scriptvarmenu.h"
 #include "statmenu.h"
@@ -29,6 +30,18 @@ MainMenu::MainMenu()
 
             delete MenuWindow::sCurMenu;
             MenuWindow::sCurMenu = new MapSelectMenu();
+            return false;
+        }
+    );
+    y -= FONT_HEIGHT + 5;
+    mOptions[n++] = new MenuButton(this, "Warp To Pit Floor", optionsX, y,
+        [](MenuButton * button, void * param)
+        {
+            (void) button;
+            (void) param;
+
+            delete MenuWindow::sCurMenu;
+            MenuWindow::sCurMenu = new PitSelectMenu();
             return false;
         }
     );
