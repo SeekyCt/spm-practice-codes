@@ -1,3 +1,4 @@
+#include "gamesavemenu.h"
 #include "hudmenu.h"
 #include "inventorymenu.h"
 #include "logmenu.h"
@@ -104,6 +105,19 @@ MainMenu::MainMenu()
         }
     );
     y -= FONT_HEIGHT + 5;
+    mOptions[n++] = new MenuButton(this, "Game Save Options", optionsX, y,
+        [](MenuButton * button, void * param)
+        {
+            // Parameters aren't needed
+            (void) button;
+            (void) param;
+
+            delete MenuWindow::sCurMenu;
+            MenuWindow::sCurMenu = new GameSaveMenu();
+            return false;
+        }
+    );
+    y -= FONT_HEIGHT + 5;
     mOptions[n++] = new MenuButton(this, "Return to Title Screen", optionsX, y,
         [](MenuButton * button, void * param)
         {
@@ -112,25 +126,6 @@ MainMenu::MainMenu()
 
             delete MenuWindow::sCurMenu;
             MenuWindow::sCurMenu = new QuitMenu();
-            return false;
-        }
-    );
-    y -= FONT_HEIGHT + 5;
-    mOptions[n++] = new MenuButton(this, "Save Game", optionsX, y,
-        [](MenuButton * button, void * param)
-        {
-            // Parameters aren't needed
-            (void) button;
-            (void) param;
-
-            // Close menu
-            delete MenuWindow::sCurMenu;
-            MenuWindow::sCurMenu = nullptr;
-
-            // Run save script
-            spm::evtmgr::evtEntry((spm::evtmgr::EvtScriptCode *) 0x8041b6d8, 0, 0);
-
-            // Signal that the menu was closed
             return false;
         }
     );
