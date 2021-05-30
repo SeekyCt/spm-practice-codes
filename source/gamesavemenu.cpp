@@ -1,5 +1,6 @@
 #include "evt_cmd.h"
 #include "gamesavemenu.h"
+#include "mainmenu.h"
 
 #include <types.h>
 #include <spm/evtmgr.h>
@@ -189,7 +190,7 @@ GameSaveMenu::GameSaveMenu()
 void GameSaveMenu::close()
 {
     delete MenuWindow::sCurMenu;
-    MenuWindow::sCurMenu = nullptr;
+    MenuWindow::sCurMenu = new MainMenu();
 }
 
 }
