@@ -73,7 +73,7 @@ void evtScriptLoggerPatch()
         [](EvtEntry * entry, const EvtScriptCode * script, u8 flags)
         {
             evtEntryLog(script);
-            return evtChildEntryOriginal(entry, script, flags);
+            return evtBrotherEntryOriginal(entry, script, flags);
         }
     );
 }

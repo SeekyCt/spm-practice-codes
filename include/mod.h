@@ -2,7 +2,7 @@
 
 namespace mod {
 
-#define MOD_VERSION "SPM Practice Codes v2"
+#define MOD_VERSION "SPM Practice Codes v3"
 
 extern bool isDolphin;
 
