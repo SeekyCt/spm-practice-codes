@@ -13,6 +13,7 @@ class GameSaveMenu : public MenuWindow
 {
 private:
     virtual void close() override;
+
 public:
     GameSaveMenu();
 };

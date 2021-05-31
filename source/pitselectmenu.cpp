@@ -75,9 +75,7 @@ void PitSelectMenu::floorUp(MenuScroller * scroller, void * param)
     // Increment and loop around if max floor reached
     int floor = instance->mFloor + 1;
     if (floor > 100)
-    {
         floor = 1;
-    }
 
     // Store new floor number and update display
     instance->mFloor = floor;
@@ -93,9 +91,7 @@ void PitSelectMenu::floorDown(MenuScroller * scroller, void * param)
     // Decrement and loop around if min floor reached
     int floor = instance->mFloor - 1;
     if (floor < 1)
-    {
         floor = 100;
-    }
 
     // Store new floor number and update display
     instance->mFloor = floor;
