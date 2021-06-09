@@ -2,9 +2,10 @@
 
 namespace mod {
 
-#define MOD_VERSION "SPM Practice Codes v3 DEV"
+#define MOD_VERSION "SPM Practice Codes v4 DEV"
 
-extern bool isDolphin;
+extern bool gIsDolphin;
+extern bool gIs4_3;
 
 void main();
 

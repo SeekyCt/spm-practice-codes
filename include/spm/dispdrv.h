@@ -1,15 +1,9 @@
 #pragma once
 
 #include <types.h>
+#include <spm/camdrv.h>
 
 namespace spm::dispdrv {
-
-enum
-{
-    // 0-12 unknown
-    CAM_DEBUG = 13,
-    CAM_DEBUG_3D = 14
-};
 
 typedef void (DispCallback)(s8 cameraId, void * param);
 

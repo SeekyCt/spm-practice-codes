@@ -108,7 +108,7 @@ extern "C" void exceptionMessageHandler(char * msg)
     f32 bottomY = getBottomY(msg);
     f32 yShift = topY;
     f32 delta = bottomY <= SCREEN_BOTTOM ? 1.0f : 0.0f;
-    f32 scale = isDolphin ? 0.7f : 0.55f; // dolphin uses a custom font for copyright reasons
+    f32 scale = gIsDolphin ? 0.7f : 0.55f; // dolphin uses a custom font for copyright reasons
     while (true)
     {
         // Check if power button was pressed

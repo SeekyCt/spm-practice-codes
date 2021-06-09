@@ -43,6 +43,10 @@
 8003ab80:windowDispGX2_Waku_col
 // more
 
+// camdrv.c
+80055b24:camGetPtr
+// more
+
 // dispdrv.c
 8005af04:dispEntry
 // more
