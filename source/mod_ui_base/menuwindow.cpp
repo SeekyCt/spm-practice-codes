@@ -2,6 +2,7 @@
 
 #include <types.h>
 #include <spm/fontmgr.h>
+#include <spm/hud.h>
 #include <spm/pausewin.h>
 #include <spm/wpadmgr.h>
 
@@ -28,8 +29,9 @@ MenuWindow::MenuWindow()
     mButtons = nullptr;
     mCurButton = nullptr;
 
-    // Pause game
+    // Pause game and hide hud
     spm::pausewin::pausewinPauseGame();
+    spm::hud::hudHide();
 }
 
 MenuWindow::~MenuWindow()

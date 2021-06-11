@@ -203,6 +203,7 @@
 
 // hud.c
 80199490:hudLoadStats
+80199ad0:hudHide
 // more
 
 // system.c

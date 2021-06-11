@@ -6,6 +6,7 @@ namespace spm::hud {
 
 extern "C" {
 
+void hudHide();
 void hudLoadStats();
 
 }
