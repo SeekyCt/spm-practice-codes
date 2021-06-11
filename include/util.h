@@ -25,3 +25,9 @@
 
 // evt_get_cur_pixl(&ret)
 EVT_DECLARE_USER_FUNC(evt_get_cur_pixl, 1)
+
+// evt_freeze_game()
+EVT_DECLARE_USER_FUNC(evt_freeze_game, 0)
+
+// evt_unfreeze_game()
+EVT_DECLARE_USER_FUNC(evt_unfreeze_game, 0)

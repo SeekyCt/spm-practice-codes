@@ -2,12 +2,13 @@
 #include "consolewindow.h"
 #include "evtdebug.h"
 #include "exception.h"
+#include "gamesavemenu.h"
 #include "mainmenu.h"
 #include "mapdoorwindow.h"
-#include "mod.h"
-#include "patch.h"
 #include "mapselectmenu.h"
+#include "mod.h"
 #include "nandsettings.h"
+#include "patch.h"
 #include "romfontexpand.h"
 #include "scriptlog.h"
 #include "scriptvarlog.h"
@@ -178,6 +179,7 @@ void main()
     evtVarLogPatch();
     evtDebugPatch();
     nandSettingsPatch();
+    GameSaveMenu::pitSavePatch();
     MapSelectMenu::scanEntrances();
 }
 

@@ -146,6 +146,8 @@
 80121f48:marioGetPtr
 80122b68:marioCtrlOffChk
 80122b7c:marioKeyOffChk
+80122bf4:marioKeyOff
+80122c2c:marioKeyOn
 8012b50c:marioSetGravity
 // more
 
@@ -301,6 +303,8 @@
 805ae1a8:relCompName
 
 // nandmgr.c
+8023e9ec:nandGetSaveFiles
+8023edcc:nandUpdateSave
 8023efe0:nandLoadSave
 // more
 

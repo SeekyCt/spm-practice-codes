@@ -1,6 +1,8 @@
 #include "evt_cmd.h"
 #include "gamesavemenu.h"
 #include "mainmenu.h"
+#include "patch.h"
+#include "util.h"
 
 #include <types.h>
 #include <spm/evtmgr.h>
@@ -13,9 +15,18 @@
 #include <spm/seqdrv.h>
 #include <spm/spmario.h>
 #include <spm/spmario_snd.h>
+#include <wii/OSError.h>
 #include <wii/string.h>
 
 namespace mod {
+
+// Just running the save block script doesn't stop the player & enemies moving
+static EVT_BEGIN(save_wrapper_evt)
+    USER_FUNC(evt_freeze_game)
+    RUN_CHILD_EVT(spm::evt_mobj::mobj_save_blk_sysevt)
+    USER_FUNC(evt_unfreeze_game)
+    RETURN()
+EVT_END()
 
 static bool saveGame(MenuButton * button, void * param)
 {
@@ -27,7 +38,7 @@ static bool saveGame(MenuButton * button, void * param)
     MenuWindow::sCurMenu = nullptr;
 
     // Run save script
-    spm::evtmgr::evtEntry(spm::evt_mobj::mobj_save_blk_sysevt, 0, 0);
+    spm::evtmgr::evtEntryType(save_wrapper_evt, 0, 0, 0);
 
     // Signal that the menu was closed
     return false;
@@ -49,6 +60,8 @@ static bool reloadSave(MenuButton * button, void * param)
 
     // Load save file
     spm::nandmgr::nandLoadSave(spm::spmario::gp->saveFileId);
+
+    // Various tasks the game does after loading a save
     spm::spmario::gp->flags |= 4;
     spm::hud::hudLoadStats();
     switch (spm::evtmgr_cmd::evtGetValue(nullptr, GSW(21)))
@@ -191,6 +204,26 @@ void GameSaveMenu::close()
 {
     delete MenuWindow::sCurMenu;
     MenuWindow::sCurMenu = new MainMenu();
+}
+
+void (*nandUpdateSaveReal)(int saveId);
+
+void GameSaveMenu::pitSavePatch()
+{
+    // The game increments GSW(1), which indicates which pit room to load next, after the
+    // current room is loaded, so saving & reloading would put you into the next floor.
+    // This fixes that by decreasing GSW(1) in the save but not in the live game.
+    nandUpdateSaveReal = patch::hookFunction(spm::nandmgr::nandUpdateSave,
+        [](int saveId)
+        {
+            nandUpdateSaveReal(saveId);
+            if (wii::string::strncmp(spm::spmario::gp->mapName, "dan", 3) == 0)
+            {
+                spm::nandmgr::SaveFile * save = spm::nandmgr::nandGetSaveFiles() + saveId;
+                save->spmarioGlobals.gsw[1] -= 1;
+            }
+        }
+    );
 }
 
 }
