@@ -194,7 +194,7 @@ bool GameSaveMenu::openMainScreen(MenuButton * button, void * param)
     instance->exitScreen();
     instance->initMainScreen();
 
-    return true;
+    return false;
 }
 
 bool GameSaveMenu::openConfirmScreen(MenuButton * button, void * param)
@@ -204,7 +204,7 @@ bool GameSaveMenu::openConfirmScreen(MenuButton * button, void * param)
     instance->exitScreen();
     instance->initConfirmScreen();
 
-    return true;
+    return false;
 }
 
 void GameSaveMenu::initMainScreen()
