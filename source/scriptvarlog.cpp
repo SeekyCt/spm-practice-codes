@@ -31,7 +31,7 @@ static void evtVarLog(s32 type, s32 id, s32 value)
         return;
 
     char * p;
-    switch(settings->logOptions[OPTION_EVT_VAR_LOG])
+    switch(gSettings->logOptions[OPTION_EVT_VAR_LOG])
     {
         case LogType::NONE:
             break;

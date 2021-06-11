@@ -88,19 +88,19 @@ void NandMenu::disp()
             switch (mTask)
             {
                 case NandTask::LOAD:
-                    if (nandSettingsSuccess)
+                    if (gNandSettingsSuccess)
                         mMiddleMsg = "Loaded settings!";
                     else
                         mMiddleMsg = "No settings to load.";
                     break;
                 case NandTask::SAVE:
-                    if (nandSettingsSuccess)
+                    if (gNandSettingsSuccess)
                         mMiddleMsg = "Saved settings!";
                     else
                         mMiddleMsg = "Failed to save settings.";
                     break;
                 case NandTask::DELETE:
-                    if (nandSettingsSuccess)
+                    if (gNandSettingsSuccess)
                         mMiddleMsg = "Deleted saved settings!";
                     else
                         mMiddleMsg = "No saved settings to delete.";

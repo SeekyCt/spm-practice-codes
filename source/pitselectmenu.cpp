@@ -225,7 +225,7 @@ void PitSelectMenu::_doMapChange()
                 sMapName = "dan_44";
     }
 
-    if (settings->mapChangeEffect)
+    if (gSettings->mapChangeEffect)
     {
         // Run script with effects
         spm::evtmgr::evtEntry(map_change_effect_pit, 0, 0);
@@ -245,10 +245,10 @@ void PitSelectMenu::disp()
 
     // Toggle teleport if minus is pressed
     if (spm::wpadmgr::wpadGetButtonsPressed(0) & WPAD_BTN_MINUS)
-        settings->mapChangeEffect = !settings->mapChangeEffect;
+        gSettings->mapChangeEffect = !gSettings->mapChangeEffect;
     
     // Display option text
-    const char * msg = settings->mapChangeEffect ?
+    const char * msg = gSettings->mapChangeEffect ?
         "Display teleport effect (<icon PAD_MINUS 0.8 0 35 0><col ffffffff>): on" : 
         "Display teleport effect (<icon PAD_MINUS 0.8 0 35 0><col ffffffff>): off";
     drawMessage(msg, -320.0f, -100.0f, nullptr, 0.8f);

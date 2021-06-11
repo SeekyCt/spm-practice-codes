@@ -388,7 +388,7 @@ void MapSelectMenu::_doMapChange()
     else
         wii::string::strcpy(sDoorStr, groups[mGroup].entranceNames[mMap - 1]->names[mEntrance - 1]);
 
-    if (settings->mapChangeEffect)
+    if (gSettings->mapChangeEffect)
     {
         // Signal to play re-appear animation if enabled and not using a normal entrance
         spm::mapdata::MapData * md = spm::mapdata::mapDataPtr(sFullMapStr);
@@ -437,10 +437,10 @@ void MapSelectMenu::disp()
 
     // Toggle teleport if minus is pressed
     if (spm::wpadmgr::wpadGetButtonsPressed(0) & WPAD_BTN_MINUS)
-        settings->mapChangeEffect = !settings->mapChangeEffect;
+        gSettings->mapChangeEffect = !gSettings->mapChangeEffect;
     
     // Display option text
-    const char * msg = settings->mapChangeEffect ?
+    const char * msg = gSettings->mapChangeEffect ?
         "Display teleport effect (<icon PAD_MINUS 0.8 0 35 0><col ffffffff>): on" : 
         "Display teleport effect (<icon PAD_MINUS 0.8 0 35 0><col ffffffff>): off";
     drawMessage(msg, -320.0f, -100.0f, nullptr, 0.8f);

@@ -20,10 +20,10 @@ static wii::NAND::NANDFileInfo fileInfo;
 static wii::NAND::NANDCommandBlock commandBlock;
 
 // Actual settings struct
-NandSettings * settings = reinterpret_cast<NandSettings *>(&_settings);
+NandSettings * gSettings = reinterpret_cast<NandSettings *>(&_settings);
 
 // Feedback for script callers
-int nandSettingsSuccess;
+int gNandSettingsSuccess;
 
 // Error handling helpers
 static wii::RGBA errorFg {0xff, 0xff, 0xff, 0xff};
@@ -66,14 +66,14 @@ EVT_BEGIN(nand_settings_load)
             USER_FUNC(evt_nandSettingsClose, LW(0))
             IF_EQUAL(LW(0), 0)
                 // If it closed, signal loading
-                SET_RAM(1, PTR(&nandSettingsSuccess))
+                SET_RAM(1, PTR(&gNandSettingsSuccess))
                 RETURN()
             END_IF()
         END_IF()
     ELSE()
         IF_EQUAL(LW(0), NAND_CODE_NOT_EXIST)
             // Signal not loading
-            SET_RAM(0, PTR(&nandSettingsSuccess))
+            SET_RAM(0, PTR(&gNandSettingsSuccess))
             RETURN()
         END_IF()
     END_IF()
@@ -106,7 +106,7 @@ EVT_BEGIN(nand_settings_write)
             GOTO(retry)
         ELSE()
             // If either failed, exit early
-            SET_RAM(0, PTR(&nandSettingsSuccess))
+            SET_RAM(0, PTR(&gNandSettingsSuccess))
             RETURN()
         END_IF()
     END_IF()
@@ -119,7 +119,7 @@ EVT_BEGIN(nand_settings_write)
             // Clean up if successful
             USER_FUNC(evt_nandSettingsClose, LW(0))
             IF_EQUAL(LW(0), 0)
-                SET_RAM(1, PTR(&nandSettingsSuccess))
+                SET_RAM(1, PTR(&gNandSettingsSuccess))
                 RETURN()
             END_IF()
         END_IF()
@@ -146,14 +146,14 @@ EVT_BEGIN(nand_settings_delete)
 
             IF_EQUAL(LW(0), NAND_CODE_OK)
                 // Signal success
-                SET_RAM(1, PTR(&nandSettingsSuccess))
+                SET_RAM(1, PTR(&gNandSettingsSuccess))
                 RETURN()
             END_IF()
         END_IF()
     ELSE()
         IF_EQUAL(LW(0), NAND_CODE_NOT_EXIST)
             // Signal there's no file to delete
-            SET_RAM(0, PTR(&nandSettingsSuccess))
+            SET_RAM(0, PTR(&gNandSettingsSuccess))
             RETURN()
         END_IF()
     END_IF()
@@ -241,25 +241,25 @@ s32 evt_nandSettingsRead(spm::evtmgr::EvtEntry * entry, bool firstRun)
         wii::OSError::OSReport("nandsettings: read with result %d, at %x, contents:\n", asyncResult.val, (u32) &_settings);
 
         // Dump contents for debugging
-        u32 * d = reinterpret_cast<u32 *>(settings);
-        for (u32 i = 0; i < (sizeof(*settings) / sizeof(u32)); i += 4)
+        u32 * d = reinterpret_cast<u32 *>(gSettings);
+        for (u32 i = 0; i < (sizeof(*gSettings) / sizeof(u32)); i += 4)
             wii::OSError::OSReport("%08x %08x %08x %08x\n", d[i], d[i+1], d[i+2], d[i+3]);
 
         // Handle settings version
-        switch (settings->version)
+        switch (gSettings->version)
         {
             case 1:
                 NandSettingsV1 v1;
-                wii::string::memcpy(&v1, settings, sizeof(v1));
+                wii::string::memcpy(&v1, gSettings, sizeof(v1));
                 wii::OSError::OSReport("nandsettings: updating settings v1->2.\n");
 
                 // Move relocated settings
                 // hudMapDoor and hudXYZ are already in place
-                settings->mapChangeEffect = v1.mapChangeEffect;
+                gSettings->mapChangeEffect = v1.mapChangeEffect;
 
                 // Initialise new settings
-                settings->xyzInterval = 4;
-                settings->xyzDP = 2;
+                gSettings->xyzInterval = 4;
+                gSettings->xyzDP = 2;
                 break;
 
             case SETTINGS_VER:
@@ -411,17 +411,17 @@ s32 evt_nandSettingsFail(spm::evtmgr::EvtEntry * entry, bool firstRun)
 
 void nandSettingsDefaults()
 {
-    settings->version = SETTINGS_VER;
+    gSettings->version = SETTINGS_VER;
 
     for (int i = 0; i < LOG_OPTION_COUNT; i++)
-        settings->logOptions[i] = LogType::NONE;
+        gSettings->logOptions[i] = LogType::NONE;
 
-    settings->hudMapDoor = false;
-    settings->hudXYZ = false;
-    settings->xyzInterval = 4;
-    settings->xyzDP = 2;
+    gSettings->hudMapDoor = false;
+    gSettings->hudXYZ = false;
+    gSettings->xyzInterval = 4;
+    gSettings->xyzDP = 2;
     
-    settings->mapChangeEffect = true;
+    gSettings->mapChangeEffect = true;
 }
 
 static bool (*isRelLoadedReal)() = nullptr;
@@ -437,7 +437,7 @@ bool loadOnBoot()
     else if ((evtId != -2) && (spm::evtmgr::evtCheckId(evtId) == false))
     {
         // If it didn't succeed, use defaults
-        if (!nandSettingsSuccess)
+        if (!gNandSettingsSuccess)
         {
             wii::OSError::OSReport("nandsettings: using defaults\n");
             nandSettingsDefaults();

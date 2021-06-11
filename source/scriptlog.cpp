@@ -17,7 +17,7 @@ namespace mod {
 static void evtEntryLog(const EvtScriptCode * script)
 {
     char * str;
-    switch (settings->logOptions[OPTION_SCRIPT_LOG])
+    switch (gSettings->logOptions[OPTION_SCRIPT_LOG])
     {
         case LogType::NONE:
             break;
