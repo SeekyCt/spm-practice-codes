@@ -1,3 +1,4 @@
+#include "mod_ui_base/centredbutton.h"
 #include "evt_cmd.h"
 #include "gamesavemenu.h"
 #include "mainmenu.h"
@@ -186,18 +187,57 @@ static bool reloadSave(MenuButton * button, void * param)
     return false;
 }
 
-GameSaveMenu::GameSaveMenu()
+bool GameSaveMenu::openMainScreen(MenuButton * button, void * param)
+{
+    GameSaveMenu * instance = reinterpret_cast<GameSaveMenu *>(param);
+
+    instance->exitScreen();
+    instance->initMainScreen();
+
+    return true;
+}
+
+bool GameSaveMenu::openConfirmScreen(MenuButton * button, void * param)
+{
+    GameSaveMenu * instance = reinterpret_cast<GameSaveMenu *>(param);
+
+    instance->exitScreen();
+    instance->initConfirmScreen();
+
+    return true;
+}
+
+void GameSaveMenu::initMainScreen()
 {
     const f32 optionsX = -330.0f;
-    f32 y = 170;
-    MenuButton * buttons[2];
-    buttons[0] = new MenuButton(this, "Save Game", optionsX, y, saveGame);
-    buttons[1] = new MenuButton(this, "Reload Save", optionsX, y - (FONT_HEIGHT + 5), reloadSave);
-    buttonLinkVertical(buttons[0], buttons[1]);
+    const f32 y = 170;
+    mButtons[0] = new MenuButton(this, "Save Game", optionsX, y, saveGame);
+    mButtons[1] = new MenuButton(this, "Reload Save", optionsX, y - (FONT_HEIGHT + 5), openConfirmScreen, this);
+    buttonLinkVertical(mButtons[0], mButtons[1]);
 
-    mCurButton = buttons[0];
-
+    mCurButton = mButtons[0];
     mTitle = "Game Save Options";
+}
+
+void GameSaveMenu::initConfirmScreen()
+{
+    mButtons[0] = new CentredButton(this, "Yes", 40.0f, reloadSave);
+    mButtons[1] = new CentredButton(this, "No", 0.0f, openMainScreen, this);
+    buttonLinkVertical(mButtons[0], mButtons[1]);
+
+    mCurButton = mButtons[1];
+    mTitle = "Are you sure you want to reload?";
+}
+
+void GameSaveMenu::exitScreen()
+{
+    delete mButtons[0];
+    delete mButtons[1];
+}
+
+GameSaveMenu::GameSaveMenu()
+{
+    initMainScreen();
 }
 
 void GameSaveMenu::close()
@@ -221,6 +261,7 @@ void GameSaveMenu::pitSavePatch()
             {
                 spm::nandmgr::SaveFile * save = spm::nandmgr::nandGetSaveFiles() + saveId;
                 save->spmarioGlobals.gsw[1] -= 1;
+                updateSaveChecksum(save);
             }
         }
     );
