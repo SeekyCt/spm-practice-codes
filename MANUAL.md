@@ -16,6 +16,15 @@ A full list of map names can be found [here](https://docs.google.com/document/d/
 
 By default a Dimentio teleport animation will play when you do this (thanks to JohnP55 for the idea and documentation of relevant functions), but you can turn that off by pressing `-` in the menu if you'd like.
 
+## Pit Warping
+The `Warp To Pit Floor` option in the menu allows you to warp to any floor of either Pit of 100 Trials.
+
+In the left column you can choose which pit you'd like to warp to, and in the right column you can choose the floor of that pit. These can be scrolled through using the D-Pad.
+
+Once you've chosen the floor and pit you'd like to warp to, press `2`.
+
+By default a Dimentio teleport animation will play when you do this (thanks to JohnP55 for the idea and documentation of relevant functions), but you can turn that off by pressing `-` in the menu if you'd like.
+
 ## HUD Displays
 The `Edit HUD Display Options` option in the menu allows you to enable and disable various displays on the screen. The list can be navigated with the D-Pad and `2` can be pressed to switch between Enabled and Disabled.
 
@@ -52,6 +61,9 @@ The `Edit Stats` option in the menu allows you to change the values of your Leve
 
 ## Saved Settings
 The `Manage Saved Settings` option in the menu allows you to save your settings for the mod to your Wii's NAND (to the file `pcset.bin` in the game's save folder) and they'll automatically load next time you boot the mod. You can also load your saved settings, load the default settings or delete them from your NAND. 
+
+## Game Saving and Reloading
+The `Game Save Options` option in the menu allows you to save the game anywhere (it's recommended to make a backup of your save file before using this feature, if you do have any issues with it please report them either as an issue in the Github repo or by contacting me on Discord) and to reload the current save file.
 
 ## Return to Title Screen
 The `Return to Title Screen` option allows you to return to the main menu without needing to game over or reboot.
