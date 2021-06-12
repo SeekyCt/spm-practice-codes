@@ -14,7 +14,7 @@ TitleTextWindow::TitleTextWindow()
     mMsg = MOD_VERSION;
     mScale = 0.8f;
     mPosX = -(spm::fontmgr::FontGetMessageWidth(mMsg) * mScale) / 2;
-    mPosY = 200.0f;
+    mPosY = gIs4_3 ? 260.0f : 200.0f;
     mColour = {0, 0xff, 0, 0xff};
 }
 

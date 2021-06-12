@@ -1,5 +1,8 @@
 #pragma once
 
+#include <spm/evtmgr.h>
+#include <spm/nandmgr.h>
+
 #define ARRAY_SIZEOF(ary) (sizeof((ary))/sizeof((ary)[0]))
 
 #define NYBBLE_0(n) (((n) >> 28) & 0xf)
@@ -20,3 +23,17 @@
 #define IS_BYTE(n) (((n) & ~0xff) == 0)
 
 #define ROUND_UP_32(n) (((n) + 0x1f) & ~0x1f)
+
+// evt_get_cur_pixl(&ret)
+EVT_DECLARE_USER_FUNC(evt_get_cur_pixl, 1)
+
+// evt_freeze_game()
+EVT_DECLARE_USER_FUNC(evt_freeze_game, 0)
+
+// evt_unfreeze_game()
+EVT_DECLARE_USER_FUNC(evt_unfreeze_game, 0)
+
+void updateSaveChecksum(spm::nandmgr::SaveFile * save);
+
+const char * getGameRegion();
+int getGameRevision();

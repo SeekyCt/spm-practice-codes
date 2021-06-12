@@ -26,18 +26,18 @@ XYZWindow::XYZWindow()
 void XYZWindow::disp()
 {
     // Don't draw over menu, if disabled or if not in game
-    if ((MenuWindow::sCurMenu != nullptr) || (spm::seqdrv::seqGetSeq() != spm::seqdrv::SEQ_GAME) || !settings->hudXYZ)
+    if ((MenuWindow::sCurMenu != nullptr) || (spm::seqdrv::seqGetSeq() != spm::seqdrv::SEQ_GAME) || !gSettings->hudXYZ)
         return;
 
     // Update if interval has passed / is disabled
-    if (++mFrameCount > settings->xyzInterval)
+    if (++mFrameCount > gSettings->xyzInterval)
     {
         // Reset
         mFrameCount = 0;
 
         // Generate format for desired number of decimal places
         char fmt[9];
-        wii::stdio::sprintf(fmt, "%%c: %%.%df", settings->xyzDP);
+        wii::stdio::sprintf(fmt, "%%c: %%.%df", gSettings->xyzDP);
 
         // Create strings
         spm::mario::MarioWork * mp = spm::mario::marioGetPtr();

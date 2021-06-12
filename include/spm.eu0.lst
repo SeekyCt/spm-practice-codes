@@ -43,6 +43,10 @@
 8003ab80:windowDispGX2_Waku_col
 // more
 
+// camdrv.c
+80055b24:camGetPtr
+// more
+
 // dispdrv.c
 8005af04:dispEntry
 // more
@@ -116,8 +120,12 @@
 // more
 
 // evt_mobj.c
+// text
 800f3608:evt_mobj_delete
 800f8be8:evt_mobj_blk
+// more
+// data
+8041b6d8:mobj_save_blk_sysevt
 // more
 
 // evt_msg.c
@@ -138,6 +146,8 @@
 80121f48:marioGetPtr
 80122b68:marioCtrlOffChk
 80122b7c:marioKeyOffChk
+80122bf4:marioKeyOff
+80122c2c:marioKeyOn
 8012b50c:marioSetGravity
 // more
 
@@ -165,6 +175,10 @@
 80179140:seq_logoMain
 // more
 
+// seq_mapchange.c
+8017af98:_unload
+// more
+
 // seq_game.c
 8017ce44:seq_gameInit
 // more
@@ -185,6 +199,11 @@
 
 // charpixlitemwin.c
 80195f98:charPixlItemWinIsClosed
+// more
+
+// hud.c
+80199490:hudLoadStats
+80199ad0:hudHide
 // more
 
 // system.c
@@ -271,6 +290,7 @@
 // spmario_snd.c
 80238598:spsndExit
 8023c93c:spsndBGMOn
+8023c948:spsndBGMOff_f_d
 // more
 
 // relmgr.c
@@ -282,6 +302,12 @@
 805ae1a0:relWp
 805ae1a4:relDecompName
 805ae1a8:relCompName
+
+// nandmgr.c
+8023e9ec:nandGetSaveFiles
+8023edcc:nandUpdateSave
+8023efe0:nandLoadSave
+// more
 
 // MSL_C.PPCEABI.bare.H.a
 // printf.c

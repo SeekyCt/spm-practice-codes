@@ -42,6 +42,8 @@ extern "C" {
 MarioWork * marioGetPtr();
 bool marioCtrlOffChk();
 bool marioKeyOffChk();
+int marioKeyOff();
+int marioKeyOn();
 void marioSetGravity(s32 type);
 
 }

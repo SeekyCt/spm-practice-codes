@@ -2,6 +2,7 @@
 #include "patch.h"
 
 #include <types.h>
+#include <spm/camdrv.h>
 #include <spm/dispdrv.h>
 #include <spm/msgdrv.h>
 #include <spm/fontmgr.h>
@@ -148,7 +149,7 @@ void Window::windowDisp(s8 camId, void * param)
 void Window::windowMain()
 {
     // Schedule windowDisp to run this frame on the debug 3d camera
-    spm::dispdrv::dispEntry(spm::dispdrv::CAM_DEBUG_3D, 2, 0.0f, Window::windowDisp, 0);
+    spm::dispdrv::dispEntry(spm::camdrv::CAM_DEBUG_3D, 2, 0.0f, Window::windowDisp, 0);
 }
 
 }

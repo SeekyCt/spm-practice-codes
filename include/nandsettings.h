@@ -53,13 +53,13 @@ struct NandSettings
     bool mapChangeEffect;
 };
 
-extern NandSettings * settings;
+extern NandSettings * gSettings;
 
 EVT_DECLARE(nand_settings_load);
 EVT_DECLARE(nand_settings_write);
 EVT_DECLARE(nand_settings_delete);
 
-extern int nandSettingsSuccess;
+extern int gNandSettingsSuccess;
 
 void nandSettingsDefaults();
 void nandSettingsPatch();

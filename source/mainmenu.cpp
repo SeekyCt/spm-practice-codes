@@ -1,3 +1,4 @@
+#include "gamesavemenu.h"
 #include "hudmenu.h"
 #include "inventorymenu.h"
 #include "logmenu.h"
@@ -5,11 +6,13 @@
 #include "mainmenu.h"
 #include "mod.h"
 #include "nandmenu.h"
+#include "pitselectmenu.h"
 #include "quitmenu.h"
 #include "scriptvarmenu.h"
 #include "statmenu.h"
 
 #include <types.h>
+#include <spm/evtmgr.h>
 #include <spm/fontmgr.h>
 
 namespace mod {
@@ -27,6 +30,18 @@ MainMenu::MainMenu()
 
             delete MenuWindow::sCurMenu;
             MenuWindow::sCurMenu = new MapSelectMenu();
+            return false;
+        }
+    );
+    y -= FONT_HEIGHT + 5;
+    mOptions[n++] = new MenuButton(this, "Warp To Pit Floor", optionsX, y,
+        [](MenuButton * button, void * param)
+        {
+            (void) button;
+            (void) param;
+
+            delete MenuWindow::sCurMenu;
+            MenuWindow::sCurMenu = new PitSelectMenu();
             return false;
         }
     );
@@ -99,6 +114,19 @@ MainMenu::MainMenu()
 
             delete MenuWindow::sCurMenu;
             MenuWindow::sCurMenu = new NandMenu();
+            return false;
+        }
+    );
+    y -= FONT_HEIGHT + 5;
+    mOptions[n++] = new MenuButton(this, "Game Save Options", optionsX, y,
+        [](MenuButton * button, void * param)
+        {
+            // Parameters aren't needed
+            (void) button;
+            (void) param;
+
+            delete MenuWindow::sCurMenu;
+            MenuWindow::sCurMenu = new GameSaveMenu();
             return false;
         }
     );

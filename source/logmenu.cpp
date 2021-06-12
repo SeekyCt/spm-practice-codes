@@ -41,19 +41,19 @@ bool LogMenu::optionCycle(MenuButton * button, void * param)
     }
 
     instance->mCurButton = instance->mOptions[i].value;
-    switch (settings->logOptions[i])
+    switch (gSettings->logOptions[i])
     {
         case LogType::NONE:
-            settings->logOptions[i] = LogType::OSREPORT;
+            gSettings->logOptions[i] = LogType::OSREPORT;
             break;
         case LogType::OSREPORT:
-            settings->logOptions[i] = LogType::SCREEN;
+            gSettings->logOptions[i] = LogType::SCREEN;
             break;
         case LogType::SCREEN:
-            settings->logOptions[i] = LogType::NONE;
+            gSettings->logOptions[i] = LogType::NONE;
             break;
     }
-    instance->mOptions[i].value->mMsg = getValueName(settings->logOptions[i]);
+    instance->mOptions[i].value->mMsg = getValueName(gSettings->logOptions[i]);
 
     return true;
 }
@@ -67,7 +67,7 @@ LogMenu::LogMenu()
     for (int i = 0; i < LOG_OPTION_COUNT; i++)
     {
         mOptions[i].label = new MenuButton(this, optionNames[i], labelX, y, nullptr, nullptr, false, 0.8f);
-        mOptions[i].value = new MenuButton(this, getValueName(settings->logOptions[i]), valueX, y, optionCycle, this, false, 0.8f);
+        mOptions[i].value = new MenuButton(this, getValueName(gSettings->logOptions[i]), valueX, y, optionCycle, this, false, 0.8f);
         y -= (FONT_HEIGHT * 0.8f) + 5;
         if (i != 0)
             buttonLinkVertical(mOptions[i-1].value, mOptions[i].value);

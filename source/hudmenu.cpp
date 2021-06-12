@@ -24,12 +24,12 @@ static const char * getValueName(bool state)
 
 void HudMenu::updateDelayStr()
 {
-    wii::stdio::sprintf(mDelayStr, "%d", settings->xyzInterval);
+    wii::stdio::sprintf(mDelayStr, "%d", gSettings->xyzInterval);
 }
 
 void HudMenu::updateDecimalPlaceStr()
 {
-    wii::stdio::sprintf(mDecimalPlaceStr, "%d", settings->xyzDP);
+    wii::stdio::sprintf(mDecimalPlaceStr, "%d", gSettings->xyzDP);
 }
 
 void HudMenu::optionToggle(MenuButton * button, bool &setting)
@@ -74,8 +74,8 @@ HudMenu::HudMenu()
     f32 y = 170;
     int i = 0;
 
-    OPTION("Map & Door Name Display", settings->hudMapDoor);
-    OPTION("Position Display", settings->hudXYZ);
+    OPTION("Map & Door Name Display", gSettings->hudMapDoor);
+    OPTION("Position Display", gSettings->hudXYZ);
 
     new MenuButton(this, "Position Update Delay", labelX, y, nullptr, nullptr, false, scale);
     updateDelayStr();
@@ -83,13 +83,13 @@ HudMenu::HudMenu()
         [](MenuScrollerH * scroller, void * param)
         {
             HudMenu * instance = reinterpret_cast<HudMenu *>(param);
-            instance->optionDelta(settings->xyzInterval, -1);
+            instance->optionDelta(gSettings->xyzInterval, -1);
             instance->updateDelayStr();
         },
         [](MenuScrollerH * scroller, void * param)
         {
             HudMenu * instance = reinterpret_cast<HudMenu *>(param);
-            instance->optionDelta(settings->xyzInterval, 1);
+            instance->optionDelta(gSettings->xyzInterval, 1);
             instance->updateDelayStr();
         },
         this, nullptr, nullptr, scale
@@ -102,13 +102,13 @@ HudMenu::HudMenu()
         [](MenuScrollerH * scroller, void * param)
         {
             HudMenu * instance = reinterpret_cast<HudMenu *>(param);
-            instance->optionDelta(settings->xyzDP, -1);
+            instance->optionDelta(gSettings->xyzDP, -1);
             instance->updateDecimalPlaceStr();
         },
         [](MenuScrollerH * scroller, void * param)
         {
             HudMenu * instance = reinterpret_cast<HudMenu *>(param);
-            instance->optionDelta(settings->xyzDP, 1);
+            instance->optionDelta(gSettings->xyzDP, 1);
             instance->updateDecimalPlaceStr();
         },
         this, nullptr, nullptr, scale

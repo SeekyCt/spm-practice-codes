@@ -2,12 +2,13 @@
 #include "consolewindow.h"
 #include "evtdebug.h"
 #include "exception.h"
+#include "gamesavemenu.h"
 #include "mainmenu.h"
 #include "mapdoorwindow.h"
-#include "mod.h"
-#include "patch.h"
 #include "mapselectmenu.h"
+#include "mod.h"
 #include "nandsettings.h"
+#include "patch.h"
 #include "romfontexpand.h"
 #include "scriptlog.h"
 #include "scriptvarlog.h"
@@ -15,6 +16,7 @@
 #include "xyzwindow.h"
 
 #include <types.h>
+#include <spm/camdrv.h>
 #include <spm/charpixlitemwin.h>
 #include <spm/codesections.h>
 #include <spm/effdrv.h>
@@ -36,7 +38,8 @@
 
 namespace mod {
 
-bool isDolphin;
+bool gIsDolphin;
+bool gIs4_3;
 
 /*
     seq_title hooks
@@ -136,23 +139,21 @@ void main()
     wii::OSError::OSReport(MOD_VERSION": main running\n");
 
     // Thanks to TheLordScruffy for telling me about this
-    isDolphin = wii::IPC::IOS_Open("/sys", 1) == -106;
+    gIsDolphin = wii::IPC::IOS_Open("/sys", 1) == -106;
 
     // If they ever fix that, it'll be in a version that's definitely new enough to have /dev/dolphin
-    if (!isDolphin)
+    if (!gIsDolphin)
     {
         int ret = wii::IPC::IOS_Open("/dev/dolphin", 0);
         if (ret >= 0)
         {
-            isDolphin = true;
+            gIsDolphin = true;
             wii::IPC::IOS_Close(ret);
         }
     }
 
-    wii::OSError::OSReport("isDolphin: %d\n", isDolphin);
-    
     // Fix dolphin hanging on game shutdown
-    if (isDolphin)
+    if (gIsDolphin)
         writeWord(spm::spmario_snd::spsndExit, 0, BLR);
 
     romfontExpand();
@@ -160,6 +161,12 @@ void main()
 
     assertf(spm::relmgr::relWp->relFile == (void *) REL_LOAD_ADDR, "relF loaded at unexpected address 0x%x",
             (u32) spm::relmgr::relWp->relFile);
+
+    // Handle 4:3
+    spm::camdrv::CamEntry * cam = spm::camdrv::camGetPtr(spm::camdrv::CAM_DEBUG_3D);
+    gIs4_3 = (cam->flag & CAM_FLAG_16_9) == 0;
+    if (gIs4_3)
+        cam->pos.z = 1350.0f;
 
     ConsoleWindow::sInstance = new ConsoleWindow();
     MapDoorWindow::sInstance = new MapDoorWindow();
@@ -172,6 +179,7 @@ void main()
     evtVarLogPatch();
     evtDebugPatch();
     nandSettingsPatch();
+    GameSaveMenu::pitSavePatch();
     MapSelectMenu::scanEntrances();
 }
 

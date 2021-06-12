@@ -199,3 +199,16 @@
 80296118:IOS_Open
 802962F8:IOS_Close
 80C09180:evt_machi_set_elv_descs
+
+// new to v4
+80055A2C:camGetPtr
+803DD090:mobj_save_blk_sysevt
+801221B8:marioKeyOff
+801221F0:marioKeyOn
+8017A35C:_unload
+801986BC:hudLoadStats
+80198CFC:hudHide
+8023AA38:spsndBGMOff_f_d
+8023CA3C:nandGetSaveFiles
+8023CE1C:nandUpdateSave
+8023d030:nandLoadSave

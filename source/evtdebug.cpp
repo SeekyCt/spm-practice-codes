@@ -15,7 +15,7 @@ static s32 debugPutMsg(spm::evtmgr::EvtEntry * entry)
 {
     // Write first arg to on-screen console
     const char * str = (char *) spm::evtmgr_cmd::evtGetValue(entry, entry->pCurData[0]);
-    switch (settings->logOptions[OPTION_DEBUG_INSTR])
+    switch (gSettings->logOptions[OPTION_DEBUG_INSTR])
     {
         case LogType::NONE:
             break;
@@ -35,7 +35,7 @@ static s32 debugPutMsg(spm::evtmgr::EvtEntry * entry)
 static s32 debugPutReg(s32 ret)
 {
     char * str;
-    switch(settings->logOptions[OPTION_DEBUG_INSTR])
+    switch(gSettings->logOptions[OPTION_DEBUG_INSTR])
     {
         case LogType::NONE:
             break;
