@@ -25,7 +25,6 @@ public:
     GameSaveMenu();
 
     static void pitSavePatch();
-    
 };
 
 }

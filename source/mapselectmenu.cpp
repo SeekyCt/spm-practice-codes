@@ -54,7 +54,7 @@ static MapGroup groups[] = {
     {"an1", 1, 11}, {"an2", 1, 10}, {"an3",  1, 16}, {"an4", 1, 12}, // chapter 7
     {"ls1", 1, 12}, {"ls2", 1, 18}, {"ls3",  1, 13}, {"ls4", 1, 13}, // chapter 8
 //  {"mg1", 1,  1}, {"mg2", 1,  5}, {"mg3",  1,  5}, {"mg4", 1,  1}, // minigames
-//  {"tst", 1,  2}, {"kaw", 1,  5}                                  // half-removed
+//  {"tst", 1,  2}, {"kaw", 1,  5}                                   // half-removed
 };
 
 char MapSelectMenu::sFullMapStr[7];
