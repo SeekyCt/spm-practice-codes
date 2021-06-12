@@ -36,24 +36,25 @@ struct EntranceNameList
 struct MapGroup
 {
     char name[4];
+    u16 firstId;
     u16 count;
     EntranceNameList ** entranceNames;
 };
 
 // TODO: korea maps?
 static MapGroup groups[] = {
-    {"aa1",  2}, {"aa2",  2}, {"aa3",  1}, {"aa4",  1}, // cutscene
-    {"bos",  1}, {"dos",  1},/* {"dan", 70}, */{"mac", 30}, // misc
-    {"he1",  6}, {"he2",  9}, {"he3",  8}, {"he4", 12}, // chapter 1
-    {"mi1", 11}, {"mi2", 11}, {"mi3",  6}, {"mi4", 15}, // chapter 2
-    {"ta1",  9}, {"ta2",  6}, {"ta3",  8}, {"ta4", 15}, // chapter 3
-    {"sp1",  7}, {"sp2", 10}, {"sp3",  7}, {"sp4", 17}, // chapter 4
-    {"gn1",  5}, {"gn2",  6}, {"gn3", 16}, {"gn4", 17}, // chapter 5
-    {"wa1", 27}, {"wa2", 25}, {"wa3", 25}, {"wa4", 26}, // chapter 6
-    {"an1", 11}, {"an2", 10}, {"an3", 16}, {"an4", 12}, // chapter 7
-    {"ls1", 12}, {"ls2", 18}, {"ls3", 13}, {"ls4", 13}, // chapter 8
-//  {"mg1",  1}, {"mg2",  5}, {"mg3",  5}, {"mg4",  1}, // minigames
-//  {"tst",  2}, {"kaw",  5}                            // half-removed
+    {"aa1", 1,  2}, {"aa2", 1,  2}, {"aa3",  1,  1}, {"aa4", 1,  1}, // cutscene
+    {"bos", 1,  1}, {"dos", 1,  1}, {"dan", 11, 14}, {"mac", 1, 30}, // misc
+    {"he1", 1,  6}, {"he2", 1,  9}, {"he3",  1,  8}, {"he4", 1, 12}, // chapter 1
+    {"mi1", 1, 11}, {"mi2", 1, 11}, {"mi3",  1,  6}, {"mi4", 1, 15}, // chapter 2
+    {"ta1", 1,  9}, {"ta2", 1,  6}, {"ta3",  1,  8}, {"ta4", 1, 15}, // chapter 3
+    {"sp1", 1,  7}, {"sp2", 1, 10}, {"sp3",  1,  7}, {"sp4", 1, 17}, // chapter 4
+    {"gn1", 1,  5}, {"gn2", 1,  6}, {"gn3",  1, 16}, {"gn4", 1, 17}, // chapter 5
+    {"wa1", 1, 27}, {"wa2", 1, 25}, {"wa3",  1, 25}, {"wa4", 1, 26}, // chapter 6
+    {"an1", 1, 11}, {"an2", 1, 10}, {"an3",  1, 16}, {"an4", 1, 12}, // chapter 7
+    {"ls1", 1, 12}, {"ls2", 1, 18}, {"ls3",  1, 13}, {"ls4", 1, 13}, // chapter 8
+//  {"mg1", 1,  1}, {"mg2", 1,  5}, {"mg3",  1,  5}, {"mg4", 1,  1}, // minigames
+//  {"tst", 1,  2}, {"kaw", 1,  5}                                  // half-removed
 };
 
 char MapSelectMenu::sFullMapStr[7];
@@ -88,7 +89,7 @@ void MapSelectMenu::groupUp(MenuScroller * scroller, void * param)
     // Decrement group and reset map & entrance
     MapSelectMenu * instance = reinterpret_cast<MapSelectMenu *>(param);
     instance->mGroup -= 1;
-    instance->mMap = 1;
+    instance->mMap = groups[instance->mGroup].firstId;
     instance->mEntrance = 0;
 
     // Loop around if the end of the group list is reached
@@ -108,7 +109,7 @@ void MapSelectMenu::groupDown(MenuScroller * scroller, void * param)
     // Increment group and reset map
     MapSelectMenu * instance = reinterpret_cast<MapSelectMenu *>(param);
     instance->mGroup += 1;
-    instance->mMap = 1;
+    instance->mMap = groups[instance->mGroup].firstId;
     instance->mEntrance = 0;
 
     // Loop around if the end of the group list is reached
@@ -133,35 +134,8 @@ void MapSelectMenu::mapUp(MenuScroller * button, void * param)
     // Validate map number
     if (map > groups[group].count)
     {
-        map = 1;
+        map = groups[group].firstId;
     }
-    /*
-    else if (wii::string::strcmp(groups[group].name, "dan") == 0)
-    {
-        // dan is missing 5-10, 15-20, 25-29, 31-40, 45-60, 65-69
-        switch (map)
-        {
-            case 5:
-                map = 11;
-                break;
-            case 15:
-                map = 21;
-                break;
-            case 25:
-                map = 30;
-                break;
-            case 31:
-                map = 41;
-                break;
-            case 45:
-                map = 61;
-                break;
-            case 65:
-                map = 70;
-                break;
-        }
-    }
-    */
     else if (wii::string::strcmp(groups[group].name, "mac") == 0)
     {
         // mac is missing 10, 13, 20-21, 23-29
@@ -199,37 +173,10 @@ void MapSelectMenu::mapDown(MenuScroller * scroller, void * param)
     int map = instance->mMap - 1;
 
     // Validate map number
-    if (map < 1)
+    if (map < groups[group].firstId)
     {
         map = groups[group].count;
     }
-    /*
-    else if (wii::string::strcmp(groups[group].name, "dan") == 0)
-    {
-        // dan is missing 5-10, 15-20, 25-29, 31-40, 45-60, 65-69
-        switch (map)
-        {
-            case 10:
-                map = 4;
-                break;
-            case 20:
-                map = 14;
-                break;
-            case 29:
-                map = 24;
-                break;
-            case 40:
-                map = 30;
-                break;
-            case 60:
-                map = 44;
-                break;
-            case 69:
-                map = 64;
-                break;
-        }
-    }
-    */
     else if (wii::string::strcmp(groups[group].name, "mac") == 0)
     {
         // mac is missing 10, 13, 20-21, 23-29
@@ -454,6 +401,13 @@ MapSelectMenu::MapSelectMenu()
     {
         // Extract current map number if group is valid
         wii::string::sscanf(spm::spmario::gp->mapName + 4, "%d", &mMap);
+
+        // dan has special handling since only the unused maps are available here
+        if (wii::string::strncmp(spm::spmario::gp->mapName, "dan", 3) == 0)
+        {
+            if ((mMap < 11) || (mMap > 14))
+                mMap = 11;
+        }
     }
     else
     {
