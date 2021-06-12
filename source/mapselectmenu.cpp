@@ -86,15 +86,16 @@ void MapSelectMenu::groupUp(MenuScroller * scroller, void * param)
 {
     (void) scroller;
 
-    // Decrement group and reset map & entrance
     MapSelectMenu * instance = reinterpret_cast<MapSelectMenu *>(param);
-    instance->mGroup -= 1;
-    instance->mMap = groups[instance->mGroup].firstId;
-    instance->mEntrance = 0;
 
-    // Loop around if the end of the group list is reached
+    // Decrement group, loop around if the end of the list is reached
+    instance->mGroup -= 1;
     if (instance->mGroup < 0)
         instance->mGroup = ARRAY_SIZEOF(groups) - 1;
+
+    // Reset map and entrance
+    instance->mMap = groups[instance->mGroup].firstId;
+    instance->mEntrance = 0;
 
     // Update displays
     instance->updateGroupDisp();
@@ -106,15 +107,16 @@ void MapSelectMenu::groupDown(MenuScroller * scroller, void * param)
 {
     (void) scroller;
 
-    // Increment group and reset map
     MapSelectMenu * instance = reinterpret_cast<MapSelectMenu *>(param);
-    instance->mGroup += 1;
-    instance->mMap = groups[instance->mGroup].firstId;
-    instance->mEntrance = 0;
 
-    // Loop around if the end of the group list is reached
+    // Increment group, loop around if the end of the list is reached
+    instance->mGroup += 1;
     if (instance->mGroup >= (int) ARRAY_SIZEOF(groups))
         instance->mGroup = 0;
+
+    // Reset map and entrance
+    instance->mMap = groups[instance->mGroup].firstId;
+    instance->mEntrance = 0;
     
     // Update displays
     instance->updateGroupDisp();
