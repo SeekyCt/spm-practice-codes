@@ -1,5 +1,6 @@
 #include "mod.h"
 #include "patch.h"
+#include "util.h"
 
 #include <types.h>
 #include <spm/fontmgr.h>
@@ -35,13 +36,24 @@ static void (*__OSUnhandledExceptionReal)(int p1, int p2, int p3, int p4);
 
 #define SCREEN_TOP 228.0f
 #define SCREEN_BOTTOM -228.0f
+#define TITLE_Y 208.0f
+#define TEXT_TOP (TITLE_Y - LINE_HEIGHT)
+#define TEXT_BOTTOM (SCREEN_BOTTOM - LINE_HEIGHT)
+#define TEXT_LEFT -300.0f
 #define LINE_HEIGHT 15.0f
+
+static void drawTitle(f32 scale)
+{
+    spm::romfont::romFontPrintGX(TEXT_LEFT, TITLE_Y, scale, {0xff, 0x20, 0x20, 0xff},
+                                 "Exception - " MOD_VERSION " - %s Revison %d",
+                                 getGameRegion(), getGameRevision());
+}
 
 static void draw(char * msg, f32 yShift, f32 scale)
 {
     char * p = msg;
     bool done = false;
-    const f32 x = -300.0f;
+    const f32 x = TEXT_LEFT;
     f32 y = 200.0f - yShift;
     while (!done)
     {
@@ -55,7 +67,7 @@ static void draw(char * msg, f32 yShift, f32 scale)
         *q = '\0';
         
         // Draw line if on screen
-        if ((y >= (SCREEN_BOTTOM - LINE_HEIGHT)) && (y <= SCREEN_TOP + LINE_HEIGHT))
+        if ((y >= TEXT_BOTTOM) && (y <= TEXT_TOP))
             spm::romfont::romFontPrintGX(x, y, scale, {0xff, 0xff, 0xff, 0xff}, p);
 
         // Move to next line
@@ -79,7 +91,7 @@ static f32 getBottomY(char * msg)
     }
 
     // Calculate
-    return SCREEN_TOP - (LINE_HEIGHT * n);
+    return TEXT_TOP - (LINE_HEIGHT * n);
 }
 
 extern "C" void exceptionMessageHandler(char * msg)
@@ -126,10 +138,13 @@ extern "C" void exceptionMessageHandler(char * msg)
         // Start frame
         wii::Mtx44 mtx;
         wii::DEMOInit::DEMOBeforeRender();
-        wii::mtx::C_MTXOrtho(&mtx, 228.0f, -228.0f, -304.0f, 304.0f, 1.0f, 1000.0f);
+        wii::mtx::C_MTXOrtho(&mtx, SCREEN_TOP, SCREEN_BOTTOM, -304.0f, 304.0f, 1.0f, 1000.0f);
         wii::GX::GXSetProjection(&mtx, 1);
 
-        // Render text
+        // Draw game & mod version header
+        drawTitle(scale);
+
+        // Render main text
         draw(msg, yShift, scale);
 
         // Scroll for next frame

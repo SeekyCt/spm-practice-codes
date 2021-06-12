@@ -34,3 +34,6 @@ EVT_DECLARE_USER_FUNC(evt_freeze_game, 0)
 EVT_DECLARE_USER_FUNC(evt_unfreeze_game, 0)
 
 void updateSaveChecksum(spm::nandmgr::SaveFile * save);
+
+const char * getGameRegion();
+int getGameRevision();

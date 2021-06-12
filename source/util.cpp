@@ -49,3 +49,27 @@ void updateSaveChecksum(spm::nandmgr::SaveFile * save)
     save->checksum = checksum;
     save->checksumNOT = ~checksum;
 }
+
+const char * getGameRegion()
+{
+    char * regionId = (char *)0x80000003;
+    switch(*regionId)
+    {
+        case 'P':
+            return "PAL";
+        case 'E':
+            return "NTSC-U";
+        case 'J':
+            return "NTSC-J";
+        case 'K':
+            return "NTSC-K";
+        default:
+            return "Invalid Region";
+    }
+}
+
+int getGameRevision()
+{
+    u8 * revision = (u8 *) 0x80000007;
+    return *revision;
+}
