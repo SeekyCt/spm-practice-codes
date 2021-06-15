@@ -73,7 +73,7 @@ void MenuWindow::disp()
     BgWindow::disp();
 
     // Draw title
-    static wii::RGBA white {0xff, 0xff, 0xff, 0xff};
+    const wii::RGBA white {0xff, 0xff, 0xff, 0xff};
     drawStringCentre(mTitle, mPosY - 5, &white, 0.9, true, false, false);
 
     // Render buttons
@@ -88,10 +88,12 @@ void MenuWindow::disp()
 
     // Handle inputs on current button
     if (mCurButton != nullptr)
+    {
         mCurButton->handleInputs(
             spm::wpadmgr::wpadGetButtonsPressed(0),
             spm::wpadmgr::wpadGetButtonsHeldRepeat(0)
         );
+    }
 }
 
 void MenuWindow::close()

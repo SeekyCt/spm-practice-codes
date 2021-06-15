@@ -19,7 +19,8 @@ void FontDrawRainbowColorOff();
 void FontDrawNoise();
 void FontDrawNoiseOff();
 void FontDrawColorIDX(u32 idx);
-void FontDrawColor(const wii::RGBA * color);
+// Overwrites color.a
+void FontDrawColor(wii::RGBA * color);
 void FontDrawColor_();
 u32 FontGetDrawColor();
 void FontDrawScale(float scale);

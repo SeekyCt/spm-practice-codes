@@ -2,8 +2,6 @@
 
 #include <types.h>
 #include <spm/fontmgr.h>
-#include <spm/wpadmgr.h>
-#include <spm/pausewin.h>
 #include <wii/wpad.h>
 
 namespace mod {
@@ -24,13 +22,9 @@ void MenuScroller::handleInputs(u32 btn, u32 btnRpt)
 {
     // Trigger scroll cbs if moving up or down
     if (btnRpt & WPAD_BTN_RIGHT)
-    {
         mScrollUpCb(this, mScrollParam);
-    }
     if (btnRpt & WPAD_BTN_LEFT)
-    {
         mScrollDownCb(this, mScrollParam);
-    }
 
     // Carry out default behaviour for other inputs
     btn &= ~(WPAD_BTN_RIGHT | WPAD_BTN_LEFT);

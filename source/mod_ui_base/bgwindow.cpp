@@ -3,7 +3,6 @@
 #include <types.h>
 #include <spm/windowdrv.h>
 #include <wii/mtx.h>
-#include <wii/types.h>
 
 namespace mod {
 

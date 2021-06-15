@@ -4,7 +4,6 @@
 #include <spm/icondrv.h>
 #include <spm/windowdrv.h>
 #include <wii/mtx.h>
-#include <wii/OSError.h>
 
 namespace mod {
 
