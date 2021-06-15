@@ -32,8 +32,6 @@
 #include <spm/wpadmgr.h>
 #include <wii/ipc.h>
 #include <wii/OSError.h>
-#include <wii/string.h>
-#include <wii/stdio.h>
 #include <wii/wpad.h>
 
 namespace mod {

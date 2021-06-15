@@ -4,9 +4,6 @@
 
 #include <types.h>
 #include <spm/fontmgr.h>
-#include <spm/seqdrv.h>
-#include <wii/OSError.h>
-#include <wii/string.h>
 #include <wii/stdio.h>
 
 namespace mod {

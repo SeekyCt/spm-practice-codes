@@ -5,7 +5,6 @@
 #include <types.h>
 #include <spm/fontmgr.h>
 #include <spm/seqdrv.h>
-#include <wii/OSError.h>
 
 namespace mod {
 

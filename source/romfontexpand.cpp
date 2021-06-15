@@ -4,9 +4,7 @@
 #include <spm/memory.h>
 #include <spm/romfont.h>
 #include <wii/OSCache.h>
-#include <wii/OSError.h>
 #include <wii/OSFont.h>
-#include <wii/stdio.h>
 #include <wii/string.h>
 
 namespace mod {

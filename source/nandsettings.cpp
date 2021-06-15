@@ -53,8 +53,6 @@ EVT_DECLARE_USER_FUNC(evt_nandSettingsCheck, 1)
 EVT_DECLARE_USER_FUNC(evt_nandSettingsFail, 1)
 
 EVT_BEGIN(nand_settings_load)
-    DEBUG_PUT_MSG(PTR("nand_settings_load running"))
-
     // Try open settings file
     USER_FUNC(evt_nandSettingsOpen, NAND_MODE_READ, LW(0))
 
@@ -84,8 +82,6 @@ EVT_END()
 
 #define retry 1
 EVT_BEGIN(nand_settings_write)
-    DEBUG_PUT_MSG(PTR("nand_settings_write running"))
-
     LBL(retry)
 
     // Try open settings file
@@ -131,8 +127,6 @@ EVT_END()
 #undef retry
 
 EVT_BEGIN(nand_settings_delete)
-    DEBUG_PUT_MSG(PTR("nand_settings_delete running"))
-
     // Try open settings file to check it exists
     USER_FUNC(evt_nandSettingsOpen, NAND_MODE_WRITE, LW(0))
 

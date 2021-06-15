@@ -3,10 +3,8 @@
 #include "util.h"
 
 #include <types.h>
-#include <spm/evtmgr.h>
 #include <spm/swdrv.h>
 #include <spm/system.h>
-#include <wii/OSError.h>
 #include <wii/stdio.h>
 
 namespace mod {

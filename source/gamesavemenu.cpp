@@ -15,8 +15,6 @@
 #include <spm/seq_mapchange.h>
 #include <spm/seqdrv.h>
 #include <spm/spmario.h>
-#include <spm/spmario_snd.h>
-#include <wii/OSError.h>
 #include <wii/string.h>
 
 namespace mod {

@@ -4,7 +4,6 @@
 #include "patch.h"
 
 #include <types.h>
-#include <spm/evtmgr.h>
 #include <spm/evtmgr_cmd.h>
 #include <wii/OSError.h>
 #include <wii/string.h>

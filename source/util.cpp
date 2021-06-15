@@ -1,6 +1,5 @@
 #include "util.h"
 
-#include <spm/evtmgr.h>
 #include <spm/evtmgr_cmd.h>
 #include <spm/mario.h>
 #include <spm/mario_pouch.h>
@@ -52,7 +51,7 @@ void updateSaveChecksum(spm::nandmgr::SaveFile * save)
 
 const char * getGameRegion()
 {
-    char * regionId = (char *)0x80000003;
+    char * regionId = (char *) 0x80000003;
     switch(*regionId)
     {
         case 'P':
