@@ -4,7 +4,7 @@ namespace spm::mobjdrv {
 
 extern "C" {
 
-void *mobjNameToPtrNoAssert(const char * name);
+void * mobjNameToPtrNoAssert(const char * name);
 
 }
 

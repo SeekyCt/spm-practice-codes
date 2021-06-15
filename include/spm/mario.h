@@ -31,8 +31,8 @@ struct MarioWork
     u8 unknown_0x68[0x120 - 0x68];
     s32 camId;
     u8 unknown_0x124[0x14c - 0x124];
-    float startspeed;
-    float maxSpeed;
+    f32 startspeed;
+    f32 maxSpeed;
     u8 unknown_0x[0x156c - 0x154];
 };
 static_assert(sizeof(MarioWork) == 0x156c);

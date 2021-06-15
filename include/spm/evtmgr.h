@@ -45,7 +45,7 @@ struct EvtEntry
     s32 * uw;
     u32 * uf;
     s32 id;
-    float speed;
+    f32 speed;
     u8 unknown_0x160[0x198 - 0x160];
     EvtScriptCode * scriptStart;
     char * name; // debug thing, unused?

@@ -16,7 +16,7 @@ extern "C" {
          4: flip x
         Others unknown
 */
-void iconDispGx(float scale, wii::Vec3 * position, u32 flags, s16 type);
+void iconDispGx(f32 scale, wii::Vec3 * position, u32 flags, s16 type);
 
 }
 

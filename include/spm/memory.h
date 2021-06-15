@@ -36,7 +36,7 @@ extern MemWork * memoryWp;
 extern HeapSize size_table[HEAP_COUNT];
 
 void *__memAlloc(u32 heap, u32 size);
-void __memFree(u32 heap, void *ptr);
+void __memFree(u32 heap, void * ptr);
 
 }
 
