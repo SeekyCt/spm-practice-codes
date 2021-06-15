@@ -21,9 +21,6 @@ private:
     void updateDecimalPlaceStr();
     void optionToggle(MenuButton * button, bool &setting);
     void optionDelta(s8 &setting, int change);
-    static bool xyzIntervalToggle(MenuButton * button, void * param);
-    static void xyzDPUp(MenuScrollerH * scroller, void * param);
-    static void xyzDPDown(MenuScrollerH * scroller, void * param);
 
 protected:
     virtual void close() override;
