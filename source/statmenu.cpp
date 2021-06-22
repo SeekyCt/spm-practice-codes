@@ -5,8 +5,6 @@
 #include <spm/fontmgr.h>
 #include <spm/mario_pouch.h>
 #include <spm/wpadmgr.h>
-#include <wii/OSError.h>
-#include <wii/string.h>
 #include <wii/stdio.h>
 #include <wii/wpad.h>
 

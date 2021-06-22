@@ -198,7 +198,7 @@
 80291648:GXSetProjection
 802958FC:IOS_Open
 80295ADC:IOS_Close
-80C36B20:evt_machi_set_elv_descs
+52e4:evt_machi_set_elv_descs?1,1
 
 // new to v4
 80055A0C:camGetPtr

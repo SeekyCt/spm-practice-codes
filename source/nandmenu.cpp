@@ -5,7 +5,6 @@
 #include <types.h>
 #include <spm/evtmgr.h>
 #include <spm/fontmgr.h>
-#include <wii/string.h>
 
 namespace mod {
 

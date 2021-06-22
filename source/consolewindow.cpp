@@ -45,7 +45,7 @@ void ConsoleWindow::disp()
     // Initialise loop vars
     ConsoleLine *line = mLines;
     ConsoleLine *prevLine = nullptr;
-    float y = mPosY;
+    f32 y = mPosY;
 
     // Draw and update all lines
     while (line != nullptr)

@@ -41,7 +41,7 @@ void XYZWindow::disp()
 
         // Create strings
         spm::mario::MarioWork * mp = spm::mario::marioGetPtr();
-        float * pos = reinterpret_cast<float *>(&mp->position);
+        f32 * pos = reinterpret_cast<f32 *>(&mp->position);
         for (int i = 0; i < 3; i++)
         {
             wii::stdio::sprintf(mMsgs[i], fmt, 'x' + i, pos[i]);

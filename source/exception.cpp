@@ -3,10 +3,8 @@
 #include "util.h"
 
 #include <types.h>
-#include <spm/fontmgr.h>
 #include <spm/romfont.h>
 #include <spm/spmario.h>
-#include <spm/system.h>
 #include <wii/DEMOInit.h>
 #include <wii/gx.h>
 #include <wii/mtx.h>

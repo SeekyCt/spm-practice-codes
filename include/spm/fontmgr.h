@@ -19,12 +19,13 @@ void FontDrawRainbowColorOff();
 void FontDrawNoise();
 void FontDrawNoiseOff();
 void FontDrawColorIDX(u32 idx);
-void FontDrawColor(const wii::RGBA * color);
+// Overwrites color.a
+void FontDrawColor(wii::RGBA * color);
 void FontDrawColor_();
 u32 FontGetDrawColor();
-void FontDrawScale(float scale);
-void FontDrawCode(float x, float y, u16 code);
-void FontDrawString(float x, float y, const char * string);
+void FontDrawScale(f32 scale);
+void FontDrawCode(f32 x, f32 y, u16 code);
+void FontDrawString(f32 x, f32 y, const char * string);
 void FontDrawMessage(int x, int y, const char * message);
 void FontDrawMessageMtx(wii::Mtx34 matrix, const char * message);
 u16 FontGetMessageWidth(const char * message);

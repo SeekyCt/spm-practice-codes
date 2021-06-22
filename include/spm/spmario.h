@@ -1,29 +1,30 @@
 #pragma once
 
 #include <types.h>
+#include <wii/types.h>
 
 namespace spm::spmario {
 
 struct SpmarioGlobals
 {
     u32 flags;
-    u32 unknown_0x4;
+    f32 fps;
     s32 language;
-    u32 unknown_0xc;
+    int discIsEjected;
     u32 systemLevelFlags;
     u8 unknown_0x14[0x18 - 0x14];
     u16 framebufferWidth;
     u16 framebufferHeight;
-    float unknown_0x1c;
-    char saveName[32]; // size needs checking
-    u32 unknown_0x40;
+    f32 gameSpeed;
+    char saveName[32];
+    int lastSaveLoaded;
     char mapName[32];
     char doorName[32];
-    u8 unknown_0x84[0xc8 - 0x84];
+    char gameOverMapName[32];
+    char prevMapName[32];
+    u8 unknown_0xc4[0xc8 - 0xc4];
     s64 lastSaveUpdateTime; // last time save file in memory was written to
-    float unknown_0xd0;
-    float unknown_0xd4;
-    float unknown_0xd8;
+    wii::Vec3 savePosition;
     int saveFileId;
     u32 unknown_0xe0;
     u8 unknown_0xe4[0xf8 - 0xe4];

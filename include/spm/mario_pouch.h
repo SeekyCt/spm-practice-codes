@@ -30,9 +30,9 @@ struct MarioPouchWork
     int flipTimer;
     int xp;
     int coins;
-    int16_t keyItem[32];
-    int16_t useItem[10];
-    int16_t shopItem[32];
+    s16 keyItem[32];
+    s16 useItem[10];
+    s16 shopItem[32];
     PouchCharOrPixlInfo characters[4];
     PouchCharOrPixlInfo pixls[16];
     int shopPoints;
