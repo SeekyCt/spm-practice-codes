@@ -18,7 +18,6 @@
 #include <types.h>
 #include <spm/camdrv.h>
 #include <spm/charpixlitemwin.h>
-#include <spm/codesections.h>
 #include <spm/effdrv.h>
 #include <spm/fadedrv.h>
 #include <spm/mario.h>
@@ -156,9 +155,6 @@ void main()
 
     romfontExpand();
     exceptionPatch();
-
-    assertf(spm::relmgr::relWp->relFile == (void *) REL_LOAD_ADDR, "relF loaded at unexpected address 0x%x",
-            (u32) spm::relmgr::relWp->relFile);
 
     // Handle 4:3
     spm::camdrv::CamEntry * cam = spm::camdrv::camGetPtr(spm::camdrv::CAM_DEBUG_3D);

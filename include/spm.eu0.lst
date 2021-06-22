@@ -404,6 +404,15 @@
 
 /* Rel */
 
+// Sections:
+//   00000000 0 none
+//   80c458fc 1 .text 
+//   80ca9ad8 2 .ctors 
+//   80ca9adc 3 .dtors 
+//   80ca9ae8 4 .rodata 
+//   80cf5180 5 .data 
+//   80f64340 6 .bss 
+
 // machi.c
-80c4abe0:evt_machi_set_elv_descs
+52e4:evt_machi_set_elv_descs?1,1
 // more
