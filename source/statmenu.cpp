@@ -29,7 +29,7 @@ struct StatDef
 static StatDef stats[STAT_COUNT] = {
     {"Level", 99},
     {"XP", 99999999},
-    {"Attack", 999},
+    {"Attack", 99},
     {"Max HP", 999},
     {"HP", 999},
     {"Coins", 999},
