@@ -6,6 +6,8 @@
 #include <spm/spmario.h>
 #include <wii/OSModule.h>
 
+namespace mod {
+
 int evt_get_cur_pixl(spm::evtmgr::EvtEntry * entry, bool firstRun)
 {
     int pixl = spm::mario_pouch::pouchGetCurPixl();
@@ -82,4 +84,17 @@ void * getModRelLoadAddr()
         curRel = curRel->next;
     
     return reinterpret_cast<void *>(curRel);
+}
+
+const char * getToggleName(bool value)
+{
+    switch (value)
+    {
+        case true:
+            return "Enabled";
+        case false:
+            return "Disabled";
+    }
+}
+
 }

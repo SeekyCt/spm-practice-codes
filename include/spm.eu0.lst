@@ -66,6 +66,8 @@
 
 // itemdrv.c
 80078b3c:itemEntry
+8007bccc:itemTypeNameToId
+// more
 
 // item_data.c
 803f5f98:itemDataTable
@@ -215,6 +217,13 @@
 
 // debug.c
 8019e33c:OSPanic
+// more
+
+// filemgr.c
+8019f724:fileAllocf
+8019fa8c:fileFree
+8019fc5c:fileAsyncf
+// more
 
 // fontmgr.c
 801a0070:FontDrawStart
@@ -236,6 +245,15 @@
 801a1d50:FontDrawMessageMtx
 801a28ac:FontGetMessageWidth
 // more
+
+// parse.c
+801a6e9c:parseInit
+801a6ebc:getTag
+801a6f40:parsePush
+801a70f4:parsePop
+801a710c:parsePopNext
+801a7140:parseGet1Next
+801a7488:parseTagGet1
 
 // romfont.c
 // text
@@ -311,10 +329,15 @@
 8023efe0:nandLoadSave
 // more
 
+// lz_embedded.c
+8036afc0:pitText
+// more
+
 // MSL_C.PPCEABI.bare.H.a
 // printf.c
 8025d098:sprintf
 // more
+
 // string.c
 8025a874:memmove
 8025e8fc:strcpy
@@ -363,6 +386,11 @@
 // mtx.c
 8027a270:PSMTXIdentity
 8027afac:C_MTXOrtho
+// more
+
+// dvd.a
+// dvdfs.c
+8027b910:DVDConvertPathToEntrynum
 // more
 
 // vi.a
@@ -418,3 +446,10 @@
 // machi.c
 52e4:evt_machi_set_elv_descs?1,1
 // more
+
+// dan.c
+// text
+3c5b4:evt_dan_read_data?1,1
+// more
+// bss
+1548:danWp?1,6

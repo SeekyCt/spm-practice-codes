@@ -1,23 +1,13 @@
 #include "hudmenu.h"
 #include "mainmenu.h"
 #include "nandsettings.h"
+#include "util.h"
 
 #include <types.h>
 #include <spm/fontmgr.h>
 #include <wii/stdio.h>
 
 namespace mod {
-
-static const char * getValueName(bool state)
-{
-    switch (state)
-    {
-        case true:
-            return "Enabled";
-        case false:
-            return "Disabled";
-    }
-}
 
 void HudMenu::updateDelayStr()
 {
@@ -32,7 +22,7 @@ void HudMenu::updateDecimalPlaceStr()
 void HudMenu::optionToggle(MenuButton * button, bool &setting)
 {
     setting = !setting;
-    button->mMsg = getValueName(setting);
+    button->mMsg = getToggleName(setting);
 }
 
 void HudMenu::optionDelta(s8 &setting, int change)
@@ -46,7 +36,7 @@ void HudMenu::optionDelta(s8 &setting, int change)
 
 #define OPTION(message, setting) \
     new MenuButton(this, message, labelX, y, nullptr, nullptr, false, scale); \
-    options[i++] = new MenuButton(this, getValueName(setting), valueX, y,     \
+    options[i++] = new MenuButton(this, getToggleName(setting), valueX, y,    \
         [](MenuButton * button, void * param)                                 \
         {                                                                     \
             HudMenu * instance = reinterpret_cast<HudMenu *>(param);          \

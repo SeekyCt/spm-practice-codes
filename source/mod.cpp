@@ -1,5 +1,6 @@
 #include "mod_ui_base/window.h"
 #include "consolewindow.h"
+#include "custompit.h"
 #include "evtdebug.h"
 #include "exception.h"
 #include "gamesavemenu.h"
@@ -9,6 +10,7 @@
 #include "mod.h"
 #include "nandsettings.h"
 #include "patch.h"
+#include "parsepatches.h"
 #include "romfontexpand.h"
 #include "scriptlog.h"
 #include "scriptvarlog.h"
@@ -175,6 +177,8 @@ void main()
     nandSettingsPatch();
     GameSaveMenu::pitSavePatch();
     MapSelectMenu::scanEntrances();
+    customPitPatch();
+    parsePatch();
 }
 
 }

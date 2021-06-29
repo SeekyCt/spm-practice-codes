@@ -3,6 +3,8 @@
 #include <spm/evtmgr.h>
 #include <spm/nandmgr.h>
 
+namespace mod {
+
 #define ARRAY_SIZEOF(ary) (sizeof((ary))/sizeof((ary)[0]))
 
 #define NYBBLE_0(n) (((n) >> 28) & 0xf)
@@ -38,3 +40,7 @@ void updateSaveChecksum(spm::nandmgr::SaveFile * save);
 const char * getGameRegion();
 int getGameRevision();
 void * getModRelLoadAddr();
+
+const char * getToggleName(bool value);
+
+}

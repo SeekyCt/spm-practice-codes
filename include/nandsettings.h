@@ -10,7 +10,7 @@
 
 namespace mod {
 
-#define SETTINGS_VER 2
+#define SETTINGS_VER 3
 #define SETTINGS_FILE_NAME "pcset.bin"
 
 enum class LogType : u8
@@ -37,6 +37,19 @@ struct NandSettingsV1
     bool hudOptions[2];
     bool mapChangeEffect;
 };
+struct NandSettingsV2
+{
+    u32 version;
+
+    LogType logOptions[LOG_OPTION_COUNT]; 
+
+    bool hudMapDoor;
+    bool hudXYZ;    
+    s8 xyzInterval;
+    s8 xyzDP;
+
+    bool mapChangeEffect;
+};
 
 // Latest
 struct NandSettings
@@ -51,6 +64,8 @@ struct NandSettings
     s8 xyzDP;
 
     bool mapChangeEffect;
+
+    bool customPitText;
 };
 
 extern NandSettings * gSettings;

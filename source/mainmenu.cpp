@@ -2,8 +2,9 @@
 #include "hudmenu.h"
 #include "inventorymenu.h"
 #include "logmenu.h"
-#include "mapselectmenu.h"
 #include "mainmenu.h"
+#include "mapselectmenu.h"
+#include "miscmenu.h"
 #include "mod.h"
 #include "nandmenu.h"
 #include "pitselectmenu.h"
@@ -105,6 +106,18 @@ MainMenu::MainMenu()
         }
     );
     y -= FONT_HEIGHT + 5;
+    mOptions[n++] = new MenuButton(this, "Miscellaneous Options", optionsX, y,
+        [](MenuButton * button, void * param)
+        {
+            (void) button;
+            (void) param;
+
+            delete MenuWindow::sCurMenu;
+            MenuWindow::sCurMenu = new MiscMenu();
+            return false;
+        }
+    );
+    y -= FONT_HEIGHT + 5;
     mOptions[n++] = new MenuButton(this, "Manage Saved Settings", optionsX, y,
         [](MenuButton * button, void * param)
         {
@@ -120,7 +133,6 @@ MainMenu::MainMenu()
     mOptions[n++] = new MenuButton(this, "Game Save Options", optionsX, y,
         [](MenuButton * button, void * param)
         {
-            // Parameters aren't needed
             (void) button;
             (void) param;
 

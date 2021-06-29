@@ -254,6 +254,22 @@ s32 evt_nandSettingsRead(spm::evtmgr::EvtEntry * entry, bool firstRun)
                 // Initialise new settings
                 gSettings->xyzInterval = 4;
                 gSettings->xyzDP = 2;
+
+                // Increment version
+                gSettings->version = 2;
+
+                // Fall through into v2->3
+
+            case 2:
+                wii::OSError::OSReport("nandsettings: updating settings v2->3.\n");
+
+                // Existing settings are already in place
+
+                // Initialise new setting
+                gSettings->customPitText = false;
+
+                // Increment version
+                gSettings->version = 3;
                 break;
 
             case SETTINGS_VER:
@@ -416,6 +432,8 @@ void nandSettingsDefaults()
     gSettings->xyzDP = 2;
     
     gSettings->mapChangeEffect = true;
+
+    gSettings->customPitText = false;
 }
 
 static bool (*isRelLoadedReal)() = nullptr;
