@@ -4,6 +4,7 @@
 
 #include <types.h>
 #include <spm/romfont.h>
+#include <spm/relmgr.h>
 #include <spm/spmario.h>
 #include <wii/DEMOInit.h>
 #include <wii/gx.h>
@@ -43,8 +44,9 @@ static void (*__OSUnhandledExceptionReal)(int p1, int p2, int p3, int p4);
 static void drawTitle(f32 scale)
 {
     spm::romfont::romFontPrintGX(TEXT_LEFT, TITLE_Y, scale, {0xff, 0x20, 0x20, 0xff},
-                                 "Exception - " MOD_VERSION " - %s Revison %d",
-                                 getGameRegion(), getGameRevision());
+                                 "Exception - " MOD_VERSION " - %s Revison %d - relF %x - mod.rel %x",
+                                 getGameRegion(), getGameRevision(), (u32) spm::relmgr::relWp->relFile,
+                                 (u32) getModRelLoadAddr());
 }
 
 static void draw(char * msg, f32 yShift, f32 scale)

@@ -1,6 +1,8 @@
 /* OS Globals */
 
 800000e4:currentThread
+800030c8:firstRel
+800030cc:lastRel
 // more
 
 /* Dol */

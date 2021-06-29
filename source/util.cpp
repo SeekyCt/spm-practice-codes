@@ -4,6 +4,7 @@
 #include <spm/mario.h>
 #include <spm/mario_pouch.h>
 #include <spm/spmario.h>
+#include <wii/OSModule.h>
 
 int evt_get_cur_pixl(spm::evtmgr::EvtEntry * entry, bool firstRun)
 {
@@ -71,4 +72,14 @@ int getGameRevision()
 {
     u8 * revision = (u8 *) 0x80000007;
     return *revision;
+}
+
+void * getModRelLoadAddr()
+{
+    // Assume the first rel loaded with a module id other than 1 is this
+    wii::OSModule::RelHeader * curRel = wii::OSModule::firstRel;
+    while (curRel->id == 1)
+        curRel = curRel->next;
+    
+    return reinterpret_cast<void *>(curRel);
 }
