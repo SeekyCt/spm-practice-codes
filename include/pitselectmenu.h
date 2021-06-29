@@ -15,9 +15,9 @@ class PitSelectMenu : public MenuWindow
 private:
     int mGroup;
     int mFloor;
-    char mFloorStr[3];
-    MenuScroller * mGroupDisp;
-    MenuScroller * mFloorDisp;
+    char mFloorStrs[3][2];
+    MenuScroller * mGroupScroller;
+    MenuScroller * mFloorScrollers[3];
 
     void updateGroupDisp();
     void updateFloorDisp();

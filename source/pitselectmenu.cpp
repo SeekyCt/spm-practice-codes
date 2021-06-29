@@ -37,13 +37,15 @@ static const char * getGroupName(int group)
 void PitSelectMenu::updateGroupDisp()
 {
     // Change message to current group name
-    mGroupDisp->mMsg = getGroupName(mGroup);
+    mGroupScroller->mMsg = getGroupName(mGroup);
 }
 
 void PitSelectMenu::updateFloorDisp()
 {
-    // Format map number to string and display
-    wii::stdio::sprintf(mFloorStr, "%02d", mFloor);
+    // Format map number to digit strings and display
+    wii::stdio::sprintf(mFloorStrs[0], "%d", DIGIT_100(mFloor));
+    wii::stdio::sprintf(mFloorStrs[1], "%d", DIGIT_10(mFloor));
+    wii::stdio::sprintf(mFloorStrs[2], "%d", DIGIT_1(mFloor));
 }
 
 void PitSelectMenu::groupSwap(MenuScroller * scroller, void * param)
@@ -62,33 +64,51 @@ void PitSelectMenu::groupSwap(MenuScroller * scroller, void * param)
 
 void PitSelectMenu::floorUp(MenuScroller * scroller, void * param)
 {
-    (void) scroller;
-
     PitSelectMenu * instance = reinterpret_cast<PitSelectMenu *>(param);
 
-    // Increment and loop around if max floor reached
-    int floor = instance->mFloor + 1;
-    if (floor > 100)
-        floor = 1;
+    // Figure out which digit is being changed and its place value
+    int increment = 100;
+    for (int i = 0; i < 3; i++)
+    {
+        if (instance->mFloorScrollers[i] == scroller)
+            // Use current increment and exit loop
+            break;
+        else
+            // Each digit has a value 10 times lower than the previous
+            increment /= 10;
+    }
 
-    // Store new floor number and update display
-    instance->mFloor = floor;
+    // Update value, limit at 100
+    instance->mFloor += increment;
+    if (instance->mFloor > 100)
+        instance->mFloor = 100;
+
+    // Update display
     instance->updateFloorDisp();
 }
 
 void PitSelectMenu::floorDown(MenuScroller * scroller, void * param)
 {
-    (void) scroller;
-
     PitSelectMenu * instance = reinterpret_cast<PitSelectMenu *>(param);
 
-    // Decrement and loop around if min floor reached
-    int floor = instance->mFloor - 1;
-    if (floor < 1)
-        floor = 100;
+    // Figure out which digit is being changed and its place value
+    int increment = 100;
+    for (int i = 0; i < 3; i++)
+    {
+        if (instance->mFloorScrollers[i] == scroller)
+            // Use current increment and exit loop
+            break;
+        else
+            // Each digit has a value 10 times lower than the previous
+            increment /= 10;
+    }
 
-    // Store new floor number and update display
-    instance->mFloor = floor;
+    // Update value, limit at 0
+    instance->mFloor -= increment;
+    if (instance->mFloor < 1)
+        instance->mFloor = 1;
+
+    // Update display
     instance->updateFloorDisp();
 }
 
@@ -276,22 +296,28 @@ PitSelectMenu::PitSelectMenu()
     const f32 groupDispX = groupLabelX + 55.0f;
     const f32 floorLabelX = groupDispX + 125.0f;
     const f32 floorDispX = floorLabelX + 85.0f;
+    const f32 floorXDiff = 20.0f;
     const f32 dispsY = 20.0f;
     
     // Init display buttons
     new MenuButton(this, "Pit:", groupLabelX, dispsY);
-    mGroupDisp = new MenuScroller(
+    mGroupScroller = new MenuScroller(
         this, getGroupName(mGroup), groupDispX, dispsY, 45.0f, groupSwap, groupSwap, this, doMapChange, this
     );
     new MenuButton(this, "Floor:", floorLabelX, dispsY);
-    updateFloorDisp(); // generates mFloorStr
-    mFloorDisp = new MenuScroller(
-        this, mFloorStr, floorDispX, dispsY, 10.0f, floorUp, floorDown, this, doMapChange, this
-    );
-    buttonLinkHorizontal(mGroupDisp, mFloorDisp);
+    updateFloorDisp(); // generates mFloorStrs
+    for (int i = 0; i < 3; i++)
+    {
+        mFloorScrollers[i] = new MenuScroller(
+            this, mFloorStrs[i], floorDispX + (floorXDiff * i), dispsY, 0.0f, floorUp, floorDown, this, doMapChange, this
+        );
+        if (i > 0)
+            buttonLinkHorizontal(mFloorScrollers[i - 1], mFloorScrollers[i]);
+    }
+    buttonLinkHorizontal(mGroupScroller, mFloorScrollers[0]);
 
     // Set starting button and title
-    mCurButton = mGroupDisp;
+    mCurButton = mGroupScroller;
     mTitle = "Pit Floor Warp";
 }
 
