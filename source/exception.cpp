@@ -35,8 +35,8 @@ static void (*__OSUnhandledExceptionReal)(int p1, int p2, int p3, int p4);
 
 #define SCREEN_TOP 228.0f
 #define SCREEN_BOTTOM -228.0f
-#define TITLE_Y 208.0f
-#define TEXT_TOP (TITLE_Y - LINE_HEIGHT)
+#define TITLE_Y 195.0f
+#define TEXT_TOP (TITLE_Y - (LINE_HEIGHT * 2))
 #define TEXT_BOTTOM (SCREEN_BOTTOM - LINE_HEIGHT)
 #define TEXT_LEFT -300.0f
 #define LINE_HEIGHT 15.0f
@@ -44,8 +44,10 @@ static void (*__OSUnhandledExceptionReal)(int p1, int p2, int p3, int p4);
 static void drawTitle(f32 scale)
 {
     spm::romfont::romFontPrintGX(TEXT_LEFT, TITLE_Y, scale, {0xff, 0x20, 0x20, 0xff},
-                                 "Exception - " MOD_VERSION " - %s Revison %d - relF %x - mod.rel %x",
-                                 getGameRegion(), getGameRevision(), (u32) spm::relmgr::relWp->relFile,
+                                 "Exception - " MOD_VERSION " - %s Revison %d",
+                                 getGameRegion(), getGameRevision());
+    spm::romfont::romFontPrintGX(TEXT_LEFT, TITLE_Y - LINE_HEIGHT, scale, {0xff, 0x20, 0x20, 0xff},
+                                 "relF %x - mod.rel %x", (u32) spm::relmgr::relWp->relFile,
                                  (u32) getModRelLoadAddr());
 }
 
