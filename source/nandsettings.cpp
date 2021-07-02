@@ -59,7 +59,7 @@ EVT_BEGIN(nand_settings_load)
     IF_EQUAL(LW(0), NAND_CODE_OK)
         // If file opened, read it
         USER_FUNC(evt_nandSettingsRead, LW(0))
-        IF_EQUAL(LW(0), (s32)sizeof(_settings))
+        IF_LARGE_EQUAL(LW(0), 0)
             // Clean up if successful
             USER_FUNC(evt_nandSettingsClose, LW(0))
             IF_EQUAL(LW(0), 0)
