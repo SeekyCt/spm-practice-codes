@@ -36,8 +36,8 @@ static char errorMsg[256];
     wii::OSError::OSFatal(&errorFg, &errorBg, errorMsg); \
     } while (false)
 
-// evt_nandSettingsRead(&ret)
-EVT_DECLARE_USER_FUNC(evt_nandSettingsRead, 1)
+// evt_nandsettings_handle_read_output()
+EVT_DECLARE_USER_FUNC(evt_nandsettings_handle_read_output, 0)
 // evt_nandSettingsWrite(&ret)
 EVT_DECLARE_USER_FUNC(evt_nandSettingsWrite, 1)
 // evt_nandSettingsOpen(mode, &ret)
@@ -55,7 +55,8 @@ EVT_BEGIN(nand_settings_load)
 
     IF_EQUAL(LW(0), NAND_CODE_OK)
         // If file opened, read it
-        USER_FUNC(evt_nandSettingsRead, LW(0))
+        USER_FUNC(evt_nand_read, PTR(&fileInfo), PTR(_settings), sizeof(_settings), PTR(&commandBlock), LW(0))
+        USER_FUNC(evt_nandsettings_handle_read_output)
         IF_LARGE_EQUAL(LW(0), 0)
             // Clean up if successful
             USER_FUNC(evt_nandSettingsClose, LW(0))
@@ -91,7 +92,7 @@ EVT_BEGIN(nand_settings_write)
 
         // Try to create if that succeeded
         IF_EQUAL(LW(0), 0)
-            USER_FUNC(evt_nand_create, PTR(SETTINGS_FILE_NAME), NAND_PERMISSION_READ_WRITE, \
+            USER_FUNC(evt_nand_create, PTR(SETTINGS_FILE_NAME), NAND_PERMISSION_READ_WRITE,
                       0, PTR(&commandBlock), LW(0))
         END_IF()
 
@@ -168,76 +169,58 @@ static void cb(s32 result, wii::NAND::NANDCommandBlock * cmd)
     asyncResult.set = true;
 }
 
-s32 evt_nandSettingsRead(spm::evtmgr::EvtEntry * entry, bool firstRun)
+s32 evt_nandsettings_handle_read_output(spm::evtmgr::EvtEntry * entry, bool firstRun)
 {
-    // On first run, try read the file
-    if (firstRun)
+    // Dump contents for debugging
+    wii::OSError::OSReport("nandsettings: read at %x, contents:\n", (u32) &_settings);
+    u32 * d = reinterpret_cast<u32 *>(gSettings);
+    for (u32 i = 0; i < (sizeof(*gSettings) / sizeof(u32)); i += 4)
+        wii::OSError::OSReport("%08x %08x %08x %08x\n", d[i], d[i+1], d[i+2], d[i+3]);
+
+    // Handle settings version
+    switch (gSettings->version)
     {
-        asyncResult.set = false;
-        s32 ret = wii::NAND::NANDReadAsync(&fileInfo, &_settings, sizeof(_settings), cb, &commandBlock);
-        if (ret < 0)
-            ERROR(ret);
+        case 1:
+            NandSettingsV1 v1;
+            wii::string::memcpy(&v1, gSettings, sizeof(v1));
+            wii::OSError::OSReport("nandsettings: updating settings v1->2.\n");
+
+            // Move relocated settings
+            // hudMapDoor and hudXYZ are already in place
+            gSettings->mapChangeEffect = v1.mapChangeEffect;
+
+            // Initialise new settings
+            gSettings->xyzInterval = 4;
+            gSettings->xyzDP = 2;
+
+            // Increment version
+            gSettings->version = 2;
+
+            // Fall through into v2->3
+
+        case 2:
+            wii::OSError::OSReport("nandsettings: updating settings v2->3.\n");
+
+            // Existing settings are already in place
+
+            // Initialise new setting
+            gSettings->customPitText = false;
+
+            // Increment version
+            gSettings->version = 3;
+            break;
+
+        case SETTINGS_VER:
+            wii::OSError::OSReport("nandsettings: settings version ok.\n");
+            break;
+
+        default:
+            wii::OSError::OSReport("nandsettings: settings file too new, using defaults\n");
+            nandSettingsDefaults();
+            break;
     }
 
-    // If the async process has finished, return to script
-    if (asyncResult.set)
-    {
-        wii::OSError::OSReport("nandsettings: read with result %d, at %x, contents:\n", asyncResult.val, (u32) &_settings);
-
-        // Dump contents for debugging
-        u32 * d = reinterpret_cast<u32 *>(gSettings);
-        for (u32 i = 0; i < (sizeof(*gSettings) / sizeof(u32)); i += 4)
-            wii::OSError::OSReport("%08x %08x %08x %08x\n", d[i], d[i+1], d[i+2], d[i+3]);
-
-        // Handle settings version
-        switch (gSettings->version)
-        {
-            case 1:
-                NandSettingsV1 v1;
-                wii::string::memcpy(&v1, gSettings, sizeof(v1));
-                wii::OSError::OSReport("nandsettings: updating settings v1->2.\n");
-
-                // Move relocated settings
-                // hudMapDoor and hudXYZ are already in place
-                gSettings->mapChangeEffect = v1.mapChangeEffect;
-
-                // Initialise new settings
-                gSettings->xyzInterval = 4;
-                gSettings->xyzDP = 2;
-
-                // Increment version
-                gSettings->version = 2;
-
-                // Fall through into v2->3
-
-            case 2:
-                wii::OSError::OSReport("nandsettings: updating settings v2->3.\n");
-
-                // Existing settings are already in place
-
-                // Initialise new setting
-                gSettings->customPitText = false;
-
-                // Increment version
-                gSettings->version = 3;
-                break;
-
-            case SETTINGS_VER:
-                wii::OSError::OSReport("nandsettings: settings version ok.\n");
-                break;
-
-            default:
-                wii::OSError::OSReport("nandsettings: settings file too new, using defaults\n");
-                nandSettingsDefaults();
-                break;
-        }
-        spm::evtmgr_cmd::evtSetValue(entry, entry->pCurData[0], asyncResult.val);
-        return 2;
-    }
-    else
-    {
-        return 0;
-    }
+    return EVT_RET_CONTINUE;
 }
 
 s32 evt_nandSettingsWrite(spm::evtmgr::EvtEntry * entry, bool firstRun)
