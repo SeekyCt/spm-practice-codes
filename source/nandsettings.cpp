@@ -36,10 +36,6 @@ static char errorMsg[256];
     wii::OSError::OSFatal(&errorFg, &errorBg, errorMsg); \
     } while (false)
 
-// evt_nandSettingsCreate(&ret)
-EVT_DECLARE_USER_FUNC(evt_nandSettingsCreate, 1)
-// evt_nandSettingsDelete(&ret)
-EVT_DECLARE_USER_FUNC(evt_nandSettingsDelete, 1)
 // evt_nandSettingsRead(&ret)
 EVT_DECLARE_USER_FUNC(evt_nandSettingsRead, 1)
 // evt_nandSettingsWrite(&ret)
@@ -138,7 +134,7 @@ EVT_BEGIN(nand_settings_delete)
 
         IF_EQUAL(LW(0), NAND_CODE_OK)
             // Try deleting settings file
-            USER_FUNC(evt_nandSettingsDelete, LW(0))
+            USER_FUNC(evt_nand_delete, PTR(SETTINGS_FILE_NAME), PTR(&commandBlock), LW(0))
 
             IF_EQUAL(LW(0), NAND_CODE_OK)
                 // Signal success
@@ -170,54 +166,6 @@ static void cb(s32 result, wii::NAND::NANDCommandBlock * cmd)
     (void) cmd;
     asyncResult.val = result;
     asyncResult.set = true;
-}
-
-s32 evt_nandSettingsCreate(spm::evtmgr::EvtEntry * entry, bool firstRun)
-{
-    // On first run, try create the file
-    if (firstRun)
-    {
-        asyncResult.set = false;
-        s32 ret = wii::NAND::NANDCreateAsync(SETTINGS_FILE_NAME, NAND_PERMISSION_READ_WRITE, 0, cb, &commandBlock);
-        if (ret < 0)
-            ERROR(ret);
-    }
-
-    // If the async process has finished, return to script
-    if (asyncResult.set)
-    {
-        wii::OSError::OSReport("nandsettings: created with result %d\n", asyncResult.val);
-        spm::evtmgr_cmd::evtSetValue(entry, entry->pCurData[0], asyncResult.val);
-        return 2;
-    }
-    else
-    {
-        return 0;
-    }
-}
-
-s32 evt_nandSettingsDelete(spm::evtmgr::EvtEntry * entry, bool firstRun)
-{
-    // On first run, try delete file
-    if (firstRun)
-    {
-        asyncResult.set = false;
-        s32 ret = wii::NAND::NANDDeleteAsync(SETTINGS_FILE_NAME, cb, &commandBlock);;
-        if (ret < 0)
-            ERROR(ret);
-    }
-
-    // If the async process has finished, return to script
-    if (asyncResult.set)
-    {
-        wii::OSError::OSReport("nandsettings: deleted with result %d\n", asyncResult.val);
-        spm::evtmgr_cmd::evtSetValue(entry, entry->pCurData[0], asyncResult.val);
-        return 2;
-    }
-    else
-    {
-        return 0;
-    }
 }
 
 s32 evt_nandSettingsRead(spm::evtmgr::EvtEntry * entry, bool firstRun)
