@@ -10,6 +10,8 @@ namespace mod {
 
 int evt_get_cur_pixl(spm::evtmgr::EvtEntry * entry, bool firstRun)
 {
+    (void) firstRun;
+    
     int pixl = spm::mario_pouch::pouchGetCurPixl();
     spm::evtmgr_cmd::evtSetValue(entry, entry->pCurData[0], pixl);
     return 2;
@@ -17,6 +19,9 @@ int evt_get_cur_pixl(spm::evtmgr::EvtEntry * entry, bool firstRun)
 
 int evt_freeze_game(spm::evtmgr::EvtEntry * entry, bool firstRun)
 {
+    (void) entry;
+    (void) firstRun;
+
     // Freeze player
     spm::mario::marioKeyOff();
 
@@ -27,6 +32,9 @@ int evt_freeze_game(spm::evtmgr::EvtEntry * entry, bool firstRun)
 
 int evt_unfreeze_game(spm::evtmgr::EvtEntry * entry, bool firstRun)
 {
+    (void) entry;
+    (void) firstRun;
+    
     // Unfreeze world
     spm::spmario::spmarioSystemLevel(0);
 

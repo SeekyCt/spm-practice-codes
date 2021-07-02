@@ -70,9 +70,9 @@ struct NandSettings
 
 extern NandSettings * gSettings;
 
-EVT_DECLARE(nand_settings_load);
-EVT_DECLARE(nand_settings_write);
-EVT_DECLARE(nand_settings_delete);
+EVT_DECLARE(nand_settings_load)
+EVT_DECLARE(nand_settings_write)
+EVT_DECLARE(nand_settings_delete)
 
 extern int gNandSettingsSuccess;
 

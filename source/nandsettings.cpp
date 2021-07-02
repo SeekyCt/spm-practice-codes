@@ -152,6 +152,9 @@ EVT_END()
 
 s32 evt_nandsettings_handle_read_output(spm::evtmgr::EvtEntry * entry, bool firstRun)
 {
+    (void) entry;
+    (void) firstRun;
+
     // Dump contents for debugging
     wii::OSError::OSReport("nandsettings: read at %x, contents:\n", (u32) &_settings);
     u32 * d = reinterpret_cast<u32 *>(gSettings);
@@ -178,6 +181,7 @@ s32 evt_nandsettings_handle_read_output(spm::evtmgr::EvtEntry * entry, bool firs
             gSettings->version = 2;
 
             // Fall through into v2->3
+            [[fallthrough]];
 
         case 2:
             wii::OSError::OSReport("nandsettings: updating settings v2->3.\n");

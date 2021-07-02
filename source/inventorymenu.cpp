@@ -491,6 +491,8 @@ void InventoryMenu::updateIdDisp()
 
 bool InventoryMenu::finishId(MenuButton * button, void * param)
 {
+    (void) button;
+
     InventoryMenu * instance = reinterpret_cast<InventoryMenu *>(param);
     instance->close();
     return false;

@@ -17,7 +17,7 @@ void MiscMenu::optionToggle(MenuButton * button, bool &setting)
 
 #define OPTION(message, setting) \
     new MenuButton(this, message, labelX, y, nullptr, nullptr, false, scale); \
-    options[i++] = new MenuButton(this, getToggleName(setting), valueX, y,    \
+    options[n++] = new MenuButton(this, getToggleName(setting), valueX, y,    \
         [](MenuButton * button, void * param)                                 \
         {                                                                     \
             MiscMenu * instance = reinterpret_cast<MiscMenu *>(param);        \
@@ -38,7 +38,7 @@ MiscMenu::MiscMenu()
 
     MenuButton * options[SETTING_COUNT];
     f32 y = 170;
-    int i = 0;
+    int n = 0;
 
     OPTION("Load Pit Text From File", gSettings->customPitText);
 

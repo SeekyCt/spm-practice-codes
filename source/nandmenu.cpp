@@ -10,7 +10,7 @@ namespace mod {
 
 bool NandMenu::loadSettings(MenuButton * button, void * param)
 {
-    (void) param;
+    (void) button;
 
     NandMenu * instance = reinterpret_cast<NandMenu *>(param);
 
@@ -50,7 +50,7 @@ bool NandMenu::defaultSettings(MenuButton * button, void * param)
 
 bool NandMenu::deleteSettings(MenuButton * button, void * param)
 {
-    (void) param;
+    (void) button;
 
     NandMenu * instance = reinterpret_cast<NandMenu *>(param);
 

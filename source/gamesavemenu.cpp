@@ -187,6 +187,8 @@ static bool reloadSave(MenuButton * button, void * param)
 
 bool GameSaveMenu::openMainScreen(MenuButton * button, void * param)
 {
+    (void) button;
+
     GameSaveMenu * instance = reinterpret_cast<GameSaveMenu *>(param);
 
     instance->exitScreen();
@@ -197,6 +199,8 @@ bool GameSaveMenu::openMainScreen(MenuButton * button, void * param)
 
 bool GameSaveMenu::openConfirmScreen(MenuButton * button, void * param)
 {
+    (void) button;
+
     GameSaveMenu * instance = reinterpret_cast<GameSaveMenu *>(param);
 
     instance->exitScreen();
