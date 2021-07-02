@@ -1,4 +1,5 @@
 #include "evt_cmd.h"
+#include "evtnandapi.h"
 #include "nandsettings.h"
 #include "patch.h"
 #include "util.h"
@@ -94,7 +95,8 @@ EVT_BEGIN(nand_settings_write)
 
         // Try to create if that succeeded
         IF_EQUAL(LW(0), 0)
-            USER_FUNC(evt_nandSettingsCreate, LW(0))
+            USER_FUNC(evt_nand_create, PTR(SETTINGS_FILE_NAME), NAND_PERMISSION_READ_WRITE, \
+                      0, PTR(&commandBlock), LW(0))
         END_IF()
 
         IF_EQUAL(LW(0), 0)
