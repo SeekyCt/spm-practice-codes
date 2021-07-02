@@ -7,6 +7,7 @@
 #include <spm/evtmgr.h>
 #include <spm/evtmgr_cmd.h>
 #include <spm/relmgr.h>
+#include <spm/system.h>
 #include <wii/NAND.h>
 #include <wii/OSError.h>
 #include <wii/stdio.h>
@@ -31,16 +32,6 @@ NandSettings * gSettings = reinterpret_cast<NandSettings *>(&_settings);
 
 // Feedback for script callers
 int gNandSettingsSuccess;
-
-// Error handling helpers
-static wii::RGBA errorFg {0xff, 0xff, 0xff, 0xff};
-static wii::RGBA errorBg {0x00, 0x00, 0x00, 0xff};
-static char errorMsg[256];
-#define ERROR(ret) \
-    do { \
-    wii::stdio::sprintf(errorMsg, "SPM Practice Codes Unhandled NAND error %d\nin %s\n(please report this)", (ret), __FUNCTION__); \
-    wii::OSError::OSFatal(&errorFg, &errorBg, errorMsg); \
-    } while (false)
 
 // evt_nandsettings_handle_read_output()
 EVT_DECLARE_USER_FUNC(evt_nandsettings_handle_read_output, 0)
@@ -217,11 +208,10 @@ s32 evt_nandSettingsFail(spm::evtmgr::EvtEntry * entry, bool firstRun)
 {
     if (firstRun)
     {
-        wii::stdio::sprintf(errorMsg, "SPM Practice Codes NAND error %d\n(please report this)",
-                            spm::evtmgr_cmd::evtGetValue(entry, entry->pCurData[0]));
-        wii::OSError::OSFatal(&errorFg, &errorBg, errorMsg);
+        assertf(0, "SPM Practice Codes NAND error %d\n(please report this)",
+                spm::evtmgr_cmd::evtGetValue(entry, entry->pCurData[0]));
     }
-    return 0;
+    return EVT_RET_BLOCK_WEAK;
 }
 
 void nandSettingsDefaults()
