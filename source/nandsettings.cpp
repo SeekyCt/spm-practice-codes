@@ -12,11 +12,17 @@
 #include <wii/stdio.h>
 #include <wii/string.h>
 
+#ifndef __INTELLISENSE__ 
+    #define NAND_ALIGN __attribute__((aligned(32)))
+#else
+    #define NAND_ALIGN ;
+#endif
+
 namespace mod {
 
 // Data to be passed into NAND lib
-static u8 _settings[ROUND_UP_32(sizeof(NandSettings))] __attribute__((aligned(32)));
-static u8 openBuf[0x4000] __attribute__((aligned(32)));
+static u8 _settings[ROUND_UP_32(sizeof(NandSettings))] NAND_ALIGN;
+static u8 openBuf[0x4000] NAND_ALIGN;
 static wii::NAND::NANDFileInfo fileInfo;
 static wii::NAND::NANDCommandBlock commandBlock;
 
@@ -38,8 +44,6 @@ static char errorMsg[256];
 
 // evt_nandsettings_handle_read_output()
 EVT_DECLARE_USER_FUNC(evt_nandsettings_handle_read_output, 0)
-// evt_nandSettingsWrite(&ret)
-EVT_DECLARE_USER_FUNC(evt_nandSettingsWrite, 1)
 // evt_nandSettingsOpen(mode, &ret)
 EVT_DECLARE_USER_FUNC(evt_nandSettingsOpen, 2)
 // evt_nandSettingsClose(&ret)
@@ -108,7 +112,7 @@ EVT_BEGIN(nand_settings_write)
 
     IF_EQUAL(LW(0), NAND_CODE_OK)
         // If file opened, write it
-        USER_FUNC(evt_nandSettingsWrite, LW(0))
+        USER_FUNC(evt_nand_write, PTR(&fileInfo), PTR(_settings), sizeof(_settings), PTR(&commandBlock), LW(0))
 
         IF_EQUAL(LW(0), (s32)sizeof(_settings))
             // Clean up if successful
@@ -221,30 +225,6 @@ s32 evt_nandsettings_handle_read_output(spm::evtmgr::EvtEntry * entry, bool firs
     }
 
     return EVT_RET_CONTINUE;
-}
-
-s32 evt_nandSettingsWrite(spm::evtmgr::EvtEntry * entry, bool firstRun)
-{
-    // On first run, try read the file
-    if (firstRun)
-    {
-        asyncResult.set = false;
-        s32 ret = wii::NAND::NANDWriteAsync(&fileInfo, &_settings, sizeof(_settings), cb, &commandBlock);
-        if (ret < 0)
-            ERROR(ret);
-    }
-
-    // If the async process has finished, return to script
-    if (asyncResult.set)
-    {
-        wii::OSError::OSReport("nandsettings: wrote with result %d\n", asyncResult.val);
-        spm::evtmgr_cmd::evtSetValue(entry, entry->pCurData[0], asyncResult.val);
-        return 2;
-    }
-    else
-    {
-        return 0;
-    }
 }
 
 s32 evt_nandSettingsOpen(spm::evtmgr::EvtEntry * entry, bool firstRun)
