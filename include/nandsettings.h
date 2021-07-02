@@ -41,7 +41,7 @@ struct NandSettingsV2
 {
     u32 version;
 
-    LogType logOptions[LOG_OPTION_COUNT]; 
+    LogType logOptions[3]; 
 
     bool hudMapDoor;
     bool hudXYZ;    
