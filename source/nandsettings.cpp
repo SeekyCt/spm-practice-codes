@@ -44,8 +44,6 @@ static char errorMsg[256];
 
 // evt_nandsettings_handle_read_output()
 EVT_DECLARE_USER_FUNC(evt_nandsettings_handle_read_output, 0)
-// evt_nandSettingsCheck(&ret)
-EVT_DECLARE_USER_FUNC(evt_nandSettingsCheck, 1)
 // evt_nandSettingsFail(ret)
 EVT_DECLARE_USER_FUNC(evt_nandSettingsFail, 1)
 
@@ -91,7 +89,8 @@ EVT_BEGIN(nand_settings_write)
     // Create file if needed
     IF_EQUAL(LW(0), NAND_CODE_NOT_EXIST)
         // Check creating it is possible
-        USER_FUNC(evt_nandSettingsCheck, LW(0))
+        USER_FUNC(evt_nand_check, BYTES_TO_BLOCKS(sizeof(_settings)), 1,
+                  PTR(&commandBlock), LW(0))
 
         // Try to create if that succeeded
         IF_EQUAL(LW(0), 0)
@@ -212,59 +211,6 @@ s32 evt_nandsettings_handle_read_output(spm::evtmgr::EvtEntry * entry, bool firs
     }
 
     return EVT_RET_CONTINUE;
-}
-
-struct AsyncResult
-{
-    bool set;
-    s32 val;
-};
-static AsyncResult asyncResult;
-
-static u32 checkAnswer;
-s32 evt_nandSettingsCheck(spm::evtmgr::EvtEntry * entry, bool firstRun)
-{
-    // On first run, start check process
-    if (firstRun)
-    {
-        asyncResult.set = false;
-        s32 ret = wii::NAND::NANDCheckAsync(
-            1, 1, &checkAnswer,
-            [](s32 result, wii::NAND::NANDCommandBlock * cmd)
-            {
-                // Store result
-                asyncResult.val = result;
-                
-                // If there was no error checking, review the answer
-                if (result == NAND_CODE_OK)
-                {
-                    (void) cmd;
-
-                    // Game checks for these separately, but both mean we shouldn't continue
-                    if (checkAnswer & (0xa | 0x5))
-                        // Make an error i
-                        asyncResult.val = -128;
-
-                    asyncResult.set = true;
-                }
-            },
-            &commandBlock
-        );
-        if (ret < 0)
-            ERROR(ret);
-    }
-
-    // If the async process has finished, return to script
-    if (asyncResult.set)
-    {
-        wii::OSError::OSReport("nandsettings: checked with result %d\n", asyncResult.val);
-        spm::evtmgr_cmd::evtSetValue(entry, entry->pCurData[0], asyncResult.val);
-        return 2;
-    }
-    else
-    {
-        return 0;
-    }
 }
 
 s32 evt_nandSettingsFail(spm::evtmgr::EvtEntry * entry, bool firstRun)

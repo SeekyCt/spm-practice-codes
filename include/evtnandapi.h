@@ -37,4 +37,8 @@ EVT_DECLARE_USER_FUNC(evt_nand_open, 7)
 //                &s32 ret)
 EVT_DECLARE_USER_FUNC(evt_nand_close, 3)
 
+// evt_nand_check(u32 blockCount, u32 inodeCount, NANDCommandBlock * commandBlock,
+//                &s32 ret)
+EVT_DECLARE_USER_FUNC(evt_nand_check, 4)
+
 }

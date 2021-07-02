@@ -26,6 +26,10 @@ namespace mod {
 
 #define ROUND_UP_32(n) (((n) + 0x1f) & ~0x1f)
 
+#define BYTES_TO_KB(size) ((((size) + 1023) & ~1023) / 1024)
+#define KB_TO_BLOCKS(size) ((((size) + 15) & ~15) / 16)
+#define BYTES_TO_BLOCKS(size) (KB_TO_BLOCKS(BYTES_TO_KB((size))))
+
 // evt_get_cur_pixl(&ret)
 EVT_DECLARE_USER_FUNC(evt_get_cur_pixl, 1)
 

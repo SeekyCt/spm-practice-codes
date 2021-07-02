@@ -17,6 +17,7 @@ using wii::NAND::NANDReadAsync;
 using wii::NAND::NANDWriteAsync;
 using wii::NAND::NANDSafeOpenAsync;
 using wii::NAND::NANDSafeCloseAsync;
+using wii::NAND::NANDCheckAsync;
 using spm::evtmgr::EvtScriptCode;
 using spm::evtmgr::EvtEntry;
 using spm::evtmgr_cmd::evtGetValue;
@@ -34,6 +35,7 @@ struct AsyncResult
     s32 val;
 };
 static AsyncResult asyncResult;
+static u32 checkAnswer;
 
 static void cb(s32 result, wii::NAND::NANDCommandBlock * cmd)
 {
@@ -205,6 +207,53 @@ s32 evt_nand_close(EvtEntry * entry, bool firstRun)
     {
         asyncResult.set = false;
         s32 ret = NANDSafeCloseAsync(fileInfo, cb, commandBlock);
+        NAND_VERIFY_RET(ret);
+    }
+
+    // If the async process has finished, return to script
+    if (asyncResult.set)
+    {
+        NAND_LOG_RESULT(asyncResult.val);
+        evtSetValue(entry, destVar, asyncResult.val);
+        return EVT_RET_CONTINUE;
+    }
+    else
+    {
+        return EVT_RET_BLOCK_WEAK;
+    }
+}
+
+static void checkCb(s32 result, wii::NAND::NANDCommandBlock * cmd)
+{
+    (void) cmd;
+
+    // Store result
+    asyncResult.val = result;
+    
+    // If there was no error checking, review the answer
+    if (result == NAND_CODE_OK)
+    {
+        // Game checks for these separately, but both mean we shouldn't continue
+        if (checkAnswer & (0xa | 0x5))
+            asyncResult.val = -128;
+
+        asyncResult.set = true;
+    }
+}
+
+s32 evt_nand_check(spm::evtmgr::EvtEntry * entry, bool firstRun)
+{
+    EvtScriptCode * args = entry->pCurData;
+    u32 blockCount = (u32) evtGetValue(entry, args[0]);
+    u32 inodeCount = (u32) evtGetValue(entry, args[1]);
+    NANDCommandBlock * commandBlock = (NANDCommandBlock *) evtGetValue(entry, args[2]);
+    s32 destVar = args[3];
+
+    // On first run, start check process
+    if (firstRun)
+    {
+        asyncResult.set = false;
+        s32 ret = NANDCheckAsync(blockCount, inodeCount, &checkAnswer, checkCb, commandBlock);
         NAND_VERIFY_RET(ret);
     }
 
