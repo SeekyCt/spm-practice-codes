@@ -44,8 +44,6 @@ static char errorMsg[256];
 
 // evt_nandsettings_handle_read_output()
 EVT_DECLARE_USER_FUNC(evt_nandsettings_handle_read_output, 0)
-// evt_nandSettingsClose(&ret)
-EVT_DECLARE_USER_FUNC(evt_nandSettingsClose, 1)
 // evt_nandSettingsCheck(&ret)
 EVT_DECLARE_USER_FUNC(evt_nandSettingsCheck, 1)
 // evt_nandSettingsFail(ret)
@@ -63,7 +61,7 @@ EVT_BEGIN(nand_settings_load)
         USER_FUNC(evt_nandsettings_handle_read_output)
         IF_LARGE_EQUAL(LW(0), 0)
             // Clean up if successful
-            USER_FUNC(evt_nandSettingsClose, LW(0))
+            USER_FUNC(evt_nand_close, PTR(&fileInfo), PTR(&commandBlock), LW(0))
             IF_EQUAL(LW(0), 0)
                 // If it closed, signal loading
                 SET_RAM(1, PTR(&gNandSettingsSuccess))
@@ -118,7 +116,7 @@ EVT_BEGIN(nand_settings_write)
 
         IF_EQUAL(LW(0), (s32)sizeof(_settings))
             // Clean up if successful
-            USER_FUNC(evt_nandSettingsClose, LW(0))
+            USER_FUNC(evt_nand_close, PTR(&fileInfo), PTR(&commandBlock), LW(0))
             IF_EQUAL(LW(0), 0)
                 SET_RAM(1, PTR(&gNandSettingsSuccess))
                 RETURN()
@@ -138,7 +136,7 @@ EVT_BEGIN(nand_settings_delete)
 
     IF_EQUAL(LW(0), NAND_CODE_OK)
         // Try close file
-        USER_FUNC(evt_nandSettingsClose, LW(0))
+        USER_FUNC(evt_nand_close, PTR(&fileInfo), PTR(&commandBlock), LW(0))
 
         IF_EQUAL(LW(0), NAND_CODE_OK)
             // Try deleting settings file
@@ -161,20 +159,6 @@ EVT_BEGIN(nand_settings_delete)
     // If an unhandled NAND error happened, kill the game
     USER_FUNC(evt_nandSettingsFail, LW(0))
 EVT_END()
-
-struct AsyncResult
-{
-    bool set;
-    s32 val;
-};
-static AsyncResult asyncResult;
-
-static void cb(s32 result, wii::NAND::NANDCommandBlock * cmd)
-{
-    (void) cmd;
-    asyncResult.val = result;
-    asyncResult.set = true;
-}
 
 s32 evt_nandsettings_handle_read_output(spm::evtmgr::EvtEntry * entry, bool firstRun)
 {
@@ -230,29 +214,12 @@ s32 evt_nandsettings_handle_read_output(spm::evtmgr::EvtEntry * entry, bool firs
     return EVT_RET_CONTINUE;
 }
 
-s32 evt_nandSettingsClose(spm::evtmgr::EvtEntry * entry, bool firstRun)
+struct AsyncResult
 {
-    // On first run, try close file
-    if (firstRun)
-    {
-        asyncResult.set = false;
-        s32 ret = wii::NAND::NANDSafeCloseAsync(&fileInfo, cb, &commandBlock);;
-        if (ret < 0)
-            ERROR(ret);
-    }
-
-    // If the async process has finished, return to script
-    if (asyncResult.set)
-    {
-        wii::OSError::OSReport("nandsettings: closed with result %d\n", asyncResult.val);
-        spm::evtmgr_cmd::evtSetValue(entry, entry->pCurData[0], asyncResult.val);
-        return 2;
-    }
-    else
-    {
-        return 0;
-    }
-}
+    bool set;
+    s32 val;
+};
+static AsyncResult asyncResult;
 
 static u32 checkAnswer;
 s32 evt_nandSettingsCheck(spm::evtmgr::EvtEntry * entry, bool firstRun)

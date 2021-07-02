@@ -16,7 +16,9 @@ using wii::NAND::NANDDeleteAsync;
 using wii::NAND::NANDReadAsync;
 using wii::NAND::NANDWriteAsync;
 using wii::NAND::NANDSafeOpenAsync;
+using wii::NAND::NANDSafeCloseAsync;
 using spm::evtmgr::EvtScriptCode;
+using spm::evtmgr::EvtEntry;
 using spm::evtmgr_cmd::evtGetValue;
 using spm::evtmgr_cmd::evtSetValue;
 
@@ -40,7 +42,7 @@ static void cb(s32 result, wii::NAND::NANDCommandBlock * cmd)
     asyncResult.set = true;
 }
 
-s32 evt_nand_create(spm::evtmgr::EvtEntry * entry, bool firstRun)
+s32 evt_nand_create(EvtEntry * entry, bool firstRun)
 {
     EvtScriptCode * args = entry->pCurData;
     const char * filename = (const char *) evtGetValue(entry, args[0]);
@@ -70,7 +72,7 @@ s32 evt_nand_create(spm::evtmgr::EvtEntry * entry, bool firstRun)
     }
 }
 
-s32 evt_nand_delete(spm::evtmgr::EvtEntry * entry, bool firstRun)
+s32 evt_nand_delete(EvtEntry * entry, bool firstRun)
 {
     EvtScriptCode * args = entry->pCurData;
     const char * filename = (const char *) evtGetValue(entry, args[0]);
@@ -81,7 +83,7 @@ s32 evt_nand_delete(spm::evtmgr::EvtEntry * entry, bool firstRun)
     if (firstRun)
     {
         asyncResult.set = false;
-        s32 ret = NANDDeleteAsync(filename, cb, commandBlock);;
+        s32 ret = NANDDeleteAsync(filename, cb, commandBlock);
         NAND_VERIFY_RET(ret);
     }
 
@@ -98,7 +100,7 @@ s32 evt_nand_delete(spm::evtmgr::EvtEntry * entry, bool firstRun)
     }
 }
 
-s32 evt_nand_read(spm::evtmgr::EvtEntry * entry, bool firstRun)
+s32 evt_nand_read(EvtEntry * entry, bool firstRun)
 {
     EvtScriptCode * args = entry->pCurData;
     NANDFileInfo * fileInfo = (NANDFileInfo *) evtGetValue(entry, args[0]);
@@ -128,7 +130,7 @@ s32 evt_nand_read(spm::evtmgr::EvtEntry * entry, bool firstRun)
     }
 }
 
-s32 evt_nand_write(spm::evtmgr::EvtEntry * entry, bool firstRun)
+s32 evt_nand_write(EvtEntry * entry, bool firstRun)
 {
     EvtScriptCode * args = entry->pCurData;
     NANDFileInfo * fileInfo = (NANDFileInfo *) evtGetValue(entry, args[0]);
@@ -158,7 +160,7 @@ s32 evt_nand_write(spm::evtmgr::EvtEntry * entry, bool firstRun)
     }
 }
 
-s32 evt_nand_open(spm::evtmgr::EvtEntry * entry, bool firstRun)
+s32 evt_nand_open(EvtEntry * entry, bool firstRun)
 {
     EvtScriptCode * args = entry->pCurData;
     const char * filename = (const char *) evtGetValue(entry, args[0]);
@@ -175,6 +177,34 @@ s32 evt_nand_open(spm::evtmgr::EvtEntry * entry, bool firstRun)
         asyncResult.set = false;
         s32 ret = NANDSafeOpenAsync(filename, fileInfo, mode, buffer, bufferSize, cb,
                                     commandBlock);
+        NAND_VERIFY_RET(ret);
+    }
+
+    // If the async process has finished, return to script
+    if (asyncResult.set)
+    {
+        NAND_LOG_RESULT(asyncResult.val);
+        evtSetValue(entry, destVar, asyncResult.val);
+        return EVT_RET_CONTINUE;
+    }
+    else
+    {
+        return EVT_RET_BLOCK_WEAK;
+    }
+}
+
+s32 evt_nand_close(EvtEntry * entry, bool firstRun)
+{
+    EvtScriptCode * args = entry->pCurData;
+    NANDFileInfo * fileInfo = (NANDFileInfo *) evtGetValue(entry, args[0]);
+    NANDCommandBlock * commandBlock = (NANDCommandBlock *) evtGetValue(entry, args[1]);
+    s32 destVar = args[2];
+
+    // On first run, try close file
+    if (firstRun)
+    {
+        asyncResult.set = false;
+        s32 ret = NANDSafeCloseAsync(fileInfo, cb, commandBlock);
         NAND_VERIFY_RET(ret);
     }
 

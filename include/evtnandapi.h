@@ -33,4 +33,8 @@ EVT_DECLARE_USER_FUNC(evt_nand_write, 5)
 //               &s32 ret)
 EVT_DECLARE_USER_FUNC(evt_nand_open, 7)
 
+// evt_nand_close(NANDFileInfo * fileInfo, NANDCommandBlock * commandBlock,
+//                &s32 ret)
+EVT_DECLARE_USER_FUNC(evt_nand_close, 3)
+
 }
