@@ -15,6 +15,7 @@ using wii::NAND::NANDCreateAsync;
 using wii::NAND::NANDDeleteAsync;
 using wii::NAND::NANDReadAsync;
 using wii::NAND::NANDWriteAsync;
+using wii::NAND::NANDSafeOpenAsync;
 using spm::evtmgr::EvtScriptCode;
 using spm::evtmgr_cmd::evtGetValue;
 using spm::evtmgr_cmd::evtSetValue;
@@ -141,6 +142,39 @@ s32 evt_nand_write(spm::evtmgr::EvtEntry * entry, bool firstRun)
     {
         asyncResult.set = false;
         s32 ret = NANDWriteAsync(fileInfo, data, length, cb, commandBlock);
+        NAND_VERIFY_RET(ret);
+    }
+
+    // If the async process has finished, return to script
+    if (asyncResult.set)
+    {
+        NAND_LOG_RESULT(asyncResult.val);
+        evtSetValue(entry, destVar, asyncResult.val);
+        return EVT_RET_CONTINUE;
+    }
+    else
+    {
+        return EVT_RET_BLOCK_WEAK;
+    }
+}
+
+s32 evt_nand_open(spm::evtmgr::EvtEntry * entry, bool firstRun)
+{
+    EvtScriptCode * args = entry->pCurData;
+    const char * filename = (const char *) evtGetValue(entry, args[0]);
+    NANDFileInfo * fileInfo = (NANDFileInfo *) evtGetValue(entry, args[1]);
+    u8 mode = (u8) evtGetValue(entry, args[2]);
+    void * buffer = (void *) evtGetValue(entry, args[3]);
+    u32 bufferSize = (u32) evtGetValue(entry, args[4]);
+    NANDCommandBlock * commandBlock = (NANDCommandBlock *) evtGetValue(entry, args[5]);
+    s32 destVar = args[6];
+
+    // On first run, try open the file
+    if (firstRun)
+    {
+        asyncResult.set = false;
+        s32 ret = NANDSafeOpenAsync(filename, fileInfo, mode, buffer, bufferSize, cb,
+                                    commandBlock);
         NAND_VERIFY_RET(ret);
     }
 

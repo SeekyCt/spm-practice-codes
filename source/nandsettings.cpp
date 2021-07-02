@@ -44,8 +44,6 @@ static char errorMsg[256];
 
 // evt_nandsettings_handle_read_output()
 EVT_DECLARE_USER_FUNC(evt_nandsettings_handle_read_output, 0)
-// evt_nandSettingsOpen(mode, &ret)
-EVT_DECLARE_USER_FUNC(evt_nandSettingsOpen, 2)
 // evt_nandSettingsClose(&ret)
 EVT_DECLARE_USER_FUNC(evt_nandSettingsClose, 1)
 // evt_nandSettingsCheck(&ret)
@@ -55,11 +53,13 @@ EVT_DECLARE_USER_FUNC(evt_nandSettingsFail, 1)
 
 EVT_BEGIN(nand_settings_load)
     // Try open settings file
-    USER_FUNC(evt_nandSettingsOpen, NAND_MODE_READ, LW(0))
+    USER_FUNC(evt_nand_open, PTR(SETTINGS_FILE_NAME), PTR(&fileInfo), NAND_MODE_READ,
+              PTR(openBuf), sizeof(openBuf), PTR(&commandBlock), LW(0))
 
     IF_EQUAL(LW(0), NAND_CODE_OK)
         // If file opened, read it
-        USER_FUNC(evt_nand_read, PTR(&fileInfo), PTR(_settings), sizeof(_settings), PTR(&commandBlock), LW(0))
+        USER_FUNC(evt_nand_read, PTR(&fileInfo), PTR(_settings), sizeof(_settings),
+                  PTR(&commandBlock), LW(0))
         USER_FUNC(evt_nandsettings_handle_read_output)
         IF_LARGE_EQUAL(LW(0), 0)
             // Clean up if successful
@@ -87,7 +87,8 @@ EVT_BEGIN(nand_settings_write)
     LBL(retry)
 
     // Try open settings file
-    USER_FUNC(evt_nandSettingsOpen, NAND_MODE_WRITE, LW(0))
+    USER_FUNC(evt_nand_open, PTR(SETTINGS_FILE_NAME), PTR(&fileInfo), NAND_MODE_WRITE,
+              PTR(openBuf), sizeof(openBuf), PTR(&commandBlock), LW(0))
 
     // Create file if needed
     IF_EQUAL(LW(0), NAND_CODE_NOT_EXIST)
@@ -96,7 +97,7 @@ EVT_BEGIN(nand_settings_write)
 
         // Try to create if that succeeded
         IF_EQUAL(LW(0), 0)
-            USER_FUNC(evt_nand_create, PTR(SETTINGS_FILE_NAME), NAND_PERMISSION_READ_WRITE,
+            USER_FUNC(evt_nand_create, PTR(SETTINGS_FILE_NAME), NAND_PERM_READ_WRITE,
                       0, PTR(&commandBlock), LW(0))
         END_IF()
 
@@ -112,7 +113,8 @@ EVT_BEGIN(nand_settings_write)
 
     IF_EQUAL(LW(0), NAND_CODE_OK)
         // If file opened, write it
-        USER_FUNC(evt_nand_write, PTR(&fileInfo), PTR(_settings), sizeof(_settings), PTR(&commandBlock), LW(0))
+        USER_FUNC(evt_nand_write, PTR(&fileInfo), PTR(_settings), sizeof(_settings),
+                  PTR(&commandBlock), LW(0))
 
         IF_EQUAL(LW(0), (s32)sizeof(_settings))
             // Clean up if successful
@@ -131,7 +133,8 @@ EVT_END()
 
 EVT_BEGIN(nand_settings_delete)
     // Try open settings file to check it exists
-    USER_FUNC(evt_nandSettingsOpen, NAND_MODE_WRITE, LW(0))
+    USER_FUNC(evt_nand_open, PTR(SETTINGS_FILE_NAME), PTR(&fileInfo), NAND_MODE_READ,
+              PTR(openBuf), sizeof(openBuf), PTR(&commandBlock), LW(0))
 
     IF_EQUAL(LW(0), NAND_CODE_OK)
         // Try close file
@@ -227,30 +230,6 @@ s32 evt_nandsettings_handle_read_output(spm::evtmgr::EvtEntry * entry, bool firs
     return EVT_RET_CONTINUE;
 }
 
-s32 evt_nandSettingsOpen(spm::evtmgr::EvtEntry * entry, bool firstRun)
-{
-    // On first run, try open the file
-    if (firstRun)
-    {
-        asyncResult.set = false;
-        s32 ret = wii::NAND::NANDSafeOpenAsync(SETTINGS_FILE_NAME, &fileInfo, entry->pCurData[0], openBuf, sizeof(openBuf), cb, &commandBlock);
-        if (ret < 0)
-            ERROR(ret);
-    }
-
-    // If the async process has finished, return to script
-    if (asyncResult.set)
-    {
-        wii::OSError::OSReport("nandsettings: opened with result %d\n", asyncResult.val);
-        spm::evtmgr_cmd::evtSetValue(entry, entry->pCurData[1], asyncResult.val);
-        return 2;
-    }
-    else
-    {
-        return 0;
-    }
-}
-
 s32 evt_nandSettingsClose(spm::evtmgr::EvtEntry * entry, bool firstRun)
 {
     // On first run, try close file
@@ -325,7 +304,7 @@ s32 evt_nandSettingsFail(spm::evtmgr::EvtEntry * entry, bool firstRun)
 {
     if (firstRun)
     {
-        wii::stdio::sprintf(errorMsg, "SPM Practice Codes NAND error %d\nin callback\n(please report this)", 
+        wii::stdio::sprintf(errorMsg, "SPM Practice Codes NAND error %d\n(please report this)",
                             spm::evtmgr_cmd::evtGetValue(entry, entry->pCurData[0]));
         wii::OSError::OSFatal(&errorFg, &errorBg, errorMsg);
     }
