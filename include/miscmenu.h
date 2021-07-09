@@ -11,13 +11,17 @@
 
 namespace mod {
 
+#define MISC_SETTING_COUNT 1
+
 class MiscMenu : public MenuWindow
 {
 private:
+    MenuButton * mOptions[MISC_SETTING_COUNT];
     void optionToggle(MenuButton * button, bool &setting);
 
 protected:
     virtual void close() override;
+    virtual void disp() override;
 
 public:
     MiscMenu();

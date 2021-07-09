@@ -34,10 +34,12 @@
 #include <wii/ipc.h>
 #include <wii/OSError.h>
 #include <wii/wpad.h>
+#include <wii/string.h>
 
 namespace mod {
 
 bool gIsDolphin;
+bool gIsRiivolution;
 bool gIs4_3;
 
 /*
@@ -133,10 +135,8 @@ void spmarioMainPatch()
     Entrypoint
 */
 
-void main()
+static void checkForDolphin()
 {
-    wii::OSError::OSReport(MOD_VERSION": main running\n");
-
     // Thanks to TheLordScruffy for telling me about this
     gIsDolphin = wii::IPC::IOS_Open("/sys", 1) == -106;
 
@@ -150,6 +150,19 @@ void main()
             wii::IPC::IOS_Close(ret);
         }
     }
+}
+
+static void checkForRiivolution()
+{
+    gIsRiivolution = wii::string::strcmp((char *) 0x805ae2d8, "/dev/di") != 0;
+}
+
+void main()
+{
+    wii::OSError::OSReport(MOD_VERSION": main running\n");
+
+    checkForDolphin();
+    checkForRiivolution();
 
     // Fix dolphin hanging on game shutdown
     if (gIsDolphin)

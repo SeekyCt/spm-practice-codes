@@ -1,5 +1,6 @@
-#include "miscmenu.h"
 #include "mainmenu.h"
+#include "miscmenu.h"
+#include "mod.h"
 #include "nandsettings.h"
 #include "util.h"
 
@@ -17,7 +18,7 @@ void MiscMenu::optionToggle(MenuButton * button, bool &setting)
 
 #define OPTION(message, setting) \
     new MenuButton(this, message, labelX, y, nullptr, nullptr, false, scale); \
-    options[n++] = new MenuButton(this, getToggleName(setting), valueX, y,    \
+    mOptions[n++] = new MenuButton(this, getToggleName(setting), valueX, y,   \
         [](MenuButton * button, void * param)                                 \
         {                                                                     \
             MiscMenu * instance = reinterpret_cast<MiscMenu *>(param);        \
@@ -27,7 +28,24 @@ void MiscMenu::optionToggle(MenuButton * button, bool &setting)
         this, false, scale);                                                  \
     y -= yDiff
 
-#define SETTING_COUNT 1
+enum OptionIdxs
+{
+    OPTION_PIT_TEXT = 0
+};
+
+void MiscMenu::disp()
+{
+    // Run main display function
+    MenuWindow::disp();
+    
+    // Display warning if selected
+    if (mCurButton == mOptions[OPTION_PIT_TEXT] && !gIsRiivolution && !gIsDolphin)
+    {
+        static const wii::RGBA colour {0xff, 0x00, 0x00, 0xff};
+        drawString("Note: custom pit text is not supported from NAND",
+                   -320.0f, -100.0f, &colour, 0.8f);
+    }
+}
 
 MiscMenu::MiscMenu()
 {
@@ -36,17 +54,16 @@ MiscMenu::MiscMenu()
     const f32 scale = 0.8f;
     const f32 yDiff = (FONT_HEIGHT * scale) + 5.0f;
 
-    MenuButton * options[SETTING_COUNT];
     f32 y = 170;
     int n = 0;
 
     OPTION("Load Pit Text From File", gSettings->customPitText);
 
-    for (int i = 1; i < SETTING_COUNT; i++)
-        buttonLinkVertical(options[i - 1], options[i]);
+    for (int i = 1; i < MISC_SETTING_COUNT; i++)
+        buttonLinkVertical(mOptions[i - 1], mOptions[i]);
 
     // Set starting button and title
-    mCurButton = options[0];
+    mCurButton = mOptions[0];
     mTitle = "Miscellaneous Options";
 }
 
