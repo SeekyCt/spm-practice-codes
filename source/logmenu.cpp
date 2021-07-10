@@ -3,7 +3,6 @@
 #include "scriptlog.h"
 
 #include <types.h>
-#include <spm/fontmgr.h>
 
 namespace mod {
 

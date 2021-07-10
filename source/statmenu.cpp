@@ -1,7 +1,6 @@
 #include "statmenu.h"
 
 #include <types.h>
-#include <spm/fontmgr.h>
 #include <spm/mario_pouch.h>
 #include <spm/wpadmgr.h>
 #include <wii/stdio.h>

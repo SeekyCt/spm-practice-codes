@@ -2,7 +2,6 @@
 #include "util.h"
 
 #include <types.h>
-#include <spm/fontmgr.h>
 #include <spm/item_data.h>
 #include <spm/mario_pouch.h>
 #include <spm/msgdrv.h>

@@ -3,7 +3,6 @@
 #include "patch.h"
 
 #include <types.h>
-#include <spm/fontmgr.h>
 #include <wii/OSError.h>
 
 namespace mod {

@@ -2,7 +2,6 @@
 #include "quitmenu.h"
 
 #include <types.h>
-#include <spm/fontmgr.h>
 #include <spm/seqdrv.h>
 
 namespace mod {

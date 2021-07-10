@@ -1,7 +1,6 @@
 #include "mod_ui_base/menuscroller.h"
 
 #include <types.h>
-#include <spm/fontmgr.h>
 #include <wii/wpad.h>
 
 namespace mod {

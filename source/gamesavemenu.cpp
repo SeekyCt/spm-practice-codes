@@ -8,7 +8,6 @@
 #include <spm/evtmgr.h>
 #include <spm/evtmgr_cmd.h>
 #include <spm/evt_mobj.h>
-#include <spm/fontmgr.h>
 #include <spm/nandmgr.h>
 #include <spm/hud.h>
 #include <spm/seq_mapchange.h>

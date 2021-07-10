@@ -10,6 +10,8 @@
 
 namespace mod {
 
+#define FONT_HEIGHT 20
+
 class Window
 {
 private:

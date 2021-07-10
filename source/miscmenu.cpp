@@ -4,7 +4,6 @@
 #include "util.h"
 
 #include <types.h>
-#include <spm/fontmgr.h>
 #include <wii/stdio.h>
 
 namespace mod {

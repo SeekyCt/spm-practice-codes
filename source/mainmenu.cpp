@@ -13,7 +13,6 @@
 #include "statmenu.h"
 
 #include <types.h>
-#include <spm/fontmgr.h>
 
 namespace mod {
 

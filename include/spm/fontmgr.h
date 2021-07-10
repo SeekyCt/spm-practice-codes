@@ -6,8 +6,6 @@
 
 namespace spm::fontmgr {
 
-#define FONT_HEIGHT 20
-
 extern "C" {
 
 void FontDrawStart();
