@@ -35,8 +35,8 @@ int gNandSettingsSuccess;
 
 // evt_nandsettings_handle_read_output()
 EVT_DECLARE_USER_FUNC(evt_nandsettings_handle_read_output, 0)
-// evt_nandSettingsFail(ret)
-EVT_DECLARE_USER_FUNC(evt_nandSettingsFail, 1)
+// evt_nandsettings_fail(ret)
+EVT_DECLARE_USER_FUNC(evt_nandsettings_fail, 1)
 
 EVT_BEGIN(nand_settings_load)
     // Try open settings file
@@ -66,7 +66,7 @@ EVT_BEGIN(nand_settings_load)
     END_IF()
 
     // If an unhandled NAND error happened, kill the game
-    USER_FUNC(evt_nandSettingsFail, LW(0))
+    USER_FUNC(evt_nandsettings_fail, LW(0))
 EVT_END()
 
 #define retry 1
@@ -115,7 +115,7 @@ EVT_BEGIN(nand_settings_write)
     END_IF()
 
     // If an unhandled NAND error happened, kill the game
-    USER_FUNC(evt_nandSettingsFail, LW(0))
+    USER_FUNC(evt_nandsettings_fail, LW(0))
 EVT_END()
 #undef retry
 
@@ -147,7 +147,7 @@ EVT_BEGIN(nand_settings_delete)
     END_IF()
 
     // If an unhandled NAND error happened, kill the game
-    USER_FUNC(evt_nandSettingsFail, LW(0))
+    USER_FUNC(evt_nandsettings_fail, LW(0))
 EVT_END()
 
 s32 evt_nandsettings_handle_read_output(spm::evtmgr::EvtEntry * entry, bool firstRun)
@@ -208,7 +208,7 @@ s32 evt_nandsettings_handle_read_output(spm::evtmgr::EvtEntry * entry, bool firs
     return EVT_RET_CONTINUE;
 }
 
-s32 evt_nandSettingsFail(spm::evtmgr::EvtEntry * entry, bool firstRun)
+s32 evt_nandsettings_fail(spm::evtmgr::EvtEntry * entry, bool firstRun)
 {
     if (firstRun)
     {
