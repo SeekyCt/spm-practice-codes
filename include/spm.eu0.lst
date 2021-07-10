@@ -246,6 +246,18 @@
 801a28ac:FontGetMessageWidth
 // more
 
+// memory.c
+// text
+801a626c:__memAlloc
+801a62f0:__memFree
+801a6e34:__dl__FPv
+// data
+8042a408:size_table
+// sdata
+805ae168:memoryWp
+805ae16c:memorySwp
+// more
+
 // parse.c
 801a6e9c:parseInit
 801a6ebc:getTag
@@ -284,17 +296,6 @@
 
 // seqdef.c
 804287a8:seq_data
-
-// memory.c
-// text
-801a626c:__memAlloc
-801a62f0:__memFree
-// data
-8042a408:size_table
-// sdata
-805ae168:memoryWp
-805ae16c:memorySwp
-// more
 
 // DEMOInit.c
 801a94c8:DEMOBeforeRender

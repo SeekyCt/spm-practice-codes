@@ -25,17 +25,17 @@ char newChars[][2] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "<", ">"
 void romfontExpand()
 {
     // Allocate memory to load font, there's not enough space in heap 0 for the jp allocations
-    void * fontHeader;
-    void * temp;
+    u8 * fontHeader;
+    u8 * temp;
     if (wii::OSFont::OSGetFontEncode() == 1)
     {
-        fontHeader = spm::memory::__memAlloc(1, 0x90ee4);
-        temp = spm::memory::__memAlloc(1, 0x4d000);
+        fontHeader = new (spm::memory::Heap::MAP) u8[0x90ee4];
+        temp = new (spm::memory::Heap::MAP) u8[0x4d000];
     }
     else
     {
-        fontHeader = spm::memory::__memAlloc(1, 0x10120);
-        temp = spm::memory::__memAlloc(1, 0x3000);
+        fontHeader = new (spm::memory::Heap::MAP) u8[0x10120];
+        temp = new (spm::memory::Heap::MAP) u8[0x3000];
     }
 
     // Load font
@@ -57,8 +57,8 @@ void romfontExpand()
     }
 
     // Free font working memory
-    spm::memory::__memFree(1, fontHeader);
-    spm::memory::__memFree(1, temp);
+    delete fontHeader;
+    delete temp;
 
     // Replace old entry array
     delete[] romfontWp->entries;

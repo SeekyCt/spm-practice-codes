@@ -49,14 +49,31 @@ struct HeapSize
 };
 static_assert(sizeof(HeapSize) == 0x8);
 
+enum class Heap
+{
+    MAIN = 0,
+    MAP = 1,
+    UNK_3 = 3,
+    UNK_4 = 4,
+    UNK_5 = 5,
+    UNK_6 = 6,
+    SMART = 7,
+    UNK_8 = 8
+};
+
 extern "C" {
 
 extern MemWork * memoryWp;
 extern HeapSize size_table[HEAP_COUNT];
 
-void *__memAlloc(u32 heap, u32 size);
-void __memFree(u32 heap, void * ptr);
+void *__memAlloc(Heap heap, u32 size);
+void __memFree(Heap heap, void * ptr);
+void __dl__FPv(void *);
 
 }
 
 }
+
+// custom in cxx.cpp
+void * operator new(std::size_t size, spm::memory::Heap heap);
+void * operator new[](std::size_t size, spm::memory::Heap heap);

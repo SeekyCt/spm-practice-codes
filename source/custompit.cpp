@@ -47,13 +47,11 @@ static int custom_evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
         }
 
         // Allocate work
-        danWp = (spm::dan::DanWork *) spm::memory::__memAlloc(1, sizeof(*danWp));
+        danWp = new (spm::memory::Heap::MAP) DanWork;
         wii::string::memset(danWp, 0, sizeof(*danWp));
-        danWp->dungeons = (spm::dan::DanDungeon *) spm::memory::__memAlloc(1,
-                                      sizeof(spm::dan::DanDungeon[DUNGEON_MAX]));
+        danWp->dungeons = new (spm::memory::Heap::MAP) DanDungeon[DUNGEON_MAX];
         wii::string::memset(danWp->dungeons, 0, sizeof(DanDungeon[DUNGEON_MAX]));
     }
-
 
     // Prepare pit text to be read
     char * decompPitText = nullptr;
@@ -69,7 +67,7 @@ static int custom_evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
     else
     {
         u32 size = spm::lzss10::lzss10GetDecompSize(pitText); // GCC can't handle lzss10ParseHeader
-        decompPitText = (char *) spm::memory::__memAlloc(0, size);
+        decompPitText = new char[size];
         spm::lzss10::lzss10Decompress(pitText, decompPitText);
         spm::parse::parseInit(decompPitText, size);
     }
@@ -122,7 +120,7 @@ static int custom_evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
     if (useCustomText)
         spm::filemgr::fileFree(file);
     else
-        spm::memory::__memFree(0, decompPitText);
+        delete decompPitText;
 
     return EVT_RET_CONTINUE;
 }
