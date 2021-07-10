@@ -17,6 +17,8 @@
 
 namespace mod {
 
+s32 MainMenu::sLastOption = 0;
+
 MainMenu::MainMenu()
 {
     const f32 optionsX = -330.0f;
@@ -158,9 +160,27 @@ MainMenu::MainMenu()
         buttonLinkVertical(mOptions[i], mOptions[i + 1]);
     buttonLinkVertical(mOptions[MAIN_MENU_OPTION_COUNT - 1], mOptions[0]);
 
-    mCurButton = mOptions[0];
+    mCurButton = mOptions[sLastOption];
 
     mTitle = MOD_VERSION;
+}
+
+void MainMenu::recordLastOption()
+{
+    for (int i = 0; i < MAIN_MENU_OPTION_COUNT; i++)
+    {
+        if (mOptions[i] == mCurButton)
+        {
+            sLastOption = i;
+            return;
+        }
+    }
+    sLastOption = 0;
+}
+
+MainMenu::~MainMenu()
+{
+    recordLastOption();
 }
 
 }
