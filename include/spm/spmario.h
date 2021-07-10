@@ -8,7 +8,7 @@ namespace spm::spmario {
 struct SpmarioGlobals
 {
     u32 flags;
-    f32 fps;
+    s32 fps;
     s32 language;
     int discIsEjected;
     u32 systemLevelFlags;

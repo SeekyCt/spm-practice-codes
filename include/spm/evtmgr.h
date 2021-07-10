@@ -9,7 +9,7 @@ namespace spm::evtmgr {
 #define MAX_EVT_JMPTBL 16
 
 struct EvtEntry;
-typedef s32 (*user_func)(struct EvtEntry * entry, bool firstRun);
+typedef s32 (user_func)(struct EvtEntry * entry, bool firstRun);
 typedef s32 EvtScriptCode;
 
 #define EVT_FLAG_IN_USE (1 << 0) 

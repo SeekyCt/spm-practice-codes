@@ -241,7 +241,7 @@ GameSaveMenu::GameSaveMenu()
     initMainScreen();
 }
 
-void (*nandUpdateSaveReal)(int saveId);
+static void (*nandUpdateSaveReal)(int saveId);
 
 void GameSaveMenu::pitSavePatch()
 {
