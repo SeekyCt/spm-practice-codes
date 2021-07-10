@@ -1,5 +1,4 @@
 #include "inventorymenu.h"
-#include "mainmenu.h"
 #include "util.h"
 
 #include <types.h>
@@ -552,8 +551,7 @@ void InventoryMenu::close()
     else
     {
         // Change back to parent menu
-        delete MenuWindow::sCurMenu;
-        MenuWindow::sCurMenu = new MainMenu();
+        ChildMenu::close();
     }
 }
 

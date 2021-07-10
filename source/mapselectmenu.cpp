@@ -1,6 +1,5 @@
 #include "evt_cmd.h"
 #include "mapselectmenu.h"
-#include "mainmenu.h"
 #include "nandsettings.h"
 #include "util.h"
 
@@ -444,13 +443,6 @@ MapSelectMenu::MapSelectMenu()
     // Set starting button and title
     mCurButton = mMapDisp;
     mTitle = "Map Select";
-}
-
-void MapSelectMenu::close()
-{
-    // Change back to parent menu
-    delete MenuWindow::sCurMenu;
-    MenuWindow::sCurMenu = new MainMenu();
 }
 
 static EntranceNameList * scanScript(const int * script)

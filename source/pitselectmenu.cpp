@@ -1,6 +1,5 @@
 #include "evt_cmd.h"
 #include "pitselectmenu.h"
-#include "mainmenu.h"
 #include "nandsettings.h"
 #include "util.h"
 
@@ -319,13 +318,6 @@ PitSelectMenu::PitSelectMenu()
     // Set starting button and title
     mCurButton = mGroupScroller;
     mTitle = "Pit Floor Warp";
-}
-
-void PitSelectMenu::close()
-{
-    // Change back to parent menu
-    delete MenuWindow::sCurMenu;
-    MenuWindow::sCurMenu = new MainMenu();
 }
 
 }

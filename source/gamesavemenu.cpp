@@ -1,7 +1,6 @@
 #include "mod_ui_base/centredbutton.h"
 #include "evt_cmd.h"
 #include "gamesavemenu.h"
-#include "mainmenu.h"
 #include "patch.h"
 #include "util.h"
 
@@ -240,12 +239,6 @@ void GameSaveMenu::exitScreen()
 GameSaveMenu::GameSaveMenu()
 {
     initMainScreen();
-}
-
-void GameSaveMenu::close()
-{
-    delete MenuWindow::sCurMenu;
-    MenuWindow::sCurMenu = new MainMenu();
 }
 
 void (*nandUpdateSaveReal)(int saveId);

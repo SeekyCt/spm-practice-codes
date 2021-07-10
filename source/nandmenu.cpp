@@ -1,4 +1,3 @@
-#include "mainmenu.h"
 #include "nandmenu.h"
 #include "nandsettings.h"
 
@@ -71,8 +70,7 @@ void NandMenu::disp()
     if (mShouldClose)
     {
         // Change back to parent menu
-        delete MenuWindow::sCurMenu;
-        MenuWindow::sCurMenu = new MainMenu();
+        ChildMenu::close();
     }
     else
     {
@@ -186,8 +184,7 @@ void NandMenu::fullClose()
     if (mTask != NandTask::NONE)
         return;
     
-    delete this;
-    MenuWindow::sCurMenu = nullptr;
+    MenuWindow::fullClose();
 }
 
 }

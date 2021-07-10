@@ -6,11 +6,11 @@
 #pragma once
 
 #include "mod_ui_base/menuscroller.h"
-#include "mod_ui_base/menuwindow.h"
+#include "childmenu.h"
 
 namespace mod {
 
-class PitSelectMenu : public MenuWindow
+class PitSelectMenu : public ChildMenu
 {
 private:
     int mGroup;
@@ -30,8 +30,7 @@ private:
 
 protected:
     virtual void disp() override;
-    virtual void close() override;
-
+    
 public:
     static const char * sMapName;
     static int sGSW1;

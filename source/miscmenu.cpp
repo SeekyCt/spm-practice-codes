@@ -1,4 +1,3 @@
-#include "mainmenu.h"
 #include "miscmenu.h"
 #include "mod.h"
 #include "nandsettings.h"
@@ -65,13 +64,6 @@ MiscMenu::MiscMenu()
     // Set starting button and title
     mCurButton = mOptions[0];
     mTitle = "Miscellaneous Options";
-}
-
-void MiscMenu::close()
-{
-    // Change back to parent menu
-    delete MenuWindow::sCurMenu;
-    MenuWindow::sCurMenu = new MainMenu();
 }
 
 }

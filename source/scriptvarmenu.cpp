@@ -1,4 +1,3 @@
-#include "mainmenu.h"
 #include "scriptvarmenu.h"
 #include "util.h"
 
@@ -324,13 +323,6 @@ ScriptVarMenu::ScriptVarMenu()
     // Set starting button and title
     mCurButton = mGroupDisp;
     mTitle = "Script Variable Editor";
-}
-
-void ScriptVarMenu::close()
-{
-    // Change back to parent menu
-    delete MenuWindow::sCurMenu;
-    MenuWindow::sCurMenu = new MainMenu();
 }
 
 }

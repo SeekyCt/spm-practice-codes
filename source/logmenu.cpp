@@ -1,5 +1,4 @@
 #include "logmenu.h"
-#include "mainmenu.h"
 #include "nandsettings.h"
 #include "scriptlog.h"
 
@@ -76,13 +75,6 @@ LogMenu::LogMenu()
     // Set starting button and title
     mCurButton = mOptions[0].value;
     mTitle = "Logging Options";
-}
-
-void LogMenu::close()
-{
-    // Change back to parent menu
-    delete MenuWindow::sCurMenu;
-    MenuWindow::sCurMenu = new MainMenu();
 }
 
 }

@@ -1,5 +1,4 @@
 #include "statmenu.h"
-#include "mainmenu.h"
 
 #include <types.h>
 #include <spm/fontmgr.h>
@@ -134,8 +133,7 @@ void StatMenu::disp()
     if (mShouldClose)
     {
         // Change back to parent menu
-        delete MenuWindow::sCurMenu;
-        MenuWindow::sCurMenu = new MainMenu();
+        ChildMenu::close();
         return;
     }
 

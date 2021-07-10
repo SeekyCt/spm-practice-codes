@@ -6,7 +6,7 @@
 #pragma once
 
 #include "mod_ui_base/menuscrollerh.h"
-#include "mod_ui_base/menuwindow.h"
+#include "childmenu.h"
 
 namespace mod {
 
@@ -18,7 +18,7 @@ struct StatOptionGroup
     MenuScrollerH * value;
 };
 
-class StatMenu : public MenuWindow
+class StatMenu : public ChildMenu
 {
 private:
     StatOptionGroup mStats[STAT_COUNT];

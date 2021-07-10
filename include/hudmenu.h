@@ -5,13 +5,13 @@
 
 #pragma once
 
-#include "mod_ui_base/menuwindow.h"
 #include "mod_ui_base/menuscrollerh.h"
+#include "childmenu.h"
 #include "nandsettings.h"
 
 namespace mod {
 
-class HudMenu : public MenuWindow
+class HudMenu : public ChildMenu
 {
 private:
     char mDelayStr[9];
@@ -21,9 +21,6 @@ private:
     void updateDecimalPlaceStr();
     void optionToggle(MenuButton * button, bool &setting);
     void optionDelta(s8 &setting, int change);
-
-protected:
-    virtual void close() override;
 
 public:
     HudMenu();

@@ -6,11 +6,11 @@
 #pragma once
 
 #include "mod_ui_base/menuscroller.h"
-#include "mod_ui_base/menuwindow.h"
+#include "childmenu.h"
 
 namespace mod {
 
-class ScriptVarMenu : public MenuWindow
+class ScriptVarMenu : public ChildMenu
 {
 private:
     int mGroup;
@@ -32,9 +32,6 @@ private:
     static void idDown(MenuScroller * scroller, void * param);
     static void valUp(MenuScroller * scroller, void * param);
     static void valDown(MenuScroller * scroller, void * param);
-
-protected:
-    virtual void close() override;
 
 public:
     ScriptVarMenu();

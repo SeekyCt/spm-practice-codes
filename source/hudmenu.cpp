@@ -1,5 +1,4 @@
 #include "hudmenu.h"
-#include "mainmenu.h"
 #include "nandsettings.h"
 #include "util.h"
 
@@ -115,13 +114,6 @@ HudMenu::HudMenu()
     // Set starting button and title
     mCurButton = options[0];
     mTitle = "HUD Display Options";
-}
-
-void HudMenu::close()
-{
-    // Change back to parent menu
-    delete MenuWindow::sCurMenu;
-    MenuWindow::sCurMenu = new MainMenu();
 }
 
 }

@@ -8,11 +8,11 @@
 #include "mod_ui_base/centredbutton.h"
 #include "mod_ui_base/menuicon.h"
 #include "mod_ui_base/menuscroller.h"
-#include "mod_ui_base/menuwindow.h"
+#include "childmenu.h"
 
 namespace mod {
 
-class InventoryMenu : public MenuWindow
+class InventoryMenu : public ChildMenu
 {
 private:
     // Common
