@@ -1,9 +1,11 @@
 #include "mod_ui_base/menuwindow.h"
+#include "patch.h"
 
 #include <types.h>
 #include <spm/fontmgr.h>
 #include <spm/hud.h>
 #include <spm/pausewin.h>
+#include <spm/homebutton.h>
 #include <spm/wpadmgr.h>
 
 namespace mod {
@@ -29,9 +31,10 @@ MenuWindow::MenuWindow()
     mButtons = nullptr;
     mCurButton = nullptr;
 
-    // Pause game and hide hud
+    // Pause game, hide hud and disable home menu
     spm::pausewin::pausewinPauseGame();
     spm::hud::hudHide();
+    spm::homebutton::homebuttonWp->flags |= HOMEBUTTON_FLAG_FORBIDDEN;
 }
 
 MenuWindow::~MenuWindow()
@@ -48,8 +51,9 @@ MenuWindow::~MenuWindow()
         delete temp;
     }
 
-    // Set game back to original pause state
+    // Set game back to original pause state and re-enable home menu
     spm::pausewin::pausewinUnpauseGame();
+    spm::homebutton::homebuttonWp->flags &= ~HOMEBUTTON_FLAG_FORBIDDEN;
 }
 
 f32 MenuWindow::getCentreAlignX(const char * str, f32 scale)
@@ -118,6 +122,12 @@ void MenuWindow::buttonLinkHorizontal(MenuButton * left, MenuButton * right)
 {
     left->mNeighbours[MENUDIR_RIGHT] = right;
     right->mNeighbours[MENUDIR_LEFT] = left;
+}
+
+void MenuWindow::homebuttonDispPatch()
+{
+    // Change homebutton to display on debug 3d camera to display on top of mod menus
+    writeWord(spm::homebutton::homebuttonMain, 0x844, 0x3860000e); // li r3, CAM_DEBUG_3D
 }
 
 }

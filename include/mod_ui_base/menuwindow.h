@@ -35,6 +35,8 @@ public:
     ~MenuWindow();
     void drawStringCentre(const char * str, f32 y, const wii::RGBA * colour = nullptr, f32 scale = 1.0f,
                           bool edge = false, bool noise = false, bool rainbow = false);
+    
+    static void homebuttonDispPatch();
 };
 
 }

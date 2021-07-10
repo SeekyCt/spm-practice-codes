@@ -1,10 +1,10 @@
 #include "mod_ui_base/window.h"
-#include "patch.h"
 
 #include <types.h>
 #include <spm/camdrv.h>
 #include <spm/dispdrv.h>
 #include <spm/fontmgr.h>
+#include <spm/homebutton.h>
 #include <spm/msgdrv.h>
 #include <spm/windowdrv.h>
 #include <wii/mtx.h>
@@ -161,8 +161,11 @@ void Window::windowDisp(s8 camId, void * param)
 
 void Window::windowMain()
 {
-    // Schedule windowDisp to run this frame on the debug 3d camera
-    spm::dispdrv::dispEntry(spm::camdrv::CAM_DEBUG_3D, 2, 0.0f, Window::windowDisp, 0);
+    if ((spm::homebutton::homebuttonWp->flags & HOMEBUTTON_FLAG_OPEN) == 0)
+    {
+        // Schedule windowDisp to run this frame on the debug 3d camera
+        spm::dispdrv::dispEntry(spm::camdrv::CAM_DEBUG_3D, 2, 0.0f, Window::windowDisp, 0);
+    }
 }
 
 }

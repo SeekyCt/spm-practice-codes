@@ -256,7 +256,6 @@
 // sdata
 805ae168:memoryWp
 805ae16c:memorySwp
-// more
 
 // parse.c
 801a6e9c:parseInit
@@ -329,6 +328,13 @@
 8023edcc:nandUpdateSave
 8023efe0:nandLoadSave
 // more
+
+// homebutton.c
+// text
+80241914:homebuttonMain
+// more
+// data
+805ae1b8:homebuttonWp
 
 // lz_embedded.c
 8036afc0:pitText
