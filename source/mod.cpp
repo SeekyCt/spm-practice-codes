@@ -155,6 +155,7 @@ static void checkForDolphin()
 
 static void checkForRiivolution()
 {
+    // Thanks to TheLordScruffy for telling me about this
     gIsRiivolution = wii::string::strcmp(wii::DVD_Broadway::devDiStr, "/dev/di") != 0;
 }
 
@@ -165,9 +166,11 @@ void main()
     checkForDolphin();
     checkForRiivolution();
 
+#if !(defined SPM_JP0 || defined SPM_JP1 || defined SPM_US0)
     // Fix dolphin hanging on game shutdown
     if (gIsDolphin)
         writeWord(spm::spmario_snd::spsndExit, 0, BLR);
+#endif
 
     romfontExpand();
     exceptionPatch();

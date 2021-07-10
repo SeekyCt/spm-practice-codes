@@ -179,7 +179,7 @@
 8056d9e1:doShutdown
 801A8728:DEMOBeforeRender
 801A87F0:DEMODoneRender
-802A2A00:spsndExit
+80235fc8:spsndExit
 8026E114:OSDumpContext
 8026E758:__OSUnhandledException
 804A77D0:exceptionMsg1
