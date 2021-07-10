@@ -31,6 +31,7 @@
 #include <spm/spmario_snd.h>
 #include <spm/system.h>
 #include <spm/wpadmgr.h>
+#include <wii/DVD_Broadway.h>
 #include <wii/ipc.h>
 #include <wii/OSError.h>
 #include <wii/wpad.h>
@@ -154,7 +155,7 @@ static void checkForDolphin()
 
 static void checkForRiivolution()
 {
-    gIsRiivolution = wii::string::strcmp((char *) 0x805ae2d8, "/dev/di") != 0;
+    gIsRiivolution = wii::string::strcmp(wii::DVD_Broadway::devDiStr, "/dev/di") != 0;
 }
 
 void main()

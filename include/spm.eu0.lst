@@ -392,6 +392,9 @@
 // dvdfs.c
 8027b910:DVDConvertPathToEntrynum
 // more
+// dvd_broadway.c
+805ae2d8:devDiStr
+// more
 
 // vi.a
 // vi.c
