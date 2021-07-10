@@ -26,11 +26,7 @@ void MenuIcon::disp(f32 centreX, f32 centreY, bool selected)
     // Draw background if highlighted
     if (selected)
     {
-        // Draw background - windowDispGX_Waku_col doesn't exist in this game,
-        // so an identity matrix is in GX2 to create an equivalent
-        wii::Mtx34 mtx;
-        wii::mtx::PSMTXIdentity(&mtx);
-        spm::windowdrv::windowDispGX2_Waku_col(&mtx, 0, &mSelColour, x, y, 50, 50, 0);
+        mWindow->drawBox(0, &mSelColour, x, y, 50, 50, 0);
     }
 
     // Draw icon

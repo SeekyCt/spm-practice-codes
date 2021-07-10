@@ -38,6 +38,7 @@ public:
                      bool edge = false, bool noise = false, bool rainbow = false);
     void drawMessageSearch(const char * name, s32 x, s32 y, const wii::RGBA * colour = nullptr, f32 scale = 1.0f,
                      bool edge = false, bool noise = false, bool rainbow = false);
+    void drawBox(u16 GXTexMapID, const wii::RGBA * colour, f32 x, f32 y, f32 width, f32 height, f32 curve);
 
     static void windowMain();
 };

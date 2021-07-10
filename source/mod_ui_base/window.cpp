@@ -4,8 +4,10 @@
 #include <types.h>
 #include <spm/camdrv.h>
 #include <spm/dispdrv.h>
-#include <spm/msgdrv.h>
 #include <spm/fontmgr.h>
+#include <spm/msgdrv.h>
+#include <spm/windowdrv.h>
+#include <wii/mtx.h>
 
 namespace mod {
 
@@ -123,6 +125,17 @@ void Window::drawMessageSearch(const char * name, s32 x, s32 y, const wii::RGBA 
                                f32 scale, bool edge, bool noise, bool rainbow)
 {
     drawMessage(spm::msgdrv::msgSearch(name), x, y, colour, scale, edge, noise, rainbow);    
+}
+
+void Window::drawBox(u16 GXTexMapID, const wii::RGBA * colour, f32 x, f32 y, f32 width,
+             f32 height, f32 curve)
+{
+    // windowDispGX_Waku_col doesn't exist in this game, so an identity matrix
+    // is used in GX2 to create an equivalent
+    wii::Mtx34 mtx;
+    wii::mtx::PSMTXIdentity(&mtx);
+    spm::windowdrv::windowDispGX2_Waku_col(&mtx, GXTexMapID, colour, x, y, width, height,
+                                           curve);
 }
 
 void Window::windowDisp(s8 camId, void * param)
