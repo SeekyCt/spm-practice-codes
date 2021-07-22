@@ -40,8 +40,9 @@ void MiscMenu::disp()
     if (mCurButton == mOptions[OPTION_PIT_TEXT] && !gIsRiivolution && !gIsDolphin && !gIsPatchedDisc)
     {
         static const wii::RGBA colour {0xff, 0x00, 0x00, 0xff};
-        drawString("Note: custom pit text is not supported without Riivolution or a patched ISO",
+        drawString("Note: custom pit text is not supported without Riivolution",
                    -320.0f, -100.0f, &colour, 0.8f);
+        drawString("or a patched ISO", -320.0f, -100.0f - FONT_HEIGHT, &colour, 0.8f);
     }
 }
 
