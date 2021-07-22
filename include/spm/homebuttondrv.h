@@ -2,7 +2,7 @@
 
 #include <types.h>
 
-namespace spm::homebutton {
+namespace spm::homebuttondrv {
 
 #define HOMEBUTTON_FLAG_OPEN 0x10
 #define HOMEBUTTON_FLAG_CONTROLLER_DC 0x20

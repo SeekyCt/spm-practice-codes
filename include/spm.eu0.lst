@@ -329,7 +329,7 @@
 8023efe0:nandLoadSave
 // more
 
-// homebutton.c
+// homebuttondrv.c
 // text
 80241914:homebuttonMain
 // more

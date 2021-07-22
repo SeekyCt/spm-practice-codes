@@ -22,7 +22,7 @@
 #include <spm/charpixlitemwin.h>
 #include <spm/effdrv.h>
 #include <spm/fadedrv.h>
-#include <spm/homebutton.h>
+#include <spm/homebuttondrv.h>
 #include <spm/mario.h>
 #include <spm/mario_motion.h>
 #include <spm/relmgr.h>
@@ -102,8 +102,8 @@ static void seq_gameMainOverride(spm::seqdrv::SeqWork *wp)
                 spm::effdrv::func_80061d78() == 0 &&
                 spm::charpixlitemwin::charPixlItemWinIsClosed() &&
                 spm::spmario::spmarioGetSystemLevel() == 0 &&
-                (spm::homebutton::homebuttonWp->flags & HOMEBUTTON_FLAG_OPEN) == 0 &&
-                (spm::homebutton::homebuttonWp->flags & HOMEBUTTON_FLAG_FORBIDDEN) == 0
+                (spm::homebuttondrv::homebuttonWp->flags & HOMEBUTTON_FLAG_OPEN) == 0 &&
+                (spm::homebuttondrv::homebuttonWp->flags & HOMEBUTTON_FLAG_FORBIDDEN) == 0
                 )
                 MenuWindow::sCurMenu = new MainMenu();
         }
