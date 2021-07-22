@@ -33,6 +33,7 @@
 #include <spm/system.h>
 #include <spm/wpadmgr.h>
 #include <wii/DVD_Broadway.h>
+#include <wii/DVDFS.h>
 #include <wii/ipc.h>
 #include <wii/OSError.h>
 #include <wii/wpad.h>
@@ -42,6 +43,7 @@ namespace mod {
 
 bool gIsDolphin;
 bool gIsRiivolution;
+bool gIsPatchedDisc;
 bool gIs4_3;
 
 /*
@@ -166,12 +168,18 @@ static void checkForRiivolution()
     gIsRiivolution = wii::string::strcmp(wii::DVD_Broadway::devDiStr, "/dev/di") != 0;
 }
 
+static void checkForPatchedDisc()
+{
+    gIsPatchedDisc = wii::DVDFS::DVDConvertPathToEntrynum("./mod/") != -1;
+}
+
 void main()
 {
     wii::OSError::OSReport(MOD_VERSION": main running\n");
 
     checkForDolphin();
     checkForRiivolution();
+    checkForPatchedDisc();
 
 #if !(defined SPM_JP0 || defined SPM_JP1 || defined SPM_US0)
     // Fix dolphin hanging on game shutdown
