@@ -13,8 +13,11 @@ namespace mod {
 using namespace spm::romfont;
 
 // TODO: check if any of these are already present in non-PAL versions
-char newChars[][2] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "<", ">", "[", "]", "=",
-                      "(", ")", "j", "H", "J", "K", "Q", "X", "Y", "Z", "_", "*", ":", "/", "\\",
+char newChars[][2] = {"0", "1", "2", "3", "4", "5", "6", "7",
+                      "8", "9", "j", "H", "J", "K", "Q", "X",
+                      "Y", "Z", "<", ">", "[", "]", "(", ")",
+                      "|", "&", "=",  "_", "*", ":", "/", "\\",
+                      "+", "~",
 #if !(defined SPM_EU0 || defined SPM_EU1)
                       "x"
 #endif
