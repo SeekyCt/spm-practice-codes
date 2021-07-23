@@ -50,7 +50,7 @@ The `Evt Variable Tracking` option will log whenever a saved script variable (LS
 ### Script Debug Instruction
 The `Evt Debug Instructions` option will log messages passed into the debug script instructions `debug_put_msg` and `debug_put_reg`.
 
-### Script Variable Editor
+## Script Variable Editor
 The `Edit Script Variables` option in the menu allows you to view and edit the values of any GW, GF, GSW, GSWF, LSW or LSWF. The variable type (first few letters), variable number (first 4 decimal digits) and value (final 8 hex digits) can be scrolled through with the D-Pad.
 
 ## Inventory Editor
@@ -58,6 +58,15 @@ The `Edit Inventory` option in the menu allows you add and remove items, charact
 
 ## Stat Editor
 The `Edit Stats` option in the menu allows you to change the values of your Level, XP, Attack, Max HP, HP, Coins and Arcade Tokens. The menu can be navigated with the D-Pad and `+`/`-` can be used to increase/decrease the increment that the values will be changed by when pressing left/right.
+
+## Miscellaneous Options
+The `Miscellaneous Options` option in the menu allows you to configure settings that aren't especially related to speedrunning or reverse engineering.
+
+## wiidungeon.xml Replacement
+The `Load Pit Text From File` option allows you to customise the Pit of 100 Trials definition text with a file either added to your ISO or patched in with Riivolution to create your own Pit, or play someone else's. A clean copy of the file can be obtained [here](https://github.com/SeekyCt/spm-docs/blob/master/misc/wiidungeon.xml)
+* Warning: this option is not supported when loading the mod exclusively through a save exploit on console (either USB Loader with a patched ISO or Riivolution must be used) because the game frequently reloads this file, so loading it from a save file would wear out the Wii's NAND.
+* To use this feature with a patched ISO, follow one of the ISO guides in [INSTALLING.md](https://github.com/SeekyCt/spm-practice-codes/blob/main/INSTALLING.md) and add the custom `wiidungeon.xml` to the `mod` folder that `mod.rel` is placed in.
+* To use this feature with Riivolution, edit / replace `wiidungeon.xml` in the SpmPracticeCodes folder on the root of your SD card.
 
 ## Saved Settings
 The `Manage Saved Settings` option in the menu allows you to save your settings for the mod to your Wii's NAND (to the file `pcset.bin` in the game's save folder) and they'll automatically load next time you boot the mod. You can also load your saved settings, load the default settings or delete them from your NAND. 
@@ -69,4 +78,8 @@ The `Game Save Options` option in the menu allows you to save the game anywhere 
 The `Return to Title Screen` option allows you to return to the main menu without needing to game over or reboot.
 
 ## Exception Handler
-When the game crashes or sets of an OSPanic, a custom exception handler will be displayed on screen showing debugging information. Unlike regular crashes, the power button can still be used to turn off the game as normal when the exception handler runs. This is currently not supported in the Korean version.
+When the game crashes or sets of an OSPanic, a custom exception handler will be displayed on screen showing debugging information.Unlike regular crashes, the power button can still be used to turn off the game as normal when the exception handler runs. This is currently not supported in the Korean version.
+
+If you do have any crashes (not including ones with invalid wiidungeon.xml replacements), please report it by either [creating an issue](https://github.com/SeekyCt/spm-practice-codes/issues) or reaching out to me on Discord in the #tools-dev channel of the [SPM Speedrunning Server](https://discord.gg/dbd733H).
+    * For exception messages that scroll, a video of the full text would be ideal, but if that's not possible then an image of the part that says `Address: Back Chain: LR Save:` to the end of the text (including the red text at the top) would be ok.
+    * For exception messages that display without scrolling, please include an image of the entire screen.

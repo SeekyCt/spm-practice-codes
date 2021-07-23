@@ -1,5 +1,6 @@
 #include "mod_ui_base/window.h"
 #include "consolewindow.h"
+#include "custompit.h"
 #include "evtdebug.h"
 #include "exception.h"
 #include "gamesavemenu.h"
@@ -9,6 +10,7 @@
 #include "mod.h"
 #include "nandsettings.h"
 #include "patch.h"
+#include "parsepatches.h"
 #include "romfontexpand.h"
 #include "scriptlog.h"
 #include "scriptvarlog.h"
@@ -20,6 +22,7 @@
 #include <spm/charpixlitemwin.h>
 #include <spm/effdrv.h>
 #include <spm/fadedrv.h>
+#include <spm/homebuttondrv.h>
 #include <spm/mario.h>
 #include <spm/mario_motion.h>
 #include <spm/relmgr.h>
@@ -29,13 +32,18 @@
 #include <spm/spmario_snd.h>
 #include <spm/system.h>
 #include <spm/wpadmgr.h>
+#include <wii/DVD_Broadway.h>
+#include <wii/DVDFS.h>
 #include <wii/ipc.h>
 #include <wii/OSError.h>
 #include <wii/wpad.h>
+#include <wii/string.h>
 
 namespace mod {
 
 bool gIsDolphin;
+bool gIsRiivolution;
+bool gIsPatchedDisc;
 bool gIs4_3;
 
 /*
@@ -87,10 +95,16 @@ static void seq_gameMainOverride(spm::seqdrv::SeqWork *wp)
     {
         if (MenuWindow::sCurMenu == nullptr)
         {
-            if (spm::fadedrv::fadeIsFinish() && !spm::mario::marioCtrlOffChk() &&
-                !spm::mario::marioKeyOffChk() && spm::mario_motion::func_80146f0c() &&
-                (spm::effdrv::func_80061d78() == 0) && spm::charpixlitemwin::charPixlItemWinIsClosed()
-                && (spm::spmario::spmarioGetSystemLevel() == 0))
+            if (spm::fadedrv::fadeIsFinish() &&
+                !spm::mario::marioCtrlOffChk() &&
+                !spm::mario::marioKeyOffChk() &&
+                spm::mario_motion::func_80146f0c() &&
+                spm::effdrv::func_80061d78() == 0 &&
+                spm::charpixlitemwin::charPixlItemWinIsClosed() &&
+                spm::spmario::spmarioGetSystemLevel() == 0 &&
+                (spm::homebuttondrv::homebuttonWp->flags & HOMEBUTTON_FLAG_OPEN) == 0 &&
+                (spm::homebuttondrv::homebuttonWp->flags & HOMEBUTTON_FLAG_FORBIDDEN) == 0
+                )
                 MenuWindow::sCurMenu = new MainMenu();
         }
         else
@@ -131,10 +145,8 @@ void spmarioMainPatch()
     Entrypoint
 */
 
-void main()
+static void checkForDolphin()
 {
-    wii::OSError::OSReport(MOD_VERSION": main running\n");
-
     // Thanks to TheLordScruffy for telling me about this
     gIsDolphin = wii::IPC::IOS_Open("/sys", 1) == -106;
 
@@ -148,10 +160,32 @@ void main()
             wii::IPC::IOS_Close(ret);
         }
     }
+}
 
+static void checkForRiivolution()
+{
+    // Thanks to TheLordScruffy for telling me about this
+    gIsRiivolution = wii::string::strcmp(wii::DVD_Broadway::devDiStr, "/dev/di") != 0;
+}
+
+static void checkForPatchedDisc()
+{
+    gIsPatchedDisc = wii::DVDFS::DVDConvertPathToEntrynum("./mod/") != -1;
+}
+
+void main()
+{
+    wii::OSError::OSReport(MOD_VERSION": main running\n");
+
+    checkForDolphin();
+    checkForRiivolution();
+    checkForPatchedDisc();
+
+#if !(defined SPM_JP0 || defined SPM_JP1 || defined SPM_US0)
     // Fix dolphin hanging on game shutdown
     if (gIsDolphin)
         writeWord(spm::spmario_snd::spsndExit, 0, BLR);
+#endif
 
     romfontExpand();
     exceptionPatch();
@@ -175,6 +209,9 @@ void main()
     nandSettingsPatch();
     GameSaveMenu::pitSavePatch();
     MapSelectMenu::scanEntrances();
+    customPitPatch();
+    parsePatch();
+    Window::homebuttonDispPatch();
 }
 
 }

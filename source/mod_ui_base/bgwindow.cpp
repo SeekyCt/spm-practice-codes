@@ -19,12 +19,7 @@ BgWindow::BgWindow()
 
 void BgWindow::disp()
 {
-    // Draw background - windowDispGX_Waku_col doesn't exist in this game,
-    // so an identity matrix is in GX2 to create an equivalent
-    wii::Mtx34 mtx;
-    wii::mtx::PSMTXIdentity(&mtx);
-    spm::windowdrv::windowDispGX2_Waku_col(&mtx, 0, &mColour, mPosX, mPosY,
-                                           mWidth, mHeight, mCurve);
+    drawBox(0, &mColour, mPosX, mPosY, mWidth, mHeight, mCurve);
 }
 
 }

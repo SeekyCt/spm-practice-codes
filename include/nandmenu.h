@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "mod_ui_base/menuwindow.h"
+#include "childmenu.h"
 
 namespace mod {
 
@@ -17,7 +17,7 @@ enum class NandTask : u8
     DELETE
 };
 
-class NandMenu : public MenuWindow
+class NandMenu : public ChildMenu
 {
 private:
     s32 mEvtId;

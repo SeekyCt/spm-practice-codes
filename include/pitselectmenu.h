@@ -6,18 +6,18 @@
 #pragma once
 
 #include "mod_ui_base/menuscroller.h"
-#include "mod_ui_base/menuwindow.h"
+#include "mapmenu.h"
 
 namespace mod {
 
-class PitSelectMenu : public MenuWindow
+class PitSelectMenu : public MapMenu
 {
 private:
     int mGroup;
     int mFloor;
-    char mFloorStr[3];
-    MenuScroller * mGroupDisp;
-    MenuScroller * mFloorDisp;
+    char mFloorStrs[3][2];
+    MenuScroller * mGroupScroller;
+    MenuScroller * mFloorScrollers[3];
 
     void updateGroupDisp();
     void updateFloorDisp();
@@ -27,10 +27,6 @@ private:
     static void floorUp(MenuScroller * scroller, void * param);
     static void floorDown(MenuScroller * scroller, void * param);
     static bool doMapChange(MenuButton * button, void * param);
-
-protected:
-    virtual void disp() override;
-    virtual void close() override;
 
 public:
     static const char * sMapName;

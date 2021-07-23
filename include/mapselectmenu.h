@@ -6,11 +6,11 @@
 #pragma once
 
 #include "mod_ui_base/menuscroller.h"
-#include "mod_ui_base/menuwindow.h"
+#include "mapmenu.h"
 
 namespace mod {
 
-class MapSelectMenu : public MenuWindow
+class MapSelectMenu : public MapMenu
 {
 private:
     int mGroup;
@@ -36,10 +36,6 @@ private:
     static void entranceUp(MenuScroller * scroller, void * param);
     static void entranceDown(MenuScroller * scroller, void * param);
     static bool doMapChange(MenuButton * button, void * param);
-
-protected:
-    virtual void disp() override;
-    virtual void close() override;
 
 public:
     static char sFullMapStr[7];

@@ -4,6 +4,7 @@
 #include <spm/fontmgr.h>
 #include <spm/hud.h>
 #include <spm/pausewin.h>
+#include <spm/homebuttondrv.h>
 #include <spm/wpadmgr.h>
 
 namespace mod {
@@ -29,9 +30,10 @@ MenuWindow::MenuWindow()
     mButtons = nullptr;
     mCurButton = nullptr;
 
-    // Pause game and hide hud
+    // Pause game, hide hud and disable home menu
     spm::pausewin::pausewinPauseGame();
     spm::hud::hudHide();
+    spm::homebuttondrv::homebuttonWp->flags |= HOMEBUTTON_FLAG_FORBIDDEN;
 }
 
 MenuWindow::~MenuWindow()
@@ -48,8 +50,9 @@ MenuWindow::~MenuWindow()
         delete temp;
     }
 
-    // Set game back to original pause state
+    // Set game back to original pause state and re-enable home menu
     spm::pausewin::pausewinUnpauseGame();
+    spm::homebuttondrv::homebuttonWp->flags &= ~HOMEBUTTON_FLAG_FORBIDDEN;
 }
 
 f32 MenuWindow::getCentreAlignX(const char * str, f32 scale)

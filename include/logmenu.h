@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "mod_ui_base/menuwindow.h"
+#include "childmenu.h"
 #include "nandsettings.h"
 #include "scriptlog.h"
 
@@ -17,15 +17,12 @@ struct LogOptionGroup
     MenuButton * value;
 };
 
-class LogMenu : public MenuWindow
+class LogMenu : public ChildMenu
 {
 private:
     LogOptionGroup mOptions[LOG_OPTION_COUNT];
 
     static bool optionCycle(MenuButton * button, void * param);
-
-protected:
-    virtual void close() override;
 
 public:
     LogMenu();

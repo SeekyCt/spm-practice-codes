@@ -1,23 +1,11 @@
 #include "hudmenu.h"
-#include "mainmenu.h"
 #include "nandsettings.h"
+#include "util.h"
 
 #include <types.h>
-#include <spm/fontmgr.h>
 #include <wii/stdio.h>
 
 namespace mod {
-
-static const char * getValueName(bool state)
-{
-    switch (state)
-    {
-        case true:
-            return "Enabled";
-        case false:
-            return "Disabled";
-    }
-}
 
 void HudMenu::updateDelayStr()
 {
@@ -32,7 +20,7 @@ void HudMenu::updateDecimalPlaceStr()
 void HudMenu::optionToggle(MenuButton * button, bool &setting)
 {
     setting = !setting;
-    button->mMsg = getValueName(setting);
+    button->mMsg = getToggleName(setting);
 }
 
 void HudMenu::optionDelta(s8 &setting, int change)
@@ -46,7 +34,7 @@ void HudMenu::optionDelta(s8 &setting, int change)
 
 #define OPTION(message, setting) \
     new MenuButton(this, message, labelX, y, nullptr, nullptr, false, scale); \
-    options[i++] = new MenuButton(this, getValueName(setting), valueX, y,     \
+    options[n++] = new MenuButton(this, getToggleName(setting), valueX, y,    \
         [](MenuButton * button, void * param)                                 \
         {                                                                     \
             HudMenu * instance = reinterpret_cast<HudMenu *>(param);          \
@@ -69,22 +57,26 @@ HudMenu::HudMenu()
 
     MenuButton * options[SETTING_COUNT];
     f32 y = 170;
-    int i = 0;
+    int n = 0;
 
     OPTION("Map & Door Name Display", gSettings->hudMapDoor);
     OPTION("Position Display", gSettings->hudXYZ);
 
     new MenuButton(this, "Position Update Delay", labelX, y, nullptr, nullptr, false, scale);
     updateDelayStr();
-    options[i++] = new MenuScrollerH(this, mDelayStr, scrollerX, y, arrowXDiff,
+    options[n++] = new MenuScrollerH(this, mDelayStr, scrollerX, y, arrowXDiff,
         [](MenuScrollerH * scroller, void * param)
         {
+            (void) scroller;
+
             HudMenu * instance = reinterpret_cast<HudMenu *>(param);
             instance->optionDelta(gSettings->xyzInterval, -1);
             instance->updateDelayStr();
         },
         [](MenuScrollerH * scroller, void * param)
         {
+            (void) scroller;
+
             HudMenu * instance = reinterpret_cast<HudMenu *>(param);
             instance->optionDelta(gSettings->xyzInterval, 1);
             instance->updateDelayStr();
@@ -95,15 +87,19 @@ HudMenu::HudMenu()
 
     new MenuButton(this, "Position Decimal Places", labelX, y, nullptr, nullptr, false, scale);
     updateDecimalPlaceStr();
-    options[i++] = new MenuScrollerH(this, mDecimalPlaceStr, scrollerX, y, arrowXDiff,
+    options[n++] = new MenuScrollerH(this, mDecimalPlaceStr, scrollerX, y, arrowXDiff,
         [](MenuScrollerH * scroller, void * param)
         {
+            (void) scroller;
+
             HudMenu * instance = reinterpret_cast<HudMenu *>(param);
             instance->optionDelta(gSettings->xyzDP, -1);
             instance->updateDecimalPlaceStr();
         },
         [](MenuScrollerH * scroller, void * param)
         {
+            (void) scroller;
+
             HudMenu * instance = reinterpret_cast<HudMenu *>(param);
             instance->optionDelta(gSettings->xyzDP, 1);
             instance->updateDecimalPlaceStr();
@@ -117,13 +113,6 @@ HudMenu::HudMenu()
     // Set starting button and title
     mCurButton = options[0];
     mTitle = "HUD Display Options";
-}
-
-void HudMenu::close()
-{
-    // Change back to parent menu
-    delete MenuWindow::sCurMenu;
-    MenuWindow::sCurMenu = new MainMenu();
 }
 
 }

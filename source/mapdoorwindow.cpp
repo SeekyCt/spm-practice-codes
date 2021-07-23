@@ -3,7 +3,6 @@
 #include "nandsettings.h"
 
 #include <types.h>
-#include <spm/fontmgr.h>
 #include <spm/seqdrv.h>
 #include <spm/spmario.h>
 #include <wii/stdio.h>

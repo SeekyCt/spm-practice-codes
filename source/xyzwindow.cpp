@@ -3,7 +3,6 @@
 #include "xyzwindow.h"
 
 #include <types.h>
-#include <spm/fontmgr.h>
 #include <spm/mario.h>
 #include <spm/seqdrv.h>
 #include <wii/stdio.h>

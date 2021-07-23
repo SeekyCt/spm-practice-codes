@@ -5,14 +5,12 @@
 
 #pragma once
 
-#include "mod_ui_base/menuwindow.h"
+#include "childmenu.h"
 
 namespace mod {
 
-class QuitMenu : public MenuWindow
+class QuitMenu : public ChildMenu
 {
-protected:
-    virtual void close() override;
 
 public:
     QuitMenu();

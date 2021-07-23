@@ -1,6 +1,5 @@
 #include "evt_cmd.h"
 #include "mapselectmenu.h"
-#include "mainmenu.h"
 #include "nandsettings.h"
 #include "util.h"
 
@@ -40,18 +39,18 @@ struct MapGroup
 
 // TODO: korea maps?
 static MapGroup groups[] = {
-    {"aa1", 1,  2}, {"aa2", 1,  2}, {"aa3",  1,  1}, {"aa4", 1,  1}, // cutscene
-    {"bos", 1,  1}, {"dos", 1,  1}, {"dan", 11, 14}, {"mac", 1, 30}, // misc
-    {"he1", 1,  6}, {"he2", 1,  9}, {"he3",  1,  8}, {"he4", 1, 12}, // chapter 1
-    {"mi1", 1, 11}, {"mi2", 1, 11}, {"mi3",  1,  6}, {"mi4", 1, 15}, // chapter 2
-    {"ta1", 1,  9}, {"ta2", 1,  6}, {"ta3",  1,  8}, {"ta4", 1, 15}, // chapter 3
-    {"sp1", 1,  7}, {"sp2", 1, 10}, {"sp3",  1,  7}, {"sp4", 1, 17}, // chapter 4
-    {"gn1", 1,  5}, {"gn2", 1,  6}, {"gn3",  1, 16}, {"gn4", 1, 17}, // chapter 5
-    {"wa1", 1, 27}, {"wa2", 1, 25}, {"wa3",  1, 25}, {"wa4", 1, 26}, // chapter 6
-    {"an1", 1, 11}, {"an2", 1, 10}, {"an3",  1, 16}, {"an4", 1, 12}, // chapter 7
-    {"ls1", 1, 12}, {"ls2", 1, 18}, {"ls3",  1, 13}, {"ls4", 1, 13}, // chapter 8
-//  {"mg1", 1,  1}, {"mg2", 1,  5}, {"mg3",  1,  5}, {"mg4", 1,  1}, // minigames
-//  {"tst", 1,  2}, {"kaw", 1,  5}                                   // half-removed
+    {"aa1", 1,  2, 0}, {"aa2", 1,  2, 0}, {"aa3",  1,  1, 0}, {"aa4", 1,  1, 0}, // cutscene
+    {"bos", 1,  1, 0}, {"dos", 1,  1, 0}, {"dan", 11, 14, 0}, {"mac", 1, 30, 0}, // misc
+    {"he1", 1,  6, 0}, {"he2", 1,  9, 0}, {"he3",  1,  8, 0}, {"he4", 1, 12, 0}, // chapter 1
+    {"mi1", 1, 11, 0}, {"mi2", 1, 11, 0}, {"mi3",  1,  6, 0}, {"mi4", 1, 15, 0}, // chapter 2
+    {"ta1", 1,  9, 0}, {"ta2", 1,  6, 0}, {"ta3",  1,  8, 0}, {"ta4", 1, 15, 0}, // chapter 3
+    {"sp1", 1,  7, 0}, {"sp2", 1, 10, 0}, {"sp3",  1,  7, 0}, {"sp4", 1, 17, 0}, // chapter 4
+    {"gn1", 1,  5, 0}, {"gn2", 1,  6, 0}, {"gn3",  1, 16, 0}, {"gn4", 1, 17, 0}, // chapter 5
+    {"wa1", 1, 27, 0}, {"wa2", 1, 25, 0}, {"wa3",  1, 25, 0}, {"wa4", 1, 26, 0}, // chapter 6
+    {"an1", 1, 11, 0}, {"an2", 1, 10, 0}, {"an3",  1, 16, 0}, {"an4", 1, 12, 0}, // chapter 7
+    {"ls1", 1, 12, 0}, {"ls2", 1, 18, 0}, {"ls3",  1, 13, 0}, {"ls4", 1, 13, 0}, // chapter 8
+//  {"mg1", 1,  1, 0}, {"mg2", 1,  5, 0}, {"mg3",  1,  5, 0}, {"mg4", 1,  1, 0}, // minigames
+//  {"tst", 1,  2, 0}, {"kaw", 1,  5, 0}                                         // half-removed
 };
 
 char MapSelectMenu::sFullMapStr[7];
@@ -376,22 +375,6 @@ int getMapGroup(const char * map)
     return -1;
 }
 
-void MapSelectMenu::disp()
-{
-    // Run main display function
-    MenuWindow::disp();
-
-    // Toggle teleport if minus is pressed
-    if (spm::wpadmgr::wpadGetButtonsPressed(0) & WPAD_BTN_MINUS)
-        gSettings->mapChangeEffect = !gSettings->mapChangeEffect;
-    
-    // Display option text
-    const char * msg = gSettings->mapChangeEffect ?
-        "Display teleport effect (<icon PAD_MINUS 0.8 0 35 0><col ffffffff>): on" : 
-        "Display teleport effect (<icon PAD_MINUS 0.8 0 35 0><col ffffffff>): off";
-    drawMessage(msg, -320.0f, -100.0f, nullptr, 0.8f);
-}
-
 MapSelectMenu::MapSelectMenu()
 {
     // Try set to current map
@@ -444,13 +427,6 @@ MapSelectMenu::MapSelectMenu()
     // Set starting button and title
     mCurButton = mMapDisp;
     mTitle = "Map Select";
-}
-
-void MapSelectMenu::close()
-{
-    // Change back to parent menu
-    delete MenuWindow::sCurMenu;
-    MenuWindow::sCurMenu = new MainMenu();
 }
 
 static EntranceNameList * scanScript(const int * script)

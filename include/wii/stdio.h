@@ -4,7 +4,8 @@ namespace wii::stdio {
 
 extern "C" {
 
-void sprintf(char * dest, const char * format, ...);
+int sprintf(char * dest, const char * format, ...);
+int sscanf(const char * str, const char * format, ...);
 
 }
 

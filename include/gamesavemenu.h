@@ -5,16 +5,15 @@
 
 #pragma once
 
-#include "mod_ui_base/menuwindow.h"
+#include "childmenu.h"
 
 namespace mod {
 
-class GameSaveMenu : public MenuWindow
+class GameSaveMenu : public ChildMenu
 {
 private:
     MenuButton * mButtons[2];
 
-    virtual void close() override;
     void initMainScreen();
     void initConfirmScreen();
     void exitScreen();

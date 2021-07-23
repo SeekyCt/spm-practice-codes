@@ -1,7 +1,6 @@
 #include "mod_ui_base/centredbutton.h"
 #include "evt_cmd.h"
 #include "gamesavemenu.h"
-#include "mainmenu.h"
 #include "patch.h"
 #include "util.h"
 
@@ -9,7 +8,6 @@
 #include <spm/evtmgr.h>
 #include <spm/evtmgr_cmd.h>
 #include <spm/evt_mobj.h>
-#include <spm/fontmgr.h>
 #include <spm/nandmgr.h>
 #include <spm/hud.h>
 #include <spm/seq_mapchange.h>
@@ -187,6 +185,8 @@ static bool reloadSave(MenuButton * button, void * param)
 
 bool GameSaveMenu::openMainScreen(MenuButton * button, void * param)
 {
+    (void) button;
+
     GameSaveMenu * instance = reinterpret_cast<GameSaveMenu *>(param);
 
     instance->exitScreen();
@@ -197,6 +197,8 @@ bool GameSaveMenu::openMainScreen(MenuButton * button, void * param)
 
 bool GameSaveMenu::openConfirmScreen(MenuButton * button, void * param)
 {
+    (void) button;
+
     GameSaveMenu * instance = reinterpret_cast<GameSaveMenu *>(param);
 
     instance->exitScreen();
@@ -238,13 +240,7 @@ GameSaveMenu::GameSaveMenu()
     initMainScreen();
 }
 
-void GameSaveMenu::close()
-{
-    delete MenuWindow::sCurMenu;
-    MenuWindow::sCurMenu = new MainMenu();
-}
-
-void (*nandUpdateSaveReal)(int saveId);
+static void (*nandUpdateSaveReal)(int saveId);
 
 void GameSaveMenu::pitSavePatch()
 {

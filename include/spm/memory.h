@@ -3,6 +3,9 @@
 #include <types.h>
 #include <wii/mem.h>
 
+// Would be cyclic include
+namespace spm::filemgr { struct FileEntry; }
+
 namespace spm::memory {
 
 #define MEM1_HEAP_COUNT 3
@@ -11,12 +14,27 @@ namespace spm::memory {
 #define SMART_HEAP_ID 7
 #define SMART_ALLOCATION_MAX 2048
 
+struct SmartAllocation
+{
+    void * data; // space on the smart heap for user to put their data
+    size_t size; // size of the space for data on the smart heap
+    struct spm::filemgr::FileEntry * fileEntry; // allows special treatment if this allocation is for a file
+    u16 flag; // 1 for in use, 0 otherwise
+    u8 type; // used to group for deallocation
+    u8 unknown_0xf; // padding?
+    size_t spaceAfter; // amount of free space in the smart heap after the data of this allocation
+    SmartAllocation * next; // next item in the allocated or free linked list
+    SmartAllocation * prev; // previous item in the allocated or free linked list
+};
+static_assert(sizeof(SmartAllocation) == 0x1c);
+
 struct MemWork
 {
     wii::MEM::MEMEXPHeap * heapHandle[HEAP_COUNT];
     void * heapStart[HEAP_COUNT];
     void * heapEnd[HEAP_COUNT];
 };
+static_assert(sizeof(MemWork) == 0x6c);
 
 enum HeapSizeType
 {
@@ -29,15 +47,33 @@ struct HeapSize
     s32 type;
     s32 size;
 };
+static_assert(sizeof(HeapSize) == 0x8);
+
+enum class Heap
+{
+    MAIN = 0,
+    MAP = 1,
+    UNK_3 = 3,
+    UNK_4 = 4,
+    UNK_5 = 5,
+    UNK_6 = 6,
+    SMART = 7,
+    UNK_8 = 8
+};
 
 extern "C" {
 
 extern MemWork * memoryWp;
 extern HeapSize size_table[HEAP_COUNT];
 
-void *__memAlloc(u32 heap, u32 size);
-void __memFree(u32 heap, void * ptr);
+void *__memAlloc(Heap heap, u32 size);
+void __memFree(Heap heap, void * ptr);
+void __dl__FPv(void *);
 
 }
 
 }
+
+// custom in cxx.cpp
+void * operator new(std::size_t size, spm::memory::Heap heap);
+void * operator new[](std::size_t size, spm::memory::Heap heap);

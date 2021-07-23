@@ -1,8 +1,6 @@
 #include "statmenu.h"
-#include "mainmenu.h"
 
 #include <types.h>
-#include <spm/fontmgr.h>
 #include <spm/mario_pouch.h>
 #include <spm/wpadmgr.h>
 #include <wii/stdio.h>
@@ -29,7 +27,7 @@ struct StatDef
 static StatDef stats[STAT_COUNT] = {
     {"Level", 99},
     {"XP", 99999999},
-    {"Attack", 999},
+    {"Attack", 99},
     {"Max HP", 999},
     {"HP", 999},
     {"Coins", 999},
@@ -134,8 +132,7 @@ void StatMenu::disp()
     if (mShouldClose)
     {
         // Change back to parent menu
-        delete MenuWindow::sCurMenu;
-        MenuWindow::sCurMenu = new MainMenu();
+        ChildMenu::close();
         return;
     }
 

@@ -1,5 +1,7 @@
 // OS Globals
 800000e4:currentThread
+800030c8:firstRel
+800030cc:lastRel
 
 // Automatically generated from spm.eu0.lst 
 80004000:memcpy
@@ -179,7 +181,7 @@
 8056d9e1:doShutdown
 801A8728:DEMOBeforeRender
 801A87F0:DEMODoneRender
-802A2A00:spsndExit
+80235fc8:spsndExit
 8026E114:OSDumpContext
 8026E758:__OSUnhandledException
 804A77D0:exceptionMsg1
@@ -212,3 +214,24 @@
 8023C350:nandGetSaveFiles
 8023C730:nandUpdateSave
 8023c944:nandLoadSave
+
+// new to v6
+8007BBB4:itemTypeNameToId
+8019E998:fileAllocf
+8019ED00:fileFree
+8019EED0:fileAsyncf
+801A61FC:__dl__FPv
+801A6264:parseInit
+801A6284:getTag
+801A6308:parsePush
+801A64BC:parsePop
+801A64D4:parsePopNext
+801A6508:parseGet1Next
+801A6850:parseTagGet1
+8023f204:homebuttonMain
+8056D1D8:homebuttonWp
+80367EF0:pitText
+80278F74:DVDConvertPathToEntrynum
+8056D2F8:devDiStr
+3be00:evt_dan_read_data?1,1
+b48:danWp?1,6

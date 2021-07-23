@@ -4,8 +4,11 @@
 #include <types.h>
 #include <spm/camdrv.h>
 #include <spm/dispdrv.h>
-#include <spm/msgdrv.h>
 #include <spm/fontmgr.h>
+#include <spm/homebuttondrv.h>
+#include <spm/msgdrv.h>
+#include <spm/windowdrv.h>
+#include <wii/mtx.h>
 
 namespace mod {
 
@@ -125,6 +128,17 @@ void Window::drawMessageSearch(const char * name, s32 x, s32 y, const wii::RGBA 
     drawMessage(spm::msgdrv::msgSearch(name), x, y, colour, scale, edge, noise, rainbow);    
 }
 
+void Window::drawBox(u16 GXTexMapID, const wii::RGBA * colour, f32 x, f32 y, f32 width,
+             f32 height, f32 curve)
+{
+    // windowDispGX_Waku_col doesn't exist in this game, so an identity matrix
+    // is used in GX2 to create an equivalent
+    wii::Mtx34 mtx;
+    wii::mtx::PSMTXIdentity(&mtx);
+    spm::windowdrv::windowDispGX2_Waku_col(&mtx, GXTexMapID, colour, x, y, width, height,
+                                           curve);
+}
+
 void Window::windowDisp(s8 camId, void * param)
 {
     // Disp callback params aren't needed
@@ -148,8 +162,26 @@ void Window::windowDisp(s8 camId, void * param)
 
 void Window::windowMain()
 {
-    // Schedule windowDisp to run this frame on the debug 3d camera
-    spm::dispdrv::dispEntry(spm::camdrv::CAM_DEBUG_3D, 2, 0.0f, Window::windowDisp, 0);
+    if ((spm::homebuttondrv::homebuttonWp->flags & HOMEBUTTON_FLAG_OPEN) == 0)
+    {
+        // Schedule windowDisp to run this frame on the debug 3d camera
+        spm::dispdrv::dispEntry(spm::camdrv::CAM_DEBUG_3D, 2, 0.0f, Window::windowDisp, 0);
+    }
+}
+
+void Window::homebuttonDispPatch()
+{
+    // Change homebutton to display on debug 3d camera to display on top of mod graphics
+#if (defined SPM_EU0 || defined SPM_EU1)
+    #define HOMEBUTTON_MAIN_CAM_OFFSET 0x844
+#elif (defined SPM_US0 || defined SPM_JP0)
+    #define HOMEBUTTON_MAIN_CAM_OFFSET 0x804
+#elif (defined SPM_US1 || defined SPM_US2 || defined SPM_JP1)
+    #define HOMEBUTTON_MAIN_CAM_OFFSET 0x814
+#elif (defined SPM_KR0)
+    #define HOMEBUTTON_MAIN_CAM_OFFSET 0x714
+#endif
+    writeWord(spm::homebuttondrv::homebuttonMain, HOMEBUTTON_MAIN_CAM_OFFSET, 0x3860000e); // li r3, CAM_DEBUG_3D
 }
 
 }

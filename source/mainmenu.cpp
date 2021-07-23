@@ -2,8 +2,9 @@
 #include "hudmenu.h"
 #include "inventorymenu.h"
 #include "logmenu.h"
-#include "mapselectmenu.h"
 #include "mainmenu.h"
+#include "mapselectmenu.h"
+#include "miscmenu.h"
 #include "mod.h"
 #include "nandmenu.h"
 #include "pitselectmenu.h"
@@ -12,9 +13,10 @@
 #include "statmenu.h"
 
 #include <types.h>
-#include <spm/fontmgr.h>
 
 namespace mod {
+
+s32 MainMenu::sLastOption = 0;
 
 MainMenu::MainMenu()
 {
@@ -105,6 +107,18 @@ MainMenu::MainMenu()
         }
     );
     y -= FONT_HEIGHT + 5;
+    mOptions[n++] = new MenuButton(this, "Miscellaneous Options", optionsX, y,
+        [](MenuButton * button, void * param)
+        {
+            (void) button;
+            (void) param;
+
+            delete MenuWindow::sCurMenu;
+            MenuWindow::sCurMenu = new MiscMenu();
+            return false;
+        }
+    );
+    y -= FONT_HEIGHT + 5;
     mOptions[n++] = new MenuButton(this, "Manage Saved Settings", optionsX, y,
         [](MenuButton * button, void * param)
         {
@@ -120,7 +134,6 @@ MainMenu::MainMenu()
     mOptions[n++] = new MenuButton(this, "Game Save Options", optionsX, y,
         [](MenuButton * button, void * param)
         {
-            // Parameters aren't needed
             (void) button;
             (void) param;
 
@@ -146,9 +159,27 @@ MainMenu::MainMenu()
         buttonLinkVertical(mOptions[i], mOptions[i + 1]);
     buttonLinkVertical(mOptions[MAIN_MENU_OPTION_COUNT - 1], mOptions[0]);
 
-    mCurButton = mOptions[0];
+    mCurButton = mOptions[sLastOption];
 
     mTitle = MOD_VERSION;
+}
+
+void MainMenu::recordLastOption()
+{
+    for (int i = 0; i < MAIN_MENU_OPTION_COUNT; i++)
+    {
+        if (mOptions[i] == mCurButton)
+        {
+            sLastOption = i;
+            return;
+        }
+    }
+    sLastOption = 0;
+}
+
+MainMenu::~MainMenu()
+{
+    recordLastOption();
 }
 
 }

@@ -18,6 +18,24 @@ namespace spm::evtmgr_cmd {
 #define EVTDAT_GW_BASE 50000000
 #define EVTDAT_LW_BASE 30000000
 
+// Stop execution of all scripts this frame
+#define EVT_RET_END_FRAME -1
+
+// Keep re-executing current instruction, continue next frame if too much time passed
+#define EVT_RET_BLOCK_WEAK 0
+
+// Move to next instruction, continue next frame if too much time passed
+#define EVT_RET_CONTINUE_WEAK 1
+
+// Move to next instruction
+#define EVT_RET_CONTINUE 2
+
+// Keep re-executing current instruction (unused?)
+#define EVT_RET_BLOCK 3
+
+// Stop running current script
+#define EVT_RET_END 0xff
+
 extern "C" {
 
 s32 evtGetValue(spm::evtmgr::EvtEntry * entry, s32 var);

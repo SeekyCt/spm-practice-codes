@@ -9,15 +9,19 @@
 
 namespace mod {
 
-#define MAIN_MENU_OPTION_COUNT 10
+#define MAIN_MENU_OPTION_COUNT 11
 
 class MainMenu : public MenuWindow
 {
 private:
     MenuButton * mOptions[MAIN_MENU_OPTION_COUNT];
+    static s32 sLastOption;
+    
+    void recordLastOption(); 
 
 public:
     MainMenu();
+    virtual ~MainMenu();
 };
 
 }

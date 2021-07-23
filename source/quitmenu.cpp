@@ -1,9 +1,7 @@
 #include "mod_ui_base/centredbutton.h"
 #include "quitmenu.h"
-#include "mainmenu.h"
 
 #include <types.h>
-#include <spm/fontmgr.h>
 #include <spm/seqdrv.h>
 
 namespace mod {
@@ -41,14 +39,6 @@ QuitMenu::QuitMenu()
     // Set title and selected button
     mCurButton = bottom;
     mTitle = "Are you sure you want to return to Title Screen?";
-}
-
-void QuitMenu::close()
-{
-    // Change back to parent menu
-    delete MenuWindow::sCurMenu;
-    MenuWindow::sCurMenu = new MainMenu();
-    return;
 }
 
 }

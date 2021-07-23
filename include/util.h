@@ -3,6 +3,8 @@
 #include <spm/evtmgr.h>
 #include <spm/nandmgr.h>
 
+namespace mod {
+
 #define ARRAY_SIZEOF(ary) (sizeof((ary))/sizeof((ary)[0]))
 
 #define NYBBLE_0(n) (((n) >> 28) & 0xf)
@@ -24,6 +26,10 @@
 
 #define ROUND_UP_32(n) (((n) + 0x1f) & ~0x1f)
 
+#define BYTES_TO_KB(size) ((((size) + 1023) & ~1023) / 1024)
+#define KB_TO_BLOCKS(size) ((((size) + 15) & ~15) / 16)
+#define BYTES_TO_BLOCKS(size) (KB_TO_BLOCKS(BYTES_TO_KB((size))))
+
 // evt_get_cur_pixl(&ret)
 EVT_DECLARE_USER_FUNC(evt_get_cur_pixl, 1)
 
@@ -37,3 +43,8 @@ void updateSaveChecksum(spm::nandmgr::SaveFile * save);
 
 const char * getGameRegion();
 int getGameRevision();
+void * getModRelLoadAddr();
+
+const char * getToggleName(bool value);
+
+}

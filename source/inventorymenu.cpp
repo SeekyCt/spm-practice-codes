@@ -1,9 +1,7 @@
 #include "inventorymenu.h"
-#include "mainmenu.h"
 #include "util.h"
 
 #include <types.h>
-#include <spm/fontmgr.h>
 #include <spm/item_data.h>
 #include <spm/mario_pouch.h>
 #include <spm/msgdrv.h>
@@ -491,6 +489,8 @@ void InventoryMenu::updateIdDisp()
 
 bool InventoryMenu::finishId(MenuButton * button, void * param)
 {
+    (void) button;
+
     InventoryMenu * instance = reinterpret_cast<InventoryMenu *>(param);
     instance->close();
     return false;
@@ -550,8 +550,7 @@ void InventoryMenu::close()
     else
     {
         // Change back to parent menu
-        delete MenuWindow::sCurMenu;
-        MenuWindow::sCurMenu = new MainMenu();
+        ChildMenu::close();
     }
 }
 
