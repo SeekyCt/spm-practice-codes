@@ -12,6 +12,7 @@
 #include <spm/memory.h>
 #include <spm/itemdrv.h>
 #include <spm/parse.h>
+#include <spm/system.h>
 #include <spm/rel/dan.h>
 #include <wii/DVDFS.h>
 #include <wii/string.h>
@@ -80,11 +81,15 @@ static int custom_evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
         int i = 0;
         spm::parse::parseTagGet1("<no>", spm::parse::PARSE_VALUE_TYPE_INT, &no);
         // assertf(144, no >= 0 && no < DUNGEON_MAX, "なんか番号がおかしい [%d]", no);
+        assertf(no >= 0 && no < DUNGEON_MAX, "Dungeon number out of range [%d]", no);
 
         // Read item id (chest contents in chest rooms, null & unused elsewhere)
         char itemName[64];
         spm::parse::parseTagGet1("<item>", spm::parse::PARSE_VALUE_TYPE_STRING, itemName);
-        danWp->dungeons[no].item = spm::itemdrv::itemTypeNameToId(itemName);
+        s32 itemId = spm::itemdrv::itemTypeNameToId(itemName);
+        if (wii::string::strcmp(itemName, "ITEM_ID_NULL") != 0 && wii::string::strcmp(itemName, "NULL") != 0)
+            assertf(itemId != 0, "Invalid item name [%s]", itemName);
+        danWp->dungeons[no].item = itemId;
 
         // Read map (bitflags for parts of the map to enable and disable in enemy rooms, 0 & unused elsewhere)
         spm::parse::parseTagGet1("<map>", spm::parse::PARSE_VALUE_TYPE_INT, &danWp->dungeons[no].map);
@@ -92,8 +97,13 @@ static int custom_evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
         // Read doors
         while (spm::parse::parsePush("<door>"))
         {
-            spm::parse::parseTagGet1("<enter>", spm::parse::PARSE_VALUE_TYPE_INT, &danWp->dungeons[no].doors[i].enter);
-            spm::parse::parseTagGet1("<exit>", spm::parse::PARSE_VALUE_TYPE_INT, &danWp->dungeons[no].doors[i].exit);
+            s32 enter, exit;
+            spm::parse::parseTagGet1("<enter>", spm::parse::PARSE_VALUE_TYPE_INT, &enter);
+            assertf(1 <= enter && enter <= 32, "Invalid enter door id %d", enter);
+            danWp->dungeons[no].doors[i].enter = enter;
+            spm::parse::parseTagGet1("<exit>", spm::parse::PARSE_VALUE_TYPE_INT, &exit);
+            assertf(1 <= exit && exit <= 32, "Invalid exit door id %d", exit);
+            danWp->dungeons[no].doors[i].exit = exit;
             spm::parse::parsePopNext();
             i++;
         }
