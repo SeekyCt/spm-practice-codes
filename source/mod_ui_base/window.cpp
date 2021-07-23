@@ -1,4 +1,5 @@
 #include "mod_ui_base/window.h"
+#include "patch.h"
 
 #include <types.h>
 #include <spm/camdrv.h>
@@ -166,6 +167,21 @@ void Window::windowMain()
         // Schedule windowDisp to run this frame on the debug 3d camera
         spm::dispdrv::dispEntry(spm::camdrv::CAM_DEBUG_3D, 2, 0.0f, Window::windowDisp, 0);
     }
+}
+
+void Window::homebuttonDispPatch()
+{
+    // Change homebutton to display on debug 3d camera to display on top of mod graphics
+#if (defined SPM_EU0 || defined SPM_EU1)
+    #define HOMEBUTTON_MAIN_CAM_OFFSET 0x844
+#elif (defined SPM_US0 || defined SPM_JP0)
+    #define HOMEBUTTON_MAIN_CAM_OFFSET 0x804
+#elif (defined SPM_US1 || defined SPM_US2 || defined SPM_JP1)
+    #define HOMEBUTTON_MAIN_CAM_OFFSET 0x814
+#elif (defined SPM_KR0)
+    #define HOMEBUTTON_MAIN_CAM_OFFSET 0x714
+#endif
+    writeWord(spm::homebuttondrv::homebuttonMain, HOMEBUTTON_MAIN_CAM_OFFSET, 0x3860000e); // li r3, CAM_DEBUG_3D
 }
 
 }

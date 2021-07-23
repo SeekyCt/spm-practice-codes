@@ -211,7 +211,7 @@ void main()
     MapSelectMenu::scanEntrances();
     customPitPatch();
     parsePatch();
-    MenuWindow::homebuttonDispPatch();
+    Window::homebuttonDispPatch();
 }
 
 }

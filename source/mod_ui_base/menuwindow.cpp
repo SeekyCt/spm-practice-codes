@@ -1,5 +1,4 @@
 #include "mod_ui_base/menuwindow.h"
-#include "patch.h"
 
 #include <types.h>
 #include <spm/fontmgr.h>
@@ -122,12 +121,6 @@ void MenuWindow::buttonLinkHorizontal(MenuButton * left, MenuButton * right)
 {
     left->mNeighbours[MENUDIR_RIGHT] = right;
     right->mNeighbours[MENUDIR_LEFT] = left;
-}
-
-void MenuWindow::homebuttonDispPatch()
-{
-    // Change homebutton to display on debug 3d camera to display on top of mod menus
-    writeWord(spm::homebuttondrv::homebuttonMain, 0x844, 0x3860000e); // li r3, CAM_DEBUG_3D
 }
 
 }
