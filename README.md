@@ -7,6 +7,9 @@ https://youtu.be/Eqa4RUWRF3E
 ## Installing
 See the [installation guide](https://github.com/SeekyCt/spm-practice-codes/blob/main/INSTALLING.md).
 
+## Updating
+See the [updating guide](https://github.com/SeekyCt/spm-practice-codes/blob/main/UPDATING.md).
+
 ## Usage
 See the [manual](https://github.com/SeekyCt/spm-practice-codes/blob/main/MANUAL.md).
 
