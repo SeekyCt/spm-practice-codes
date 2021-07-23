@@ -1,7 +1,9 @@
 // OS Globals
 800000e4:currentThread
+800030c8:firstRel
+800030cc:lastRel
 
-// Automatically generated from spm.eu0.lst with manual fontmgr and NAND ports
+// Automatically generated from spm.eu0.lst
 80004000:memcpy
 80004104:memset
 80029680:mapDataPtr
@@ -155,7 +157,7 @@
 802A1BF0:NANDGetHomeDir
 802A21B4:NANDCheckAsync
 802E9708:lzss10GetDecompSize
-802E9780:lzss10Decompress
+802E9748:lzss10Decompress
 802E9888:lzss10ParseHeader
 
 // new to v2
@@ -202,3 +204,24 @@
 802371CC:nandGetSaveFiles
 80237544:nandUpdateSave
 80237758:nandLoadSave
+
+// new to v6
+80076108:itemTypeNameToId
+8019B7F8:fileAllocf
+8019BB60:fileFree
+8019BD30:fileAsyncf
+8019F70C:__dl__FPv
+8019F774:parseInit
+8019F794:getTag
+8019F818:parsePush
+8019F9CC:parsePop
+8019F9E4:parsePopNext
+8019FA18:parseGet1Next
+8019FD60:parseTagGet1
+80239f74:homebuttonMain
+805d79b8:homebuttonWp
+8038D200:pitText
+8027F85C:DVDConvertPathToEntrynum
+805D7B18:devDiStr
+3c6d4:evt_dan_read_data?1,1
+2a48:danWp?1,6

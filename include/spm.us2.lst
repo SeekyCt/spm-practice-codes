@@ -1,5 +1,7 @@
 // OS Globals
 800000e4:currentThread
+800030c8:firstRel
+800030cc:lastRel
 
 // Automatically generated from spm.eu0.lst 
 80004000:memcpy
@@ -212,3 +214,24 @@
 8023CD68:nandGetSaveFiles
 8023D0CC:nandUpdateSave
 8023d2e0:nandLoadSave
+
+// new to v6
+8007BB54:itemTypeNameToId
+8019ED0C:fileAllocf
+8019F074:fileFree
+8019F244:fileAsyncf
+801A6570:__dl__FPv
+801A65D8:parseInit
+801A65F8:getTag
+801A667C:parsePush
+801A6830:parsePop
+801A6848:parsePopNext
+801A687C:parseGet1Next
+801A6BC4:parseTagGet1
+8023f994:homebuttonMain
+8056CBB8:homebuttonWp
+80368BD0:pitText
+80279860:DVDConvertPathToEntrynum
+8056CCD8:devDiStr
+3be5c:evt_dan_read_data?1,1
+b48:danWp?1,6
