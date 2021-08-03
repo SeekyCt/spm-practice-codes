@@ -55,8 +55,14 @@ static bool reloadSave(MenuButton * button, void * param)
     wii::string::strcpy(spm::spmario::gp->mapName, "");
     wii::string::strcpy(spm::spmario::gp->doorName, "");
 
+    // Backup save slot
+    s32 slot = spm::spmario::gp->saveFileId;
+
     // Load save file
     spm::nandmgr::nandLoadSave(spm::spmario::gp->saveFileId);
+
+    // Restore save slot
+    spm::spmario::gp->saveFileId = slot;
 
     // Various tasks the game does after loading a save
     spm::spmario::gp->flags |= 4;
