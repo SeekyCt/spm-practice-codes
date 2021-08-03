@@ -28,6 +28,19 @@ struct SmartAllocation
 };
 static_assert(sizeof(SmartAllocation) == 0x1c);
 
+struct SmartWork
+{
+    void * heapStart;
+    SmartAllocation allocations[2048];
+    u32 heapStartSpace;
+    SmartAllocation * allocatedStart;
+    SmartAllocation * allocatedEnd;
+    SmartAllocation * freeStart;
+    SmartAllocation * freeEnd;
+    u32 freedThisFrame;    
+};
+static_assert(sizeof(SmartWork) == 0xe01c);
+
 struct MemWork
 {
     wii::MEM::MEMEXPHeap * heapHandle[HEAP_COUNT];
@@ -64,6 +77,7 @@ enum class Heap
 extern "C" {
 
 extern MemWork * memoryWp;
+extern SmartWork * memorySwp;
 extern HeapSize size_table[HEAP_COUNT];
 
 void *__memAlloc(Heap heap, u32 size);
