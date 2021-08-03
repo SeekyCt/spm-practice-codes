@@ -22,7 +22,12 @@ struct MEMEXPHeap
     u8 unknown_0xc[0x18 -  0xc];
     void * start;
     void * end;
-    u8 unknown_0x20[0x50 - 0x20];
+    u8 unknown_0x20[0x3c - 0x20];
+    MEMAllocation * firstFree;
+    MEMAllocation * lastFree;
+    MEMAllocation * firstUsed;
+    MEMAllocation * lastUsed;
+    u8 unknown_0x4c[0x50 - 0x4c];
 };
 static_assert(sizeof(MEMEXPHeap) == 0x50);
 
