@@ -4,6 +4,7 @@
 #include "evtdebug.h"
 #include "exception.h"
 #include "gamesavemenu.h"
+#include "hpbar.h"
 #include "mainmenu.h"
 #include "mapdoorwindow.h"
 #include "mapselectmenu.h"
@@ -212,6 +213,7 @@ void main()
     customPitPatch();
     parsePatch();
     Window::homebuttonDispPatch();
+    hpBarPatch();
 }
 
 }

@@ -45,8 +45,13 @@
 8003ab80:windowDispGX2_Waku_col
 // more
 
+// animdrv.c
+800418fc:animMain
+// more
+
 // camdrv.c
 80055b24:camGetPtr
+80058294:getScreenPoint
 // more
 
 // dispdrv.c
@@ -299,6 +304,10 @@
 // DEMOInit.c
 801a94c8:DEMOBeforeRender
 801a9590:DEMODoneRender
+// more
+
+// npcdrv.c
+801c9adc:npcGetWorkPtr
 // more
 
 // wpadmgr.c
