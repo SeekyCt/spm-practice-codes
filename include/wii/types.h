@@ -9,6 +9,11 @@ struct RGBA
     u8 r, g, b, a;
 };
 
+struct Vec2
+{
+    f32 x, y;
+};
+
 struct Vec3
 {
     f32 x, y, z;
