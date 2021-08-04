@@ -8,7 +8,9 @@
 #include <spm/homebuttondrv.h>
 #include <spm/msgdrv.h>
 #include <spm/windowdrv.h>
+#include <wii/gx.h>
 #include <wii/mtx.h>
+#include <ogc/gx.h>
 
 namespace mod {
 
@@ -137,6 +139,59 @@ void Window::drawBox(u16 GXTexMapID, const wii::RGBA * colour, f32 x, f32 y, f32
     wii::mtx::PSMTXIdentity(&mtx);
     spm::windowdrv::windowDispGX2_Waku_col(&mtx, GXTexMapID, colour, x, y, width, height,
                                            curve);
+}
+
+static const wii::RGBA white {0xff, 0xff, 0xff, 0xff};
+void Window::drawBoxGX(const wii::RGBA * colour, f32 x, f32 y, f32 width, f32 height)
+{
+    // Disable some stuff
+    wii::GX::GXSetCullMode(GX_CULL_NONE); // disable all culling
+    wii::GX::GXSetZCompLoc(true); // compare z before texture
+    wii::GX::GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0); // set alpha test to always pass
+    wii::GX::GXSetBlendMode(GX_BM_NONE, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_OR); // write output directly to EFB
+    wii::GX::GXSetZMode(true, GX_ALWAYS, true); // always pass z test
+    wii::GX::GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, &white); // disable fog
+
+    // Set verex input format
+    wii::GX::GXClearVtxDesc(); // reset vertex properties
+    wii::GX::GXSetVtxDesc(GX_VA_POS, GX_DIRECT); // position coordinates first
+    wii::GX::GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT); // colour second
+    wii::GX::GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0); // position format is a f32 vec3
+    wii::GX::GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0); // color format is rgba8
+
+    // Setup for direct colour
+    wii::GX::GXSetNumChans(1); // enable 1 colour channel
+    wii::GX::GXSetNumTexGens(0); // disable tex coord generation
+    wii::GX::GXSetNumTevStages(1); // only 1 TEV stage
+    wii::GX::GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORDNULL, GX_TEXMAP_NULL, GX_COLOR0A0); // disable textures in TEV
+        // set colour to only come from the vertices
+    wii::GX::GXSetChanCtrl(GX_COLOR0A0, false, GX_SRC_VTX, GX_SRC_VTX, GX_LIGHTNULL, GX_DF_NONE, GX_AF_NONE); 
+    wii::GX::GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR); // set TEV to pass the colour directly
+
+    // Setup view matrix
+    spm::camdrv::CamEntry * camera = spm::camdrv::camGetCurPtr();
+    wii::GX::GXLoadPosMtxImm(&camera->viewMtx, 0);
+    wii::GX::GXSetCurrentMtx(0);
+
+    // Draw
+    f32 top = y;
+    f32 bottom = y - height;
+    f32 left = x;
+    f32 right = x + width;
+    f32 z = 0.0f;
+    u32 _colour = *reinterpret_cast<const u32 *>(colour);
+    wii::GX::GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+    {
+        ogc::GX::GX_Position3f32(left, top, z);
+        ogc::GX::GX_Color1u32(_colour);
+        ogc::GX::GX_Position3f32(right, top, z);
+        ogc::GX::GX_Color1u32(_colour);
+        ogc::GX::GX_Position3f32(right, bottom, z);
+        ogc::GX::GX_Color1u32(_colour);
+        ogc::GX::GX_Position3f32(left, bottom, z);
+        ogc::GX::GX_Color1u32(_colour);
+    }
+    GXEnd();
 }
 
 void Window::windowDisp(s8 camId, void * param)

@@ -55,14 +55,10 @@ public:
                                   bool edge = false,
                                   bool noise = false,
                                   bool rainbow = false);
-    static void drawBox(u16 GXTexMapID,
-                        const wii::RGBA * colour,
-                        f32 x,
-                        f32 y,
-                        f32 width,
-                        f32 height,
-                        f32 curve);
-
+    static void drawBox(u16 GXTexMapID, const wii::RGBA * colour,
+                        f32 x, f32 y, f32 width, f32 height, f32 curve);
+    static void drawBoxGX(const wii::RGBA * colour, f32 x, f32 y,
+                          f32 width, f32 height);
     static void windowMain();
     static void homebuttonDispPatch();
 };

@@ -51,6 +51,7 @@
 
 // camdrv.c
 80055b24:camGetPtr
+80055b38:camGetCurPtr
 80058294:getScreenPoint
 // more
 
@@ -420,8 +421,25 @@
 // more
 
 // gx.a
-// GXTransform.c
+8028e1b4:GXSetVtxDesc
+8028ea44:GXClearVtxDesc
+8028ea78:GXSetVtxAttrFmt
+8028f3b4:GXSetNumTexGens
+8028ff30:GXBegin
+802901f8:GXSetCullMode
+802912f4:GXSetNumChans
+80291318:GXSetChanCtrl
+802929d4:GXSetTevOp
+80292e10:GXSetAlphaCompare
+80292ed4:GXSetTevOrder
+80293030:GXSetNumTevStages
+80293054:GXSetFog
+802933a4:GXSetBlendMode
+8029344c:GXSetZMode
+80293480:GXSetZCompLoc
 80294214:GXSetProjection
+80294304:GXLoadPosMtxImm
+802943ac:GXSetCurrentMtx
 // more
 
 // mem.a

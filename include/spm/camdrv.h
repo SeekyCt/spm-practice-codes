@@ -40,6 +40,7 @@ static_assert(sizeof(CamEntry) == 0x2f0);
 extern "C" {
 
 CamEntry * camGetPtr(int camId);
+CamEntry * camGetCurPtr();
 void getScreenPoint(wii::Vec3 * worldPos, wii::Vec3 * screenPosOut);
 
 }
