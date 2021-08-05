@@ -8,7 +8,8 @@
 namespace mod {
 
 #define ARROW_HEIGHT 26
-#define NUM_SIDE_GAP 2
+#define NUM_LEFT_GAP 1
+#define NUM_WIDTH 14
 #define NUM_TOP_GAP 5
 
 MenuScrollGroup::MenuScrollGroup(MenuWindow * parent, u32 value, f32 x, f32 y, MenuScrollGroupCb * scrollCb,
@@ -62,9 +63,10 @@ void MenuScrollGroup::disp(f32 centreX, f32 centreY, bool selected)
     f32 x = centreX + mPosX;
     f32 y = centreY + mPosY;
     f32 arrowGap = 10.0f * mScale;
+    f32 arrowScale = mScale / 2.0f;
     f32 bottomArrowOffset = (FONT_HEIGHT * mScale) + (NUM_TOP_GAP * mScale);
-    f32 topArrowOffset = ARROW_HEIGHT * mScale / 2.0f;
-    f32 arrowXDiff = ((FONT_WIDTH - NUM_SIDE_GAP) * mScale / 2.0f) - (FONT_WIDTH * mScale / 4.0f);
+    f32 topArrowOffset = ARROW_HEIGHT * arrowScale;
+    f32 arrowXDiff = (NUM_LEFT_GAP * mScale) + (NUM_WIDTH * mScale / 2.0f) - (FONT_WIDTH * arrowScale / 2.0f);
     for (s32 i = 0; i < mDigits; i++)
     {
         // Calculate digit value
