@@ -47,4 +47,7 @@ void * getModRelLoadAddr();
 
 const char * getToggleName(bool value);
 
+// Doesn't support negative powers
+s32 pow(s32 val, s32 power);
+
 }

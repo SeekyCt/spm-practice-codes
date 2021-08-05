@@ -33,8 +33,9 @@ void MenuScroller::handleInputs(u32 btn, u32 btnRpt)
 
 void MenuScroller::disp(f32 centreX, f32 centreY, bool selected)
 {
+    // TODO: fix scale
+
     // Draw arrows
-    // TODO: support scale
     const f32 x = centreX + mPosX;
     const f32 y = centreY + mPosY;
     const f32 height = (FONT_HEIGHT * mScale) + 5;

@@ -105,4 +105,12 @@ const char * getToggleName(bool value)
     }
 }
 
+s32 pow(s32 val, s32 power)
+{
+    s32 x = 1;
+    for (s32 i = power; i > 0; i--)
+        x *= val;
+    return x;
+}
+
 }
