@@ -414,53 +414,17 @@ void InventoryMenu::setId(int id)
     }
 }
 
-void InventoryMenu::idUp(MenuScroller * scroller, void * param)
+void InventoryMenu::idChange(MenuScrollGroup * scroller, s32 delta, void * param)
 {
+    (void) scroller;
+
     InventoryMenu * instance = reinterpret_cast<InventoryMenu *>(param);
 
-    // Figure out which digit is being changed and its place value
-    s32 increment = 100;
-    for (int i = 0; i < 3; i++)
-    {
-        if (scroller == instance->mIdScrollers[i])
-            // Use current increment and exit loop
-            break;
-        else
-            // Each digit has a value 10 times lower than the previous
-            increment /= 10;
-    }
-
     // Set value
-    int id = instance->getId(instance->mSlot) + increment;
+    int id = instance->getId(instance->mSlot) + delta;
 
     if (id >= modes[instance->mMode].max)
         id = modes[instance->mMode].max - 1;
-
-    instance->setId(id);
-
-    // Update display
-    instance->updateIdDisp();
-}
-
-void InventoryMenu::idDown(MenuScroller * scroller, void * param)
-{
-    InventoryMenu * instance = reinterpret_cast<InventoryMenu *>(param);
-
-    // Figure out which digit is being changed and its place value
-    s32 increment = 100;
-    for (int i = 0; i < 3; i++)
-    {
-        if (scroller == instance->mIdScrollers[i])
-            // Use current increment and exit loop
-            break;
-        else
-            // Each digit has a value 10 times lower than the previous
-            increment /= 10;
-    }
-
-    // Update value
-    int id = instance->getId(instance->mSlot) - increment;
-
     if (id < modes[instance->mMode].min)
         id = modes[instance->mMode].min;
 
@@ -482,9 +446,7 @@ void InventoryMenu::updateIdDisp()
     else
         mItemName->mMsg = "None";
 
-    wii::stdio::sprintf(mIdStrs[0], "%d", DIGIT_100(id));
-    wii::stdio::sprintf(mIdStrs[1], "%d", DIGIT_10(id));
-    wii::stdio::sprintf(mIdStrs[2], "%d", DIGIT_1(id));
+    mIdScroller->mDispValue = id;
 }
 
 bool InventoryMenu::finishId(MenuButton * button, void * param)
@@ -500,7 +462,6 @@ void InventoryMenu::initIdScreen()
 {    
     mScreen = SCREEN_ID;
     const f32 selectDispX = -60.0f;
-    const f32 selectXDiff = 20.0f;
     const f32 dispsY = 20.0f;
     const f32 iconX = selectDispX + 80.0f;
     const f32 iconY = dispsY + 15.0f;
@@ -509,24 +470,17 @@ void InventoryMenu::initIdScreen()
     // Init id select buttons
     mItemIcon = new MenuIcon(this, 0, iconX, iconY);
     mItemName = new CentredButton(this, nullptr, nameY);
+    mIdScroller = new MenuScrollGroup(this, 0, selectDispX, dispsY, idChange, this, 3, false, finishId, this);
     updateIdDisp();
-    for (int i = 0; i < 3; i++)
-        mIdScrollers[i] = new MenuScroller(this, mIdStrs[i], selectDispX + (selectXDiff * i), dispsY,
-                                           0.0f, idUp, idDown, this, finishId, this);
-    for (int i = 0; i < 2; i++)
-        buttonLinkHorizontal(mIdScrollers[i], mIdScrollers[i + 1]);
-    mCurButton = mIdScrollers[0];
+    mCurButton = mIdScroller;
 }
 
 void InventoryMenu::exitIdScreen()
 {
-    for (int i = 0; i < 3; i++)
-    {
-        delete mIdScrollers[i];
-        mIdScrollers[i] = nullptr;
-    }
+    delete mIdScroller;
     delete mItemIcon;
     delete mItemName;
+    mIdScroller = nullptr;
     mItemIcon = nullptr;
     mItemName = nullptr;
 }

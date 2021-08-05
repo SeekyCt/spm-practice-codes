@@ -7,7 +7,7 @@
 
 #include "mod_ui_base/centredbutton.h"
 #include "mod_ui_base/menuicon.h"
-#include "mod_ui_base/menuscroller.h"
+#include "mod_ui_base/menuscrollgroup.h"
 #include "childmenu.h"
 
 namespace mod {
@@ -46,13 +46,11 @@ private:
     void exitEditScreen();
     
     // Item id edit screen
-    MenuScroller * mIdScrollers[3];
+    MenuScrollGroup * mIdScroller;
     MenuIcon * mItemIcon;
     CentredButton * mItemName;
-    char mIdStrs[3][2]; // 1 digit + null
     void setId(int id);
-    static void idUp(MenuScroller * scroller, void * param);
-    static void idDown(MenuScroller * scroller, void * param);
+    static void idChange(MenuScrollGroup * scroller, s32 delta, void * param);
     static bool finishId(MenuButton * button, void * param);
     void updateIdDisp();
     void initIdScreen();
