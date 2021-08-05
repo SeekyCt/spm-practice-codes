@@ -41,10 +41,8 @@ void PitSelectMenu::updateGroupDisp()
 
 void PitSelectMenu::updateFloorDisp()
 {
-    // Format map number to digit strings and display
-    wii::stdio::sprintf(mFloorStrs[0], "%d", DIGIT_100(mFloor));
-    wii::stdio::sprintf(mFloorStrs[1], "%d", DIGIT_10(mFloor));
-    wii::stdio::sprintf(mFloorStrs[2], "%d", DIGIT_1(mFloor));
+    // Set floor display to new number
+    mFloorScroller->mDispValue = mFloor;
 }
 
 void PitSelectMenu::groupSwap(MenuScroller * scroller, void * param)
@@ -61,49 +59,16 @@ void PitSelectMenu::groupSwap(MenuScroller * scroller, void * param)
     instance->updateFloorDisp();
 }
 
-void PitSelectMenu::floorUp(MenuScroller * scroller, void * param)
+void PitSelectMenu::floorChange(MenuScrollGroup * scroller, s32 delta, void * param)
 {
+    (void) scroller;
+
     PitSelectMenu * instance = reinterpret_cast<PitSelectMenu *>(param);
 
-    // Figure out which digit is being changed and its place value
-    int increment = 100;
-    for (int i = 0; i < 3; i++)
-    {
-        if (instance->mFloorScrollers[i] == scroller)
-            // Use current increment and exit loop
-            break;
-        else
-            // Each digit has a value 10 times lower than the previous
-            increment /= 10;
-    }
-
-    // Update value, limit at 100
-    instance->mFloor += increment;
+    // Update value, ensure between 1 and 100
+    instance->mFloor += delta;
     if (instance->mFloor > 100)
         instance->mFloor = 100;
-
-    // Update display
-    instance->updateFloorDisp();
-}
-
-void PitSelectMenu::floorDown(MenuScroller * scroller, void * param)
-{
-    PitSelectMenu * instance = reinterpret_cast<PitSelectMenu *>(param);
-
-    // Figure out which digit is being changed and its place value
-    int increment = 100;
-    for (int i = 0; i < 3; i++)
-    {
-        if (instance->mFloorScrollers[i] == scroller)
-            // Use current increment and exit loop
-            break;
-        else
-            // Each digit has a value 10 times lower than the previous
-            increment /= 10;
-    }
-
-    // Update value, limit at 0
-    instance->mFloor -= increment;
     if (instance->mFloor < 1)
         instance->mFloor = 1;
 
@@ -279,7 +244,6 @@ PitSelectMenu::PitSelectMenu()
     const f32 groupDispX = groupLabelX + 55.0f;
     const f32 floorLabelX = groupDispX + 125.0f;
     const f32 floorDispX = floorLabelX + 85.0f;
-    const f32 floorXDiff = 20.0f;
     const f32 dispsY = 20.0f;
     
     // Init display buttons
@@ -288,16 +252,8 @@ PitSelectMenu::PitSelectMenu()
         this, getGroupName(mGroup), groupDispX, dispsY, 45.0f, groupSwap, groupSwap, this, doMapChange, this
     );
     new MenuButton(this, "Floor:", floorLabelX, dispsY);
-    updateFloorDisp(); // generates mFloorStrs
-    for (int i = 0; i < 3; i++)
-    {
-        mFloorScrollers[i] = new MenuScroller(
-            this, mFloorStrs[i], floorDispX + (floorXDiff * i), dispsY, 0.0f, floorUp, floorDown, this, doMapChange, this
-        );
-        if (i > 0)
-            buttonLinkHorizontal(mFloorScrollers[i - 1], mFloorScrollers[i]);
-    }
-    buttonLinkHorizontal(mGroupScroller, mFloorScrollers[0]);
+    mFloorScroller = new MenuScrollGroup(this, mFloor, floorDispX, dispsY, floorChange, this, 3, false, doMapChange, this);
+    buttonLinkHorizontal(mGroupScroller, mFloorScroller);
 
     // Set starting button and title
     mCurButton = mGroupScroller;

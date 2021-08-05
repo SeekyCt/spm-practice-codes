@@ -6,6 +6,7 @@
 #pragma once
 
 #include "mod_ui_base/menuscroller.h"
+#include "mod_ui_base/menuscrollgroup.h"
 #include "mapmenu.h"
 
 namespace mod {
@@ -15,17 +16,15 @@ class PitSelectMenu : public MapMenu
 private:
     int mGroup;
     int mFloor;
-    char mFloorStrs[3][2];
     MenuScroller * mGroupScroller;
-    MenuScroller * mFloorScrollers[3];
+    MenuScrollGroup * mFloorScroller;
 
     void updateGroupDisp();
     void updateFloorDisp();
     void _doMapChange();
 
     static void groupSwap(MenuScroller * scroller, void * param);
-    static void floorUp(MenuScroller * scroller, void * param);
-    static void floorDown(MenuScroller * scroller, void * param);
+    static void floorChange(MenuScrollGroup * scroller, s32 delta, void * param);
     static bool doMapChange(MenuButton * button, void * param);
 
 public:
