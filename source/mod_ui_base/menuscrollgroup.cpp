@@ -7,11 +7,6 @@
 
 namespace mod {
 
-#define ARROW_HEIGHT 26
-#define NUM_LEFT_GAP 1
-#define NUM_WIDTH 14
-#define NUM_TOP_GAP 5
-
 MenuScrollGroup::MenuScrollGroup(MenuWindow * parent, u32 value, f32 x, f32 y, MenuScrollGroupCb * scrollCb,
                                  void * scrollParam, s32 digits, bool hex, MenuAction * action, void * actionParam,
                                  f32 scale, wii::RGBA * colour, wii::RGBA * selColour)
@@ -61,12 +56,13 @@ void MenuScrollGroup::disp(f32 centreX, f32 centreY, bool selected)
     // Draw scrollers
     u32 remaining = mDispValue;
     f32 x = centreX + mPosX;
-    f32 y = centreY + mPosY;
-    f32 arrowGap = 10.0f * mScale;
-    f32 arrowScale = mScale / 2.0f;
-    f32 bottomArrowOffset = (FONT_HEIGHT * mScale) + (NUM_TOP_GAP * mScale);
-    f32 topArrowOffset = ARROW_HEIGHT * arrowScale;
-    f32 arrowXDiff = (NUM_LEFT_GAP * mScale) + (NUM_WIDTH * mScale / 2.0f) - (FONT_WIDTH * arrowScale / 2.0f);
+    const f32 y = centreY + mPosY;
+    const f32 arrowGap = 10.0f * mScale;
+    const f32 arrowScale = mScale / 2.0f;
+    const f32 bottomArrowOffset = (FONT_HEIGHT * mScale) + (FONT_NUM_TOP_GAP * mScale);
+    const f32 topArrowOffset = FONT_ARROW_HEIGHT * arrowScale;
+    const f32 arrowXDiff = (FONT_NUM_LEFT_GAP * mScale) + (FONT_NUM_WIDTH * mScale / 2.0f)
+                           - (FONT_WIDTH * arrowScale / 2.0f);
     for (s32 i = 0; i < mDigits; i++)
     {
         // Calculate digit value
@@ -82,8 +78,8 @@ void MenuScrollGroup::disp(f32 centreX, f32 centreY, bool selected)
         mWindow->drawString(str, x, y, colour, mScale, true);
 
         // Draw arrows
-        mWindow->drawString("/\\", x + arrowXDiff, y + topArrowOffset + arrowGap, colour, mScale / 2.0f, true);
-        mWindow->drawString("\\/", x + arrowXDiff, y - bottomArrowOffset - arrowGap, colour, mScale / 2.0f, true);
+        mWindow->drawString("/\\", x + arrowXDiff, y + topArrowOffset + arrowGap, colour, arrowScale, true);
+        mWindow->drawString("\\/", x + arrowXDiff, y - bottomArrowOffset - arrowGap, colour, arrowScale, true);
 
         // Move to next digit
         x += FONT_WIDTH * mScale;

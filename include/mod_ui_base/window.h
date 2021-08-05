@@ -12,6 +12,10 @@ namespace mod {
 
 #define FONT_HEIGHT 20
 #define FONT_WIDTH 20
+#define FONT_ARROW_HEIGHT 26
+#define FONT_NUM_LEFT_GAP 1
+#define FONT_NUM_WIDTH 14
+#define FONT_NUM_TOP_GAP 5
 
 class Window
 {

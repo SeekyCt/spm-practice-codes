@@ -33,17 +33,18 @@ void MenuScroller::handleInputs(u32 btn, u32 btnRpt)
 
 void MenuScroller::disp(f32 centreX, f32 centreY, bool selected)
 {
-    // TODO: fix scale
-
     // Draw arrows
     const f32 x = centreX + mPosX;
     const f32 y = centreY + mPosY;
-    const f32 height = (FONT_HEIGHT * mScale) + 5;
-    const f32 arrowYDiff = 25.0f * mScale;
+    const f32 arrowScale = mScale / 2.0f;
+    const f32 bottomArrowOffset = (FONT_HEIGHT * mScale) + (FONT_NUM_TOP_GAP * mScale);
+    const f32 topArrowOffset = FONT_ARROW_HEIGHT * arrowScale;
+    const f32 arrowGap = 10.0f * mScale;
     wii::RGBA * colour = selected ? &mSelColour : &mColour;
-    mWindow->drawString("/\\", x + mArrowXDiff, y + arrowYDiff, colour, 0.5f, true);
-    mWindow->drawString("\\/", x + mArrowXDiff, y - arrowYDiff - height, colour, 0.5f, true);
-    
+    mWindow->drawString("/\\", x + mArrowXDiff, y + topArrowOffset + arrowGap, colour, arrowScale, true);
+    mWindow->drawString("\\/", x + mArrowXDiff, y - bottomArrowOffset - arrowGap, colour, arrowScale, true);
+
+
     // Draw main button
     MenuButton::disp(centreX, centreY, selected);
 }
