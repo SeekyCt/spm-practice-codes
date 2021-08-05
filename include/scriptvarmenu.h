@@ -6,6 +6,7 @@
 #pragma once
 
 #include "mod_ui_base/menuscroller.h"
+#include "mod_ui_base/menuscrollgroup.h"
 #include "childmenu.h"
 
 namespace mod {
@@ -16,10 +17,8 @@ private:
     int mGroup;
     int mId;
     MenuScroller * mGroupDisp;
-    MenuScroller * mSelectScrollers[4];
-    char mSelectStrs[4][2]; // 1 digit + null
-    MenuScroller * mEditScrollers[8];
-    char mEditStrs[8][2]; // 1 digit + null
+    MenuScrollGroup * mSelectScroller;
+    MenuScrollGroup * mEditScroller;
 
     void updateGroupDisp();
     void updateVarDisp();
@@ -28,10 +27,8 @@ private:
 
     static void groupUp(MenuScroller * scroller, void * param);
     static void groupDown(MenuScroller * scroller, void * param);
-    static void idUp(MenuScroller * scroller, void * param);
-    static void idDown(MenuScroller * scroller, void * param);
-    static void valUp(MenuScroller * scroller, void * param);
-    static void valDown(MenuScroller * scroller, void * param);
+    static void idChange(MenuScrollGroup * scroller, s32 delta, void * param);
+    static void valChange(MenuScrollGroup * scroller, s32 delta, void * param);
 
 public:
     ScriptVarMenu();
