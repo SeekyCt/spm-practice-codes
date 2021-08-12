@@ -24,6 +24,11 @@ private:
 
     static Window * sWindowList;
     static void windowDisp(s8 camId, void * param);
+    static void setupGX(s32 zMode);
+    static void circleGX(const wii::RGBA * colour, f32 x, f32 y, f32 z,
+                         f32 radius, s32 n);
+    static void cylinderBarsGX(const wii::RGBA * colour, f32 x, f32 y, f32 z,
+                               f32 radius, f32 height, s32 n);
 
 protected:
     s32 mCamera;
@@ -66,8 +71,10 @@ public:
                         f32 x, f32 y, f32 width, f32 height, f32 curve);
     static void drawBoxGX(const wii::RGBA * colour, f32 x, f32 y,
                           f32 width, f32 height);
-    static void drawLineCuboidGX(wii::RGBA * colour, f32 top, f32 bottom, f32 left, f32 right,
-                                 f32 front, f32 back);
+    static void drawLineCuboidGX(wii::RGBA * colour, f32 top, f32 bottom,
+                                 f32 left, f32 right, f32 front, f32 back);
+    void drawLineCylinderGX(const wii::RGBA * colour, f32 x, f32 y, f32 z,
+                            f32 radius, f32 height, s32 n, s32 barN);
     static void windowMain();
     static void homebuttonDispPatch();
 };

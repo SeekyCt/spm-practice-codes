@@ -364,6 +364,12 @@
 80267018:strlen
 // more
 
+// s_cos.c
+80263ea0:cos
+
+// s_sin.c
+802642ac:sin
+
 // os.a
 // OSCache.c
 80270050:DCFlushRange
