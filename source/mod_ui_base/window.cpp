@@ -233,7 +233,7 @@ void Window::drawLineCuboidGX(wii::RGBA * colour, f32 top, f32 bottom, f32 left,
         ogc::GX::GX_Position3f32(right, bottom, front);
         ogc::GX::GX_Color1u32(_colour);
 
-        // 3
+        // 4
         ogc::GX::GX_Position3f32(left, bottom, front);
         ogc::GX::GX_Color1u32(_colour);
 
@@ -269,7 +269,7 @@ void Window::drawLineCuboidGX(wii::RGBA * colour, f32 top, f32 bottom, f32 left,
         ogc::GX::GX_Position3f32(left, bottom, back);
         ogc::GX::GX_Color1u32(_colour);
 
-        // 3
+        // 4
         ogc::GX::GX_Position3f32(right, bottom, back);
         ogc::GX::GX_Color1u32(_colour);
 
