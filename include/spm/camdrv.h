@@ -15,7 +15,8 @@ enum
     CAM_2D = 11,
     // 12 unknown
     CAM_DEBUG = 13,
-    CAM_DEBUG_3D = 14
+    CAM_DEBUG_3D = 14,
+    CAM_ID_MAX = 15
 };
 
 struct CamEntry

@@ -26,6 +26,8 @@ private:
     static void windowDisp(s8 camId, void * param);
 
 protected:
+    s32 mCamera;
+
     virtual void disp();
 
 public:

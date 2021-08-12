@@ -21,6 +21,9 @@ Window::Window()
     // Add to linked list
     mNext = sWindowList;
     sWindowList = this;
+
+    // Display on default camera
+    mCamera = spm::camdrv::CAM_DEBUG_3D;
 }
 
 Window::~Window()
@@ -196,8 +199,7 @@ void Window::drawBoxGX(const wii::RGBA * colour, f32 x, f32 y, f32 width, f32 he
 
 void Window::windowDisp(s8 camId, void * param)
 {
-    // Disp callback params aren't needed
-    (void) camId;
+    // Disp callback param isn't needed
     (void) param;
 
     // Call every window's display function
@@ -207,8 +209,9 @@ void Window::windowDisp(s8 camId, void * param)
         // Window may delete itself during disp so this has to be read now
         Window * temp = w->mNext;
 
-        // Call custom display function
-        w->disp();
+        // Call custom display function if window is on this camera
+        if (w->mCamera == camId)
+            w->disp();
 
         // Continue to next window
         w = temp;
@@ -219,8 +222,9 @@ void Window::windowMain()
 {
     if ((spm::homebuttondrv::homebuttonWp->flags & HOMEBUTTON_FLAG_OPEN) == 0)
     {
-        // Schedule windowDisp to run this frame on the debug 3d camera
-        spm::dispdrv::dispEntry(spm::camdrv::CAM_DEBUG_3D, 2, 0.0f, Window::windowDisp, 0);
+        // Schedule windowDisp to run this frame on all cameras
+        for (s32 i = 0; i < spm::camdrv::CAM_ID_MAX; i++)
+            spm::dispdrv::dispEntry(i, 2, 0.0f, Window::windowDisp, nullptr);
     }
 }
 
