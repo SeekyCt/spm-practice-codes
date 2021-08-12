@@ -66,6 +66,8 @@ public:
                         f32 x, f32 y, f32 width, f32 height, f32 curve);
     static void drawBoxGX(const wii::RGBA * colour, f32 x, f32 y,
                           f32 width, f32 height);
+    static void drawLineCuboidGX(wii::RGBA * colour, f32 top, f32 bottom, f32 left, f32 right,
+                                 f32 front, f32 back);
     static void windowMain();
     static void homebuttonDispPatch();
 };

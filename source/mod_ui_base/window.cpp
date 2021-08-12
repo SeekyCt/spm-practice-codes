@@ -15,6 +15,7 @@
 namespace mod {
 
 Window * Window::sWindowList = nullptr;
+static const wii::RGBA white {0xff, 0xff, 0xff, 0xff};
 
 Window::Window()
 {
@@ -144,7 +145,6 @@ void Window::drawBox(u16 GXTexMapID, const wii::RGBA * colour, f32 x, f32 y, f32
                                            curve);
 }
 
-static const wii::RGBA white {0xff, 0xff, 0xff, 0xff};
 void Window::drawBoxGX(const wii::RGBA * colour, f32 x, f32 y, f32 width, f32 height)
 {
     // Disable some stuff
@@ -192,6 +192,141 @@ void Window::drawBoxGX(const wii::RGBA * colour, f32 x, f32 y, f32 width, f32 he
         ogc::GX::GX_Position3f32(right, bottom, z);
         ogc::GX::GX_Color1u32(_colour);
         ogc::GX::GX_Position3f32(left, bottom, z);
+        ogc::GX::GX_Color1u32(_colour);
+    }
+    GXEnd();
+}
+
+void Window::drawLineCuboidGX(wii::RGBA * colour, f32 top, f32 bottom, f32 left, f32 right, f32 front, f32 back)
+{
+    // Disable some stuff
+    wii::GX::GXSetCullMode(GX_CULL_NONE); // disable all culling
+    wii::GX::GXSetZCompLoc(true); // compare z before texture
+    wii::GX::GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0); // set alpha test to always pass
+    wii::GX::GXSetBlendMode(GX_BM_NONE, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_OR); // write output directly to EFB
+    wii::GX::GXSetZMode(true, GX_LEQUAL, true); // always pass z test
+    wii::GX::GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, &white); // disable fog
+
+    // Set verex input format
+    wii::GX::GXClearVtxDesc(); // reset vertex properties
+    wii::GX::GXSetVtxDesc(GX_VA_POS, GX_DIRECT); // position coordinates first
+    wii::GX::GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT); // colour second
+    wii::GX::GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0); // position format is a f32 vec3
+    wii::GX::GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0); // color format is rgba8
+
+    // Setup for direct colour
+    wii::GX::GXSetNumChans(1); // enable 1 colour channel
+    wii::GX::GXSetNumTexGens(0); // disable tex coord generation
+    wii::GX::GXSetNumTevStages(1); // only 1 TEV stage
+    wii::GX::GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORDNULL, GX_TEXMAP_NULL, GX_COLOR0A0); // disable textures in TEV
+        // set colour to only come from the vertices
+    wii::GX::GXSetChanCtrl(GX_COLOR0A0, false, GX_SRC_VTX, GX_SRC_VTX, GX_LIGHTNULL, GX_DF_NONE, GX_AF_NONE); 
+    wii::GX::GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR); // set TEV to pass the colour directly
+
+    // Setup view matrix
+    spm::camdrv::CamEntry * camera = spm::camdrv::camGetCurPtr();
+    wii::GX::GXLoadPosMtxImm(&camera->viewMtx, 0);
+    wii::GX::GXSetCurrentMtx(0);
+
+    // Get colour
+    u32 _colour = *reinterpret_cast<const u32 *>(colour);
+
+    // Draw front face & top left line
+    wii::GX::GXBegin(GX_LINESTRIP, GX_VTXFMT0, 6);
+    {
+        /*
+              6
+             /
+            1--2
+            |  |
+            4--3
+        */
+
+        // 1
+        ogc::GX::GX_Position3f32(left, top, front);
+        ogc::GX::GX_Color1u32(_colour);
+
+        // 2
+        ogc::GX::GX_Position3f32(right, top, front);
+        ogc::GX::GX_Color1u32(_colour);
+
+        // 3
+        ogc::GX::GX_Position3f32(right, bottom, front);
+        ogc::GX::GX_Color1u32(_colour);
+
+        // 3
+        ogc::GX::GX_Position3f32(left, bottom, front);
+        ogc::GX::GX_Color1u32(_colour);
+
+        // 5 (1)
+        ogc::GX::GX_Position3f32(left, top, front);
+        ogc::GX::GX_Color1u32(_colour);
+
+        // 6
+        ogc::GX::GX_Position3f32(left, top, back);
+        ogc::GX::GX_Color1u32(_colour);
+    }
+    GXEnd();
+
+
+    // Draw back face & top right line
+    wii::GX::GXBegin(GX_LINESTRIP, GX_VTXFMT0, 6);
+    {
+        /*
+            2--1
+            |  | \
+            3--4  6
+        */
+
+        // 1
+        ogc::GX::GX_Position3f32(right, top, back);
+        ogc::GX::GX_Color1u32(_colour);
+
+        // 2
+        ogc::GX::GX_Position3f32(left, top, back);
+        ogc::GX::GX_Color1u32(_colour);
+
+        // 3
+        ogc::GX::GX_Position3f32(left, bottom, back);
+        ogc::GX::GX_Color1u32(_colour);
+
+        // 3
+        ogc::GX::GX_Position3f32(right, bottom, back);
+        ogc::GX::GX_Color1u32(_colour);
+
+        // 5 (1)
+        ogc::GX::GX_Position3f32(right, top, back);
+        ogc::GX::GX_Color1u32(_colour);
+
+        // 6
+        ogc::GX::GX_Position3f32(right, top, front);
+        ogc::GX::GX_Color1u32(_colour);
+    }
+    GXEnd();
+
+    // Draw bottom lines
+    wii::GX::GXBegin(GX_LINES, GX_VTXFMT0, 4);
+    {
+        /*
+              2   4
+             /   /
+            1   3
+        */
+
+        // 1
+        ogc::GX::GX_Position3f32(left, bottom, front);
+        ogc::GX::GX_Color1u32(_colour);
+
+        // 2
+        ogc::GX::GX_Position3f32(left, bottom, back);
+        ogc::GX::GX_Color1u32(_colour);
+
+        // 3
+        ogc::GX::GX_Position3f32(right, bottom, front);
+        ogc::GX::GX_Color1u32(_colour);
+
+        // 4
+        ogc::GX::GX_Position3f32(right, bottom, back);
         ogc::GX::GX_Color1u32(_colour);
     }
     GXEnd();
