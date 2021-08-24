@@ -8,6 +8,7 @@
 #include <spm/animdrv.h>
 #include <spm/camdrv.h>
 #include <spm/dispdrv.h>
+#include <spm/evt_door.h>
 #include <spm/mario.h>
 #include <spm/npcdrv.h>
 #include <spm/seqdrv.h>
@@ -19,8 +20,8 @@
 
 namespace mod {
 
-#define BAR_WIDTH (50.0f)
-#define BAR_HEIGHT (12.5f)
+#define BAR_WIDTH 50.0f
+#define BAR_HEIGHT 12.5f
 #define OUTLINE_SIZE 2.5f
 #define INNER_WIDTH (BAR_WIDTH - (2 * OUTLINE_SIZE))
 #define INNER_HEIGHT (BAR_HEIGHT - (2 * OUTLINE_SIZE))
@@ -28,6 +29,37 @@ namespace mod {
 static const wii::RGBA black {0x00, 0x00, 0x00, 0xff};
 static const wii::RGBA red {0xff, 0x00, 0x00, 0xff};
 static const wii::RGBA yellow {0xff, 0xff, 0x00, 0xff};
+
+/*
+    If a door has been entered in this map, checks that the NPC is shown by it
+*/
+static bool npcDoorCheck(const char * name)
+{
+    // Get the door desc for the current room
+    spm::evt_door::DoorDesc * door = spm::evt_door::evtDoorGetActiveDoorDesc();
+
+    // Never display while a door is open
+    if (spm::evt_door::evtDoorWp->flags & EVT_DOOR_FLAG_DOOR_OPEN)
+        return false;
+
+    // Always display if not in a room
+    if (door == nullptr)
+        return true;    
+
+    // Never display if the room has no NPCs
+    if (door->npcNameList == nullptr)
+        return false;
+    
+    // Display if belonging to room
+    for (const char ** pName = door->npcNameList; *pName; pName++)
+    {
+        if (wii::string::strcmp(name, *pName) == 0)
+            return true;
+    }
+
+    // Don't display if not in room
+    return false;
+}
 
 static void disp(s8 cameraId, void * param)
 {
@@ -44,7 +76,11 @@ static void disp(s8 cameraId, void * param)
     spm::npcdrv::NPCEntry * npc = wp->entries;
     for (s32 i = 0; i < wp->num; i++, npc++)
     {
-        if (npc->flags_8 & 1)
+        // Check NPC is visible
+        // TODO: check Z to prevent issues with enemies very far behind &
+        //        attempt to hide enemies blocked by objects
+        if ((npc->flags_8 & 1) && (npc->flags_8 & 0x40000000) == 0 && npcDoorCheck(npc->name)
+            && (npc->flag46C & 0x20000) == 0 && (npc->flags_c & 0x20) == 0)
         {
             // Get screen position
             wii::Vec3 pos;

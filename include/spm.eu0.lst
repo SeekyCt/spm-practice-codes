@@ -103,10 +103,14 @@
 // more
 
 // evt_door.c
+// text
+800e11b0:evtDoorGetActiveDoorDesc
 800e2610:evt_door_set_door_descs
 800e3588:evt_door_set_dokan_descs
 800e4118:evt_door_set_map_door_descs
 // more
+// sdata
+805ae020:evtDoorWp
 
 // evt_fade.c
 800e7100:evt_fade_end_wait
