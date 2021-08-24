@@ -33,7 +33,10 @@ struct MarioWork
     u8 unknown_0x124[0x14c - 0x124];
     f32 startspeed;
     f32 maxSpeed;
-    u8 unknown_0x[0x156c - 0x154];
+    u8 unknown_0x154[0x194 - 0x154];
+    f32 hitboxWidth;
+    f32 hitboxHeight;
+    u8 unknown_0x19c[0x156c - 0x19c];
 };
 static_assert(sizeof(MarioWork) == 0x156c);
 
