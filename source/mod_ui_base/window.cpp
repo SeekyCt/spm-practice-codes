@@ -311,6 +311,19 @@ void Window::drawLineCuboidGX(wii::RGBA * colour, f32 top, f32 bottom, f32 left,
     GXEnd();
 }
 
+void Window::drawLineCubeGX(wii::RGBA * colour, f32 x, f32 y, f32 z, f32 sideLength)
+{
+    f32 len = sideLength / 2.0f;
+    f32 left = x - len;
+    f32 right = x + len;
+    f32 top = y + len;
+    f32 bottom = y - len;
+    f32 front = z + len;
+    f32 back = z - len;
+    drawLineCuboidGX(colour, top, bottom, left, right, front, back);
+}
+
+
 void Window::circleGX(const wii::RGBA * colour, f32 x, f32 y, f32 z, f32 radius, s32 n)
 {
     f32 angleStep = PIx2 / (float) n;
