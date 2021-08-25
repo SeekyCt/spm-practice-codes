@@ -86,8 +86,6 @@ void HPWindow::disp()
     for (s32 i = 0; i < wp->num; i++, npc++)
     {
         // Check NPC is visible
-        // TODO: check Z to prevent issues with enemies very far behind &
-        //       attempt to hide enemies blocked by objects
         if ((npc->flags_8 & 1) && (npc->flags_8 & 0x40000000) == 0
             && (npc->flags_c & 0x20) == 0 && (npc->flag46C & 0x20000) == 0 
             && npcPosCheck(npc) && npcDoorCheck(npc->name))
