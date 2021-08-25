@@ -4,7 +4,7 @@
 #include "evtdebug.h"
 #include "exception.h"
 #include "gamesavemenu.h"
-#include "hpbar.h"
+#include "hpwindow.h"
 #include "mainmenu.h"
 #include "mapdoorwindow.h"
 #include "mapselectmenu.h"
@@ -200,6 +200,7 @@ void main()
     ConsoleWindow::sInstance = new ConsoleWindow();
     MapDoorWindow::sInstance = new MapDoorWindow();
     XYZWindow::sInstance = new XYZWindow();
+    HPWindow::sInstance = new HPWindow();
 
     spmarioMainPatch();
     seq_titlePatch();
@@ -213,7 +214,6 @@ void main()
     customPitPatch();
     parsePatch();
     Window::homebuttonDispPatch();
-    hpBarPatch();
 }
 
 }

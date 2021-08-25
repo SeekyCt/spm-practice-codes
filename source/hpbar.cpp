@@ -1,6 +1,6 @@
 #include "mod_ui_base/menuwindow.h"
 #include "nandsettings.h"
-#include "hpbar.h"
+#include "hpwindow.h"
 #include "patch.h"
 #include "util.h"
 
@@ -29,6 +29,13 @@ namespace mod {
 static const wii::RGBA black {0x00, 0x00, 0x00, 0xff};
 static const wii::RGBA red {0xff, 0x00, 0x00, 0xff};
 static const wii::RGBA yellow {0xff, 0xff, 0x00, 0xff};
+
+HPWindow * HPWindow::sInstance = nullptr;
+
+HPWindow::HPWindow()
+{
+    mCamera = spm::camdrv::CAM_2D;
+}
 
 /*
     If a door has been entered in this map, checks that the NPC is shown by it
@@ -61,11 +68,8 @@ static bool npcDoorCheck(const char * name)
     return false;
 }
 
-static void disp(s8 cameraId, void * param)
+void HPWindow::disp()
 {
-    (void) cameraId;
-    (void) param;
-
     // Don't draw over menu, if disabled or if not in game
     // TODO: make own setting
     if (spm::seqdrv::seqGetSeq() != spm::seqdrv::SEQ_GAME || !gSettings->hudXYZ
@@ -78,7 +82,7 @@ static void disp(s8 cameraId, void * param)
     {
         // Check NPC is visible
         // TODO: check Z to prevent issues with enemies very far behind &
-        //        attempt to hide enemies blocked by objects
+        //       attempt to hide enemies blocked by objects
         if ((npc->flags_8 & 1) && (npc->flags_8 & 0x40000000) == 0 && npcDoorCheck(npc->name)
             && (npc->flag46C & 0x20000) == 0 && (npc->flags_c & 0x20) == 0)
         {
@@ -112,6 +116,7 @@ static void disp(s8 cameraId, void * param)
     }
 }
 
+/*
 void (*animMainReal)();
 void hpBarPatch()
 {
@@ -123,5 +128,6 @@ void hpBarPatch()
         }
     );
 }
+*/
 
 }
