@@ -8,22 +8,22 @@ namespace spm::dan {
 #define DUNGEON_MAX 200
 #define DAN_PARTS_COUNT 16
 
-typedef struct
+struct DanDoor
 {
     s32 enter;
     s32 exit;
-} DanDoor;
+};
 static_assert(sizeof(DanDoor) == 0x8);
 
-typedef struct
+struct DanEnemy
 {
     s32 name;
     s32 num;
     s32 pos;
-} DanEnemy;
+};
 static_assert(sizeof(DanEnemy) == 0xc);
 
-typedef struct
+struct DanDungeon
 {
     u32 map;
     s32 item;
@@ -31,10 +31,10 @@ typedef struct
     s32 enemyCount;
     DanDoor doors[20];
     DanEnemy enemies[16];
-} DanDungeon;
+};
 static_assert(sizeof(DanDungeon) == 0x170);
 
-typedef struct
+struct DanWork
 {
     DanDungeon * dungeons;
     DanDoor doorInfo;
@@ -56,7 +56,7 @@ typedef struct
     u8 unknown_0x410[0x510 - 0x410];
     char enterDoorName[64];
     char exitDoorName[64];
-} DanWork;
+};
 static_assert(sizeof(DanWork) == 0x590);
 
 extern "C" {
