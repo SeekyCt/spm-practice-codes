@@ -13,7 +13,7 @@ namespace mod {
 
 #define MISC_SETTING_COUNT 1
 
-class MiscMenu : public ChildMenu
+class MiscMenu final : public ChildMenu
 {
 private:
     MenuButton * mOptions[MISC_SETTING_COUNT];

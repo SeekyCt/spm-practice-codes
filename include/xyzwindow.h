@@ -8,7 +8,7 @@
 
 namespace mod {
 
-class XYZWindow : public Window
+class XYZWindow final : public Window
 {
 protected:
     virtual void disp() override;

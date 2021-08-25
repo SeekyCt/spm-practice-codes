@@ -12,7 +12,7 @@
 
 namespace mod {
 
-class InventoryMenu : public ChildMenu
+class InventoryMenu final : public ChildMenu
 {
 private:
     // Common

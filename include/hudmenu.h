@@ -11,7 +11,7 @@
 
 namespace mod {
 
-class HudMenu : public ChildMenu
+class HudMenu final : public ChildMenu
 {
 private:
     char mDelayStr[9];

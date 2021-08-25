@@ -11,7 +11,7 @@
 
 namespace mod {
 
-class PitSelectMenu : public MapMenu
+class PitSelectMenu final : public MapMenu
 {
 private:
     int mGroup;

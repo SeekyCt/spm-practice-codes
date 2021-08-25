@@ -9,7 +9,7 @@
 
 namespace mod {
 
-class TitleTextWindow : public Window
+class TitleTextWindow final : public Window
 {
 protected:
     virtual void disp() override;

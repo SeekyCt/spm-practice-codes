@@ -8,7 +8,7 @@
 
 namespace mod {
 
-class MapDoorWindow : public Window
+class MapDoorWindow final : public Window
 {
 protected:
     virtual void disp() override;

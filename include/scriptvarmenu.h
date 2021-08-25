@@ -11,7 +11,7 @@
 
 namespace mod {
 
-class ScriptVarMenu : public ChildMenu
+class ScriptVarMenu final : public ChildMenu
 {
 private:
     int mGroup;

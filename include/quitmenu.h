@@ -9,7 +9,7 @@
 
 namespace mod {
 
-class QuitMenu : public ChildMenu
+class QuitMenu final : public ChildMenu
 {
 
 public:

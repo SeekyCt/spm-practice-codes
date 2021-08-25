@@ -11,7 +11,7 @@ namespace mod {
 
 #define MAIN_MENU_OPTION_COUNT 11
 
-class MainMenu : public MenuWindow
+class MainMenu final : public MenuWindow
 {
 private:
     MenuButton * mOptions[MAIN_MENU_OPTION_COUNT];

@@ -10,7 +10,7 @@
 
 namespace mod {
 
-class HPWindow : public Window
+class HPWindow final : public Window
 {
 private:
     /*

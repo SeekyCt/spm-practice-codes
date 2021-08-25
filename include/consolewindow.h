@@ -14,7 +14,7 @@ namespace mod {
 
 typedef void (ConsoleFreeCallback)(const char * line);
 
-class ConsoleWindow : public Window
+class ConsoleWindow final : public Window
 {
 protected:
     struct ConsoleLine

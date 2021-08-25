@@ -17,7 +17,7 @@ enum class NandTask : u8
     DELETE
 };
 
-class NandMenu : public ChildMenu
+class NandMenu final : public ChildMenu
 {
 private:
     s32 mEvtId;
