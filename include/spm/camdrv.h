@@ -32,7 +32,7 @@ struct CamEntry
     f32 left;
     f32 right;
     u8 unknown_0x100[0x158 - 0x100];
-    s32 isOrtho;
+    BOOL isOrtho;
     wii::Vec3 pos;
     wii::Vec3 target;
     u8 unknown_0x174[0x2f0 - 0x174]; 

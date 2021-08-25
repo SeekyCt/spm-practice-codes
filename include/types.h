@@ -16,3 +16,5 @@ typedef uint32_t size_t;
 
 typedef float f32;
 typedef double f64;
+
+typedef s32 BOOL;
