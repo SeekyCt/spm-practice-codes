@@ -143,7 +143,7 @@ void spmarioMainPatch()
 }
 
 /*
-    Entrypoint
+    Platform detection to adjust certain settings
 */
 
 static void checkForDolphin()
@@ -173,6 +173,10 @@ static void checkForPatchedDisc()
 {
     gIsPatchedDisc = wii::DVDFS::DVDConvertPathToEntrynum("./mod/") != -1;
 }
+
+/*
+    Entrypoint
+*/
 
 void main()
 {
