@@ -203,7 +203,7 @@ void Window::drawBoxGX(const wii::RGBA * colour, f32 x, f32 y, f32 width, f32 he
     GXEnd();
 }
 
-void Window::drawLineCuboidGX(wii::RGBA * colour, f32 top, f32 bottom, f32 left, f32 right, f32 front, f32 back)
+void Window::drawLineCuboidGX(const wii::RGBA * colour, f32 top, f32 bottom, f32 left, f32 right, f32 front, f32 back)
 {
     setupGX(GX_LEQUAL);
 
@@ -311,7 +311,7 @@ void Window::drawLineCuboidGX(wii::RGBA * colour, f32 top, f32 bottom, f32 left,
     GXEnd();
 }
 
-void Window::drawLineCubeGX(wii::RGBA * colour, f32 x, f32 y, f32 z, f32 sideLength)
+void Window::drawLineCubeGX(const wii::RGBA * colour, f32 x, f32 y, f32 z, f32 sideLength)
 {
     f32 len = sideLength / 2.0f;
     f32 left = x - len;

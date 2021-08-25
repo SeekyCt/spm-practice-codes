@@ -71,9 +71,9 @@ public:
                         f32 x, f32 y, f32 width, f32 height, f32 curve);
     static void drawBoxGX(const wii::RGBA * colour, f32 x, f32 y,
                           f32 width, f32 height);
-    static void drawLineCuboidGX(wii::RGBA * colour, f32 top, f32 bottom,
+    static void drawLineCuboidGX(const wii::RGBA * colour, f32 top, f32 bottom,
                                  f32 left, f32 right, f32 front, f32 back);
-    static void drawLineCubeGX(wii::RGBA * colour, f32 x, f32 y, f32 z,
+    static void drawLineCubeGX(const wii::RGBA * colour, f32 x, f32 y, f32 z,
                                f32 sideLength);
     void drawLineCylinderGX(const wii::RGBA * colour, f32 x, f32 y, f32 z,
                             f32 radius, f32 height, s32 n, s32 barN);
