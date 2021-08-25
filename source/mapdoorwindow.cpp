@@ -36,4 +36,9 @@ void MapDoorWindow::disp()
     drawString(mDoorMsg, mPosX, mPosY - (FONT_HEIGHT * mScale), &mColour, mScale, true);
 }
 
+void MapDoorWindow::init()
+{
+    sInstance = new MapDoorWindow();
+}
+
 }

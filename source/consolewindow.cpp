@@ -92,4 +92,9 @@ void ConsoleWindow::disp()
     }
 }
 
+void ConsoleWindow::init()
+{
+    sInstance = new ConsoleWindow();
+}
+
 }

@@ -48,35 +48,6 @@ bool gIsPatchedDisc;
 bool gIs4_3;
 
 /*
-    seq_title hooks
-*/
-
-static spm::seqdef::SeqDef seq_titleReal;
-
-static void seq_titleInitOverride(spm::seqdrv::SeqWork * wp)
-{
-    TitleTextWindow::sInstance = new TitleTextWindow();
-
-    seq_titleReal.init(wp);
-}
-
-static void seq_titleExitOverride(spm::seqdrv::SeqWork * wp)
-{
-    delete TitleTextWindow::sInstance;
-    TitleTextWindow::sInstance = nullptr;
-
-    seq_titleReal.exit(wp);
-}
-
-static void seq_titlePatch()
-{
-    seq_titleReal = spm::seqdef::seq_data[spm::seqdrv::SEQ_TITLE];
-    spm::seqdef::seq_data[spm::seqdrv::SEQ_TITLE] = {
-        seq_titleInitOverride, seq_titleReal.main, seq_titleExitOverride
-    };
-}
-
-/*
     seq_game hooks
 */
 
@@ -201,13 +172,13 @@ void main()
     if (gIs4_3)
         cam->pos.z = 1350.0f;
 
-    ConsoleWindow::sInstance = new ConsoleWindow();
-    MapDoorWindow::sInstance = new MapDoorWindow();
-    XYZWindow::sInstance = new XYZWindow();
-    HPWindow::sInstance = new HPWindow();
+    ConsoleWindow::init();
+    HPWindow::init();
+    MapDoorWindow::init();
+    XYZWindow::init();
+    TitleTextWindow::init();
 
     spmarioMainPatch();
-    seq_titlePatch();
     seq_gamePatch();
     evtScriptLoggerPatch();
     evtVarLogPatch();

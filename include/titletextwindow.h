@@ -12,16 +12,18 @@ namespace mod {
 class TitleTextWindow final : public Window
 {
 protected:
-    virtual void disp() override;
     const char * mMsg;
     wii::RGBA mColour;
     f32 mScale;
+
+    virtual void disp() override;
+    TitleTextWindow();
     
 public:
     // Window::mPosX/Y are used for top left corner of window
     static TitleTextWindow * sInstance;
 
-    TitleTextWindow();    
+    static void init();
 };
 
 }

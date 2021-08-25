@@ -117,4 +117,9 @@ void HPWindow::disp()
     }
 }
 
+void HPWindow::init()
+{
+    sInstance = new HPWindow();
+}
+
 }

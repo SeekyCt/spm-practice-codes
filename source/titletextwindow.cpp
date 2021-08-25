@@ -3,6 +3,7 @@
 
 #include <types.h>
 #include <spm/fontmgr.h>
+#include <spm/seqdrv.h>
 
 namespace mod {
 
@@ -20,8 +21,17 @@ TitleTextWindow::TitleTextWindow()
 
 void TitleTextWindow::disp()
 {
+    // Only draw on title screen
+    if (spm::seqdrv::seqGetSeq() != spm::seqdrv::SEQ_TITLE)
+        return;
+
     // Draw string
     drawString(mMsg, mPosX, mPosY, &mColour, mScale, true);
+}
+
+void TitleTextWindow::init()
+{
+    sInstance = new TitleTextWindow();
 }
 
 }

@@ -28,6 +28,7 @@ protected:
     ConsoleLine * mLines;
 
     virtual void disp() override;
+    ConsoleWindow();
     
 public:
     // Window::mPosX/Y are used for bottom left corner of window
@@ -37,8 +38,8 @@ public:
 
     static ConsoleWindow * sInstance;
 
-    ConsoleWindow();
     void push(const char * text, ConsoleFreeCallback * cb = nullptr, const wii::RGBA * colour = nullptr);
+    static void init();
 };
 
 }

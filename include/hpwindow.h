@@ -25,11 +25,12 @@ private:
 
 protected:
     virtual void disp() override;
+    HPWindow();
 
 public:
     static HPWindow * sInstance;
 
-    HPWindow();
+    static void init();
 };
 
 }

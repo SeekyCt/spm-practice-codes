@@ -71,4 +71,9 @@ void XYZWindow::disp()
         drawString(mMsgs[i], mPosX, mPosY - ((FONT_HEIGHT * mScale) * i), &mColour, mScale, true);
 }
 
+void XYZWindow::init()
+{
+    sInstance = new XYZWindow();
+}
+
 }
