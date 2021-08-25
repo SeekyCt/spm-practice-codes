@@ -45,10 +45,6 @@
 8003ab80:windowDispGX2_Waku_col
 // more
 
-// animdrv.c
-800418fc:animMain
-// more
-
 // camdrv.c
 80055b24:camGetPtr
 80055b38:camGetCurPtr

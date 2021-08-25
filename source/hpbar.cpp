@@ -5,7 +5,6 @@
 #include "util.h"
 
 #include <types.h>
-#include <spm/animdrv.h>
 #include <spm/camdrv.h>
 #include <spm/dispdrv.h>
 #include <spm/evt_door.h>
@@ -115,19 +114,5 @@ void HPWindow::disp()
         }
     }
 }
-
-/*
-void (*animMainReal)();
-void hpBarPatch()
-{
-    animMainReal = patch::hookFunction(spm::animdrv::animMain,
-        []()
-        {
-            animMainReal();
-            spm::dispdrv::dispEntry(spm::camdrv::CAM_2D, 0, 908.0f, disp, nullptr);
-        }
-    );
-}
-*/
 
 }
