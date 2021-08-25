@@ -1,3 +1,4 @@
+#include "mod_ui_base/colours.h"
 #include "mod_ui_base/menuwindow.h"
 #include "mapdoorwindow.h"
 #include "nandsettings.h"
@@ -18,7 +19,7 @@ MapDoorWindow::MapDoorWindow()
     mPosX = -365.0f;
     mPosY = 128.0f;
     mScale = 0.8f;
-    mColour = {0, 0xff, 0, 0xff};
+    mColour = colours::green;
 }
 
 void MapDoorWindow::disp()

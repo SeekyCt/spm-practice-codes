@@ -1,3 +1,4 @@
+#include "mod_ui_base/colours.h"
 #include "mod_ui_base/menuwindow.h"
 #include "nandsettings.h"
 #include "xyzwindow.h"
@@ -18,7 +19,7 @@ XYZWindow::XYZWindow()
     mPosX = -365.0f;
     mPosY = 64.0f;
     mScale = 0.8f;
-    mColour = {0, 0xff, 0, 0xff};
+    mColour = colours::green;
     mFrameCount = 0;
 }
 

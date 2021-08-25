@@ -1,3 +1,4 @@
+#include "mod_ui_base/colours.h"
 #include "mod.h"
 #include "titletextwindow.h"
 
@@ -16,7 +17,7 @@ TitleTextWindow::TitleTextWindow()
     mScale = 0.8f;
     mPosX = -(spm::fontmgr::FontGetMessageWidth(mMsg) * mScale) / 2;
     mPosY = gIs4_3 ? 260.0f : 200.0f;
-    mColour = {0, 0xff, 0, 0xff};
+    mColour = colours::green;
 }
 
 void TitleTextWindow::disp()

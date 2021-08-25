@@ -1,3 +1,4 @@
+#include "mod_ui_base/colours.h"
 #include "mod_ui_base/menuwindow.h"
 #include "consolewindow.h"
 #include "patch.h"
@@ -29,7 +30,7 @@ void ConsoleWindow::push(const char *text, ConsoleFreeCallback *cb, const wii::R
     if (colour != nullptr)
         _colour = *colour, _colour.a = 0xff; // override alpha for timed fade effect
     else
-        _colour = {0, 0xff, 0, 0xff};
+        _colour = colours::green;
 
     // Append to list of active console lines for mLineLifetime frames
     mLines = new ConsoleLine {text, _colour, mLineLifetime, mLines, cb};
