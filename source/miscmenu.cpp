@@ -1,3 +1,4 @@
+#include "mod_ui_base/colours.h"
 #include "miscmenu.h"
 #include "mod.h"
 #include "nandsettings.h"
@@ -39,10 +40,9 @@ void MiscMenu::disp()
     // Display warning if selected
     if (mCurButton == mOptions[OPTION_PIT_TEXT] && !gIsRiivolution && !gIsDolphin && !gIsPatchedDisc)
     {
-        static const wii::RGBA colour {0xff, 0x00, 0x00, 0xff};
         drawString("Note: custom pit text is not supported without Riivolution",
-                   -320.0f, -100.0f, &colour, 0.8f);
-        drawString("or a patched ISO", -320.0f, -100.0f - FONT_HEIGHT, &colour, 0.8f);
+                   -320.0f, -100.0f, &colours::red, 0.8f);
+        drawString("or a patched ISO", -320.0f, -100.0f - FONT_HEIGHT, &colours::red, 0.8f);
     }
 }
 

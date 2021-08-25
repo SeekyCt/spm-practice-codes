@@ -1,3 +1,4 @@
+#include "mod_ui_base/colours.h"
 #include "mod_ui_base/menuwindow.h"
 #include "nandsettings.h"
 #include "hpwindow.h"
@@ -24,10 +25,6 @@ namespace mod {
 #define OUTLINE_SIZE 2.5f
 #define INNER_WIDTH (BAR_WIDTH - (2 * OUTLINE_SIZE))
 #define INNER_HEIGHT (BAR_HEIGHT - (2 * OUTLINE_SIZE))
-
-static const wii::RGBA black {0x00, 0x00, 0x00, 0xff};
-static const wii::RGBA red {0xff, 0x00, 0x00, 0xff};
-static const wii::RGBA yellow {0xff, 0xff, 0x00, 0xff};
 
 HPWindow * HPWindow::sInstance = nullptr;
 
@@ -98,24 +95,24 @@ void HPWindow::disp()
             pos.x -= BAR_WIDTH / 2.0f;
 
             // Draw the black outline
-            Window::drawBoxGX(&black, pos.x, pos.y, BAR_WIDTH, BAR_HEIGHT);
+            Window::drawBoxGX(&colours::black, pos.x, pos.y, BAR_WIDTH, BAR_HEIGHT);
 
             // Adjust coordinates for inside the outline
             pos.x += OUTLINE_SIZE;
             pos.y -= OUTLINE_SIZE;
 
             // Draw the red background
-            Window::drawBoxGX(&red, pos.x, pos.y, INNER_WIDTH, INNER_HEIGHT);
+            Window::drawBoxGX(&colours::red, pos.x, pos.y, INNER_WIDTH, INNER_HEIGHT);
 
             // Draw yellow hp bar
             float overlayWidth = INNER_WIDTH * ((float)npc->hp / (float)npc->maxHp);
             if (overlayWidth > 0.0f)
-                Window::drawBoxGX(&yellow, pos.x, pos.y, overlayWidth, INNER_HEIGHT);
+                Window::drawBoxGX(&colours::yellow, pos.x, pos.y, overlayWidth, INNER_HEIGHT);
 
             // Draw hp
             char str[16];
             wii::stdio::sprintf(str, "%d", npc->hp);
-            Window::drawString(str, pos.x + 50.0f, pos.y, &yellow, 1.0f, true);
+            Window::drawString(str, pos.x + 50.0f, pos.y, &colours::yellow, 1.0f, true);
         }
     }
 }

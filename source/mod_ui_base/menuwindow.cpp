@@ -1,3 +1,4 @@
+#include "mod_ui_base/colours.h"
 #include "mod_ui_base/menuwindow.h"
 
 #include <types.h>
@@ -76,8 +77,7 @@ void MenuWindow::disp()
     BgWindow::disp();
 
     // Draw title
-    const wii::RGBA white {0xff, 0xff, 0xff, 0xff};
-    drawStringCentre(mTitle, mPosY - 5, &white, 0.9, true, false, false);
+    drawStringCentre(mTitle, mPosY - 5, &colours::white, 0.9, true, false, false);
 
     // Render buttons
     MenuButton * p = mButtons;

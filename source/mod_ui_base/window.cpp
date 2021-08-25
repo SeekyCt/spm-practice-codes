@@ -1,3 +1,4 @@
+#include "mod_ui_base/colours.h"
 #include "mod_ui_base/window.h"
 #include "patch.h"
 
@@ -16,7 +17,6 @@
 namespace mod {
 
 Window * Window::sWindowList = nullptr;
-static const wii::RGBA white {0xff, 0xff, 0xff, 0xff};
 
 Window::Window()
 {
@@ -61,7 +61,7 @@ void Window::drawString(const char * str, f32 x, f32 y, const wii::RGBA * colour
     if (colour != nullptr)
         _colour = *colour;
     else
-        _colour = {0xff, 0xff, 0xff, 0xff};
+        _colour = colours::white;
 
     // Initialise
 	spm::fontmgr::FontDrawStart_alpha(_colour.a);
@@ -99,7 +99,7 @@ void Window::drawMessage(const char * str, s32 x, s32 y, const wii::RGBA * colou
     if (colour != nullptr)
         _colour = *colour;
     else
-        _colour = {0xff, 0xff, 0xff, 0xff};
+        _colour = colours::white;
 
     // Initialise
 	spm::fontmgr::FontDrawStart_alpha(_colour.a);
@@ -154,7 +154,7 @@ void Window::setupGX(s32 zMode)
     wii::GX::GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0); // set alpha test to always pass
     wii::GX::GXSetBlendMode(GX_BM_NONE, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_OR); // write output directly to EFB
     wii::GX::GXSetZMode(true, zMode, true); // always pass z test
-    wii::GX::GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, &white); // disable fog
+    wii::GX::GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, &colours::white); // disable fog
 
     // Set verex input format
     wii::GX::GXClearVtxDesc(); // reset vertex properties

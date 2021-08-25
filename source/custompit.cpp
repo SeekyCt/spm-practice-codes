@@ -1,3 +1,4 @@
+#include "mod_ui_base/colours.h"
 #include "consolewindow.h"
 #include "custompit.h"
 #include "nandsettings.h"
@@ -39,12 +40,11 @@ static int custom_evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
         useCustomText = false;
         if (gSettings->customPitText)
         {
-            const wii::RGBA errorColour = {0xff, 0, 0, 0xff};
             if (wii::DVDFS::DVDConvertPathToEntrynum(CUSTOM_PIT_FILENAME) != -1)
                 useCustomText = true;
             else
                 ConsoleWindow::sInstance->push("ERROR: " CUSTOM_PIT_FILENAME " not found.",
-                                               nullptr, &errorColour);
+                                               nullptr, &colours::red);
         }
 
         // Allocate work
