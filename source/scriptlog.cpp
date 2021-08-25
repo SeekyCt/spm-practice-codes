@@ -21,10 +21,12 @@ static void evtEntryLog(const EvtScriptCode * script)
     {
         case LogType::NONE:
             break;
+
         case LogType::OSREPORT:
             // Write to OSReport
             wii::OSError::OSReport("Evt entry: 0x%x\n", (u32) script);
             break;
+
         case LogType::SCREEN:
             // Format string
             str = new char[32];

@@ -36,6 +36,11 @@ void ConsoleWindow::push(const char *text, ConsoleFreeCallback *cb, const wii::R
     mLines = new ConsoleLine {text, _colour, mLineLifetime, mLines, cb};
 }
 
+void ConsoleWindow::autoFreeCb(const char * line)
+{
+    delete[] line;
+}
+
 void ConsoleWindow::disp()
 {
     // Don't draw over menu

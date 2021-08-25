@@ -39,6 +39,7 @@ public:
     static ConsoleWindow * sInstance;
 
     void push(const char * text, ConsoleFreeCallback * cb = nullptr, const wii::RGBA * colour = nullptr);
+    static void autoFreeCb(const char * line);
     static void init();
 };
 

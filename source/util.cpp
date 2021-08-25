@@ -6,6 +6,7 @@
 #include <spm/mario_pouch.h>
 #include <spm/spmario.h>
 #include <wii/OSModule.h>
+#include <wii/string.h>
 
 namespace mod {
 
@@ -118,6 +119,14 @@ bool check3d()
 {
     spm::camdrv::CamEntry * cam = spm::camdrv::camGetPtr(spm::camdrv::CAM_3D);
     return !cam->isOrtho;
+}
+
+char * cloneString(const char * str)
+{
+    size_t len = wii::string::strlen(str);
+    char * newStr = new char[len + 1]; // include terminating null
+    wii::string::strcpy(newStr, str);
+    return newStr;
 }
 
 }

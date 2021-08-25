@@ -52,4 +52,6 @@ s32 pow(s32 val, s32 power);
 
 bool check3d();
 
+char * cloneString(const char * str);
+
 }
