@@ -193,7 +193,25 @@ s32 evt_nandsettings_handle_read_output(spm::evtmgr::EvtEntry * entry, bool firs
 
             // Increment version
             gSettings->version = 3;
+
+            // Fall through into v3->4
+            [[fallthrough]];
+
+        case 3:
+            wii::OSError::OSReport("nandsettings: updating settings v3->4\n");
+
+            // Existing settings are already in place
+
+            // Initialise new settings
+            gSettings->enemyHpBars = false;
+            gSettings->hpBarHide3d = false;
+            gSettings->bossHpBars = false;
+
+            // Increment version
+            gSettings->version = 4;
+
             break;
+        
 
         case SETTINGS_VER:
             wii::OSError::OSReport("nandsettings: settings version ok.\n");
@@ -233,6 +251,10 @@ void nandSettingsDefaults()
     gSettings->mapChangeEffect = true;
 
     gSettings->customPitText = false;
+
+    gSettings->enemyHpBars = false;
+    gSettings->hpBarHide3d = false;
+    gSettings->bossHpBars = false;
 }
 
 static bool (*isRelLoadedReal)() = nullptr;

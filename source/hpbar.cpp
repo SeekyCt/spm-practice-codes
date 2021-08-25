@@ -36,10 +36,7 @@ HPWindow::HPWindow()
     mCamera = spm::camdrv::CAM_2D;
 }
 
-/*
-    If a door has been entered in this map, checks that the NPC is shown by it
-*/
-static bool npcDoorCheck(const char * name)
+bool HPWindow::npcDoorCheck(const char * name)
 {
     // Get the door desc for the current room
     spm::evt_door::DoorDesc * door = spm::evt_door::evtDoorGetActiveDoorDesc();
@@ -67,12 +64,21 @@ static bool npcDoorCheck(const char * name)
     return false;
 }
 
+bool HPWindow::npcPosCheck(spm::npcdrv::NPCEntry * npc)
+{
+    // Position doesn't matter in 2d because of panes
+    if (!check3d())
+        return true;
+
+    spm::camdrv::CamEntry * cam = spm::camdrv::camGetPtr(spm::camdrv::CAM_3D);
+    return cam->pos.x < npc->position.x;
+}
+
 void HPWindow::disp()
 {
     // Don't draw over menu, if disabled or if not in game
-    // TODO: make own setting
-    if (spm::seqdrv::seqGetSeq() != spm::seqdrv::SEQ_GAME || !gSettings->hudXYZ
-        || MenuWindow::sCurMenu != nullptr)
+    if (spm::seqdrv::seqGetSeq() != spm::seqdrv::SEQ_GAME || !gSettings->enemyHpBars
+        || (gSettings->hpBarHide3d && check3d()) || MenuWindow::sCurMenu != nullptr)
         return;
 
     spm::npcdrv::NPCWork * wp = spm::npcdrv::npcGetWorkPtr();
@@ -82,8 +88,9 @@ void HPWindow::disp()
         // Check NPC is visible
         // TODO: check Z to prevent issues with enemies very far behind &
         //       attempt to hide enemies blocked by objects
-        if ((npc->flags_8 & 1) && (npc->flags_8 & 0x40000000) == 0 && npcDoorCheck(npc->name)
-            && (npc->flag46C & 0x20000) == 0 && (npc->flags_c & 0x20) == 0)
+        if ((npc->flags_8 & 1) && (npc->flags_8 & 0x40000000) == 0
+            && (npc->flags_c & 0x20) == 0 && (npc->flag46C & 0x20000) == 0 
+            && npcPosCheck(npc) && npcDoorCheck(npc->name))
         {
             // Get screen position
             wii::Vec3 pos;

@@ -1,5 +1,6 @@
 #include "util.h"
 
+#include <spm/camdrv.h>
 #include <spm/evtmgr_cmd.h>
 #include <spm/mario.h>
 #include <spm/mario_pouch.h>
@@ -111,6 +112,12 @@ s32 pow(s32 val, s32 power)
     for (s32 i = power; i > 0; i--)
         x *= val;
     return x;
+}
+
+bool check3d()
+{
+    spm::camdrv::CamEntry * cam = spm::camdrv::camGetPtr(spm::camdrv::CAM_3D);
+    return !cam->isOrtho;
 }
 
 }
