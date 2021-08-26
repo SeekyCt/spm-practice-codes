@@ -45,6 +45,14 @@
 8003ab80:windowDispGX2_Waku_col
 // more
 
+// animdrv.c
+8004249c:animPoseEntry
+80045288:animPoseMain
+800497c8:animPoseDrawMtx
+80049fc4:animPoseRelease
+8004a5bc:animPoseAutoRelease
+// more
+
 // camdrv.c
 80055b24:camGetPtr
 80055b38:camGetCurPtr
@@ -353,14 +361,17 @@
 // MSL_C.PPCEABI.bare.H.a
 // printf.c
 8025d098:sprintf
+// scanf.c
+8025e784:sscanf
 // more
 
 // string.c
 8025a874:memmove
 8025e8fc:strcpy
+8025e9bc:strncpy
 8025ea78:strcmp
 8025eb94:strncmp
-8025e784:sscanf
+8025ebd4:strchr
 80267018:strlen
 // more
 
@@ -408,6 +419,10 @@
 // mtx.a
 // mtx.c
 8027a270:PSMTXIdentity
+8027a7b4:PSMTXTrans
+8027a7e8:PSMTXTransApply
+8027a834:PSMTXScale
+8027a85c:PSMTXScaleApply
 8027afac:C_MTXOrtho
 // more
 

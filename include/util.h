@@ -54,4 +54,8 @@ bool check3d();
 
 char * cloneString(const char * str);
 
+s32 strcount(const char * str, char c);
+
+bool fileExists(const char * path);
+
 }

@@ -48,6 +48,11 @@ Window::~Window()
     }
 }
 
+void Window::preDisp()
+{
+    // stub for inheriting classes to replace
+}
+
 void Window::disp()
 {
     // stub for inheriting classes to replace
@@ -397,6 +402,19 @@ void Window::windowMain()
 {
     if ((spm::homebuttondrv::homebuttonWp->flags & HOMEBUTTON_FLAG_OPEN) == 0)
     {
+        // Call every window's pre-display function
+        Window * w = sWindowList;
+        while (w != nullptr)
+        {
+            // Window may delete itself during preDisp so this has to be read now
+            Window * temp = w->mNext;
+
+            w->preDisp();
+
+            // Continue to next window
+            w = temp;
+        }
+
         // Schedule windowDisp to run this frame on all cameras
         for (s32 i = 0; i < spm::camdrv::CAM_ID_MAX; i++)
             spm::dispdrv::dispEntry(i, 2, 0.0f, Window::windowDisp, nullptr);

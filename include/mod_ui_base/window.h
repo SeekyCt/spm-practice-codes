@@ -33,6 +33,7 @@ private:
 protected:
     s32 mCamera;
 
+    virtual void preDisp();
     virtual void disp();
 
 public:

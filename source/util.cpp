@@ -5,6 +5,7 @@
 #include <spm/mario.h>
 #include <spm/mario_pouch.h>
 #include <spm/spmario.h>
+#include <wii/DVDFS.h>
 #include <wii/OSModule.h>
 #include <wii/string.h>
 
@@ -127,6 +128,22 @@ char * cloneString(const char * str)
     char * newStr = new char[len + 1]; // include terminating null
     wii::string::strcpy(newStr, str);
     return newStr;
+}
+
+s32 strcount(const char * str, char c)
+{
+    u32 n = 0;
+    for (const char * p = str; *p; p++)
+    {
+        if (*p == c)
+            n++;
+    }
+    return n;
+}
+
+bool fileExists(const char * path)
+{
+    return wii::DVDFS::DVDConvertPathToEntrynum(path) != -1;
 }
 
 }

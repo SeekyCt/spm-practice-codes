@@ -11,6 +11,7 @@
 #include "mod.h"
 #include "nandsettings.h"
 #include "patch.h"
+#include "pyconsole.h"
 #include "parsepatches.h"
 #include "romfontexpand.h"
 #include "scriptlog.h"
@@ -107,6 +108,7 @@ void spmarioMainPatch()
     spmarioMainReal = patch::hookFunction(spm::spmario::spmarioMain,
         []()
         {
+            PyConsole::main();
             Window::windowMain();
             spmarioMainReal();
         }
@@ -189,6 +191,7 @@ void main()
     customPitPatch();
     parsePatch();
     Window::homebuttonDispPatch();
+    PyConsole::init();
 }
 
 }
