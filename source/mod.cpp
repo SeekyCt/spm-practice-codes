@@ -1,4 +1,5 @@
 #include "mod_ui_base/window.h"
+#include "apwindow.h"
 #include "consolewindow.h"
 #include "custompit.h"
 #include "evtdebug.h"
@@ -192,6 +193,7 @@ void main()
     parsePatch();
     Window::homebuttonDispPatch();
     PyConsole::init();
+    APWindow::init();
 }
 
 }
