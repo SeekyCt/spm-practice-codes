@@ -47,10 +47,12 @@
 
 // animdrv.c
 8004249c:animPoseEntry
+80043410:animPoseSetAnim
 80045288:animPoseMain
 800497c8:animPoseDrawMtx
 80049fc4:animPoseRelease
 8004a5bc:animPoseAutoRelease
+8004c828:animPoseGetAnimBaseDataPtr
 // more
 
 // camdrv.c
