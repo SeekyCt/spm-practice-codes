@@ -100,6 +100,7 @@
 
 // evtmgr_cmd.c
 // text
+800ddd5c:evtmgrCmd
 800dd500:evt_debug_put_msg
 800dd534:evt_debug_put_reg
 800de594:evtGetValue
