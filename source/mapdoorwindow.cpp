@@ -17,7 +17,7 @@ MapDoorWindow::MapDoorWindow()
 {
     // Set text pos, scale and colour
     mPosX = -365.0f;
-    mPosY = 128.0f;
+    mPosY = 120.0f;
     mScale = 0.8f;
     mColour = colours::green;
 }
