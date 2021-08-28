@@ -1,5 +1,7 @@
 #pragma once
 
+#include <wii/types.h>
+
 namespace spm::npcdrv {
 
 struct NPCAnim
@@ -37,7 +39,9 @@ struct NPCEntry
     wii::Vec3 position;
     u8 unknown_0x2ac[0x46c - 0x2ac];
     u32 flag46C;
-    u8 unknown_0x470[0x4ec - 0x470];
+    u8 unknown_0x470[0x49c - 0x470];
+    s32 tribeId;
+    u8 unknown_0x4a0[0x4ec - 0x4a0];
     u32 maxHp;
     u32 hp;
     u8 unknown_0x4f4[0x714 - 0x4f4];
