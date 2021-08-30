@@ -36,7 +36,6 @@ static s32 debugPutMsg(spm::evtmgr::EvtEntry * entry)
 
 static s32 debugPutReg(s32 ret)
 {
-    char * str;
     switch(gSettings->logOptions[OPTION_DEBUG_INSTR])
     {
         case LogType::NONE:
@@ -48,11 +47,8 @@ static s32 debugPutReg(s32 ret)
             break;
 
         case LogType::SCREEN:
-            // String could be changed while still in use, so a copy is made
-            str = cloneString(spm::evtmgr_cmd::evt_debug_put_reg_str);
-
-            // Write to screen
-            ConsoleWindow::push(str, ConsoleWindow::autoFreeCb);
+            // Write to screen (cloned since it could be changed while still in use)
+            ConsoleWindow::pushClone(spm::evtmgr_cmd::evt_debug_put_reg_str);
             break;
     }
 

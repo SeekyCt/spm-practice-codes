@@ -2,6 +2,7 @@
 #include "mod_ui_base/menuwindow.h"
 #include "consolewindow.h"
 #include "patch.h"
+#include "util.h"
 
 #include <types.h>
 #include <wii/OSError.h>
@@ -20,12 +21,17 @@ ConsoleWindow::ConsoleWindow()
     mLineLifetime = 450;
 }
 
-void ConsoleWindow::push(const char * text, ConsoleFreeCallback * cb, const wii::RGBA * colour)
+void ConsoleWindow::push(const char * text, const wii::RGBA * colour, ConsoleFreeCallback * cb)
 {
-    sInstance->_push(text, cb, colour);
+    sInstance->_push(text, colour, cb);
 }
 
-void ConsoleWindow::_push(const char * text, ConsoleFreeCallback * cb, const wii::RGBA * colour)
+void ConsoleWindow::pushClone(const char * text, const wii::RGBA * colour)
+{
+    sInstance->_push(cloneString(text), colour, autoFreeCb);
+}
+
+void ConsoleWindow::_push(const char * text, const wii::RGBA * colour, ConsoleFreeCallback * cb)
 {
     // Print to OSReport
     wii::OSError::OSReport("(Console %x) %s\n", this, text);

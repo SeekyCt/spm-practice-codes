@@ -30,7 +30,6 @@ static void evtVarLog(s32 type, s32 id, s32 value)
     if (wii::string::strcmp(spm::spmario::gp->saveName, "default") == 0)
         return;
 
-    char * p;
     switch(gSettings->logOptions[OPTION_EVT_VAR_LOG])
     {
         case LogType::NONE:
@@ -40,17 +39,8 @@ static void evtVarLog(s32 type, s32 id, s32 value)
             wii::OSError::OSReport("%s %d set to 0x%x\n", logTypeNames[type], id, value);
             break;
         case LogType::SCREEN:
-            // Format string
-            p = new char[32];
-            wii::stdio::sprintf(p, "%s %d set to 0x%x", logTypeNames[type], id, value);
-
-            // Write to console
-            ConsoleWindow::push(p,
-                [](const char * line)
-                {
-                    delete[] line;
-                }
-            );
+            // Write to screem
+            CONSOLE_PUSH_FMT("%s %d set to 0x%x", logTypeNames[type], id, value);
             break;
     }
 }

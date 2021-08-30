@@ -16,7 +16,6 @@ namespace mod {
 // Handle a script being passed into any entry function
 static void evtEntryLog(const EvtScriptCode * script)
 {
-    char * str;
     switch (gSettings->logOptions[OPTION_SCRIPT_LOG])
     {
         case LogType::NONE:
@@ -28,17 +27,8 @@ static void evtEntryLog(const EvtScriptCode * script)
             break;
 
         case LogType::SCREEN:
-            // Format string
-            str = new char[32];
-            wii::stdio::sprintf(str, "Evt entry: 0x%x", (u32) script);
-
             // Write to screen
-            ConsoleWindow::push(str,
-                [](const char * line)
-                {
-                    delete[] line;
-                }
-            );
+            CONSOLE_PUSH_FMT("Evt entry: 0x%x", (u32) script);
             break;
     }
 }

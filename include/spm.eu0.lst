@@ -363,6 +363,7 @@
 
 // MSL_C.PPCEABI.bare.H.a
 // printf.c
+8025cfc0:snprintf
 8025d098:sprintf
 // scanf.c
 8025e784:sscanf
