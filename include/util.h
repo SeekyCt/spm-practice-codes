@@ -1,5 +1,6 @@
 #pragma once
 
+#include <types.h>
 #include <spm/evtmgr.h>
 #include <spm/nandmgr.h>
 

@@ -4,6 +4,8 @@
 */
 #pragma once
 
+#include <types.h>
+
 namespace mod {
 
 enum class PyConsoleErr
