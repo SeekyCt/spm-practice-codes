@@ -33,7 +33,7 @@ static void evtEntryLog(const EvtScriptCode * script)
             wii::stdio::sprintf(str, "Evt entry: 0x%x", (u32) script);
 
             // Write to screen
-            ConsoleWindow::sInstance->push(str,
+            ConsoleWindow::push(str,
                 [](const char * line)
                 {
                     delete[] line;

@@ -45,7 +45,7 @@ static void evtVarLog(s32 type, s32 id, s32 value)
             wii::stdio::sprintf(p, "%s %d set to 0x%x", logTypeNames[type], id, value);
 
             // Write to console
-            ConsoleWindow::sInstance->push(p,
+            ConsoleWindow::push(p,
                 [](const char * line)
                 {
                     delete[] line;

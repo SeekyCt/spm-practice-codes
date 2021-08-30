@@ -65,7 +65,7 @@ void PyConsole::main()
 
         // Write  command onto screen
         char * newStr = cloneString(command);
-        ConsoleWindow::sInstance->push(newStr, ConsoleWindow::autoFreeCb);
+        ConsoleWindow::push(newStr, ConsoleWindow::autoFreeCb);
 
         // Prepare arguments
         s32 argc = strcount(command, ' ');
@@ -94,15 +94,15 @@ void PyConsole::main()
                 break;
 
             case PyConsoleErr::UNK_CMD:
-                ConsoleWindow::sInstance->push("Error: unknown command", nullptr, &colours::red);
+                ConsoleWindow::push("Error: unknown command", nullptr, &colours::red);
                 break;
             
             case PyConsoleErr::BAD_ARGS:
-                ConsoleWindow::sInstance->push("Error: invalid arguments", nullptr, &colours::red);
+                ConsoleWindow::push("Error: invalid arguments", nullptr, &colours::red);
                 break;
             
             case PyConsoleErr::BAD_ARG_COUNT:
-                ConsoleWindow::sInstance->push("Error: invalid number of arguments", nullptr, &colours::red);
+                ConsoleWindow::push("Error: invalid number of arguments", nullptr, &colours::red);
                 break;
         }
         

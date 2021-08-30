@@ -27,7 +27,7 @@ static s32 debugPutMsg(spm::evtmgr::EvtEntry * entry)
 
         case LogType::SCREEN:
             // Write to screen
-            ConsoleWindow::sInstance->push(str);
+            ConsoleWindow::push(str);
             break;
     }
 
@@ -52,7 +52,7 @@ static s32 debugPutReg(s32 ret)
             str = cloneString(spm::evtmgr_cmd::evt_debug_put_reg_str);
 
             // Write to screen
-            ConsoleWindow::sInstance->push(str, ConsoleWindow::autoFreeCb);
+            ConsoleWindow::push(str, ConsoleWindow::autoFreeCb);
             break;
     }
 

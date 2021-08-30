@@ -43,7 +43,7 @@ static int custom_evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
             if (wii::DVDFS::DVDConvertPathToEntrynum(CUSTOM_PIT_FILENAME) != -1)
                 useCustomText = true;
             else
-                ConsoleWindow::sInstance->push("ERROR: " CUSTOM_PIT_FILENAME " not found.",
+                ConsoleWindow::push("ERROR: " CUSTOM_PIT_FILENAME " not found.",
                                                nullptr, &colours::red);
         }
 

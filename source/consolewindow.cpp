@@ -20,7 +20,12 @@ ConsoleWindow::ConsoleWindow()
     mLineLifetime = 450;
 }
 
-void ConsoleWindow::push(const char *text, ConsoleFreeCallback *cb, const wii::RGBA *colour)
+void ConsoleWindow::push(const char * text, ConsoleFreeCallback * cb, const wii::RGBA * colour)
+{
+    sInstance->_push(text, cb, colour);
+}
+
+void ConsoleWindow::_push(const char * text, ConsoleFreeCallback * cb, const wii::RGBA * colour)
 {
     // Print to OSReport
     wii::OSError::OSReport("(Console %x) %s\n", this, text);

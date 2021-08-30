@@ -19,7 +19,7 @@ void APWindow::announceAnim(const char * name, u32 idx, u32 count)
 {
     char * str = new char[8 + wii::string::strlen(name) + 2 + 10 + 1 + 10 + 2];
     wii::stdio::sprintf(str, "Playing %s (%d/%d)", name, idx, count - 1);
-    ConsoleWindow::sInstance->push(str, ConsoleWindow::autoFreeCb);
+    ConsoleWindow::push(str, ConsoleWindow::autoFreeCb);
 }
 
 void APWindow::release()

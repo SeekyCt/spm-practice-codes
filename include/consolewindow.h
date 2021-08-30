@@ -27,7 +27,10 @@ protected:
     };
     ConsoleLine * mLines;
 
+    static ConsoleWindow * sInstance;
+
     virtual void disp() override;
+    void _push(const char * text, ConsoleFreeCallback * cb, const wii::RGBA * colour);
     ConsoleWindow();
     
 public:
@@ -36,9 +39,8 @@ public:
     u32 mFadeThreshhold;
     u32 mLineLifetime;
 
-    static ConsoleWindow * sInstance;
+    static void push(const char * text, ConsoleFreeCallback * cb = nullptr, const wii::RGBA * colour = nullptr);
 
-    void push(const char * text, ConsoleFreeCallback * cb = nullptr, const wii::RGBA * colour = nullptr);
     static void autoFreeCb(const char * line);
     static void init();
 };
