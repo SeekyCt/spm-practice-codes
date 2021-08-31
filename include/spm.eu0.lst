@@ -319,7 +319,13 @@
 // more
 
 // npcdrv.c
+// text
+801bfc48:npcSearchAnimDefs
 801c9adc:npcGetWorkPtr
+// more
+// data
+8043bf30:npcTribes
+80449888:npcEnemyTemplates
 // more
 
 // wpadmgr.c

@@ -66,12 +66,12 @@ enum class Heap
 {
     MAIN = 0,
     MAP = 1,
-    UNK_3 = 3,
-    UNK_4 = 4,
-    UNK_5 = 5,
-    UNK_6 = 6,
+    MEM1_UNUSED = 3,
+    EFFECT = 4,
+    WPAD = 5,
+    SOUND = 6,
     SMART = 7,
-    UNK_8 = 8
+    MEM2_UNUSED = 8
 };
 
 extern "C" {
