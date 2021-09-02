@@ -105,7 +105,9 @@ struct NPCEntry
     u8 unknown_0x4a0[0x4ec - 0x4a0];
     u32 maxHp;
     u32 hp;
-    u8 unknown_0x4f4[0x714 - 0x4f4];
+    u8 unknown_0x4f4[0x510 - 0x4f4];
+    s32 unitWork[16];
+    u8 unknown_0x550[0x714 - 0x550];
     NPCPart * parts;
     u8 unknown_0x718[0x748 - 0x718];
 };

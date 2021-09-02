@@ -37,6 +37,18 @@ private:
     bool npcPosCheck(spm::npcdrv::NPCEntry * npc);
 
     /*
+        Returns the current/max HP of a boss, with special cases for ones not using standard HP
+    */
+    s32 bossGetHp(spm::npcdrv::NPCEntry * npc);
+    s32 bossGetMaxHp(spm::npcdrv::NPCEntry * npc);
+
+    /*
+        The big blooper boss consists of multiple NPCs with the same tribe id, only one stores
+        its health information
+    */
+    bool npcBossBlooperCheck(spm::npcdrv::NPCEntry * npc);
+
+    /*
         Draws the boss HP bar at the top of the screen if a boss is active
     */
     void bossDisp();

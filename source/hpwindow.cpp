@@ -9,9 +9,13 @@
 #include <spm/camdrv.h>
 #include <spm/dispdrv.h>
 #include <spm/evt_door.h>
+#include <spm/fontmgr.h>
+#include <spm/item_data.h>
 #include <spm/mario.h>
+#include <spm/msgdrv.h>
 #include <spm/npcdrv.h>
 #include <spm/seqdrv.h>
+#include <spm/system.h>
 #include <wii/mtx.h>
 #include <wii/stdio.h>
 #include <wii/string.h>
@@ -20,11 +24,22 @@
 
 namespace mod {
 
+#define OUTLINE_SIZE 2.5f
+
 #define BAR_WIDTH 50.0f
 #define BAR_HEIGHT 12.5f
-#define OUTLINE_SIZE 2.5f
 #define INNER_WIDTH (BAR_WIDTH - (2 * OUTLINE_SIZE))
 #define INNER_HEIGHT (BAR_HEIGHT - (2 * OUTLINE_SIZE))
+
+#define BOSS_NAME_SCALE 0.8f
+#define BOSS_NAME_X -7.5f
+#define BOSS_NAME_Y 160.0f
+#define BOSS_BAR_WIDTH 200.0f
+#define BOSS_BAR_HEIGHT 20.0f
+#define BOSS_INNER_WIDTH (BOSS_BAR_WIDTH - (2 * OUTLINE_SIZE))
+#define BOSS_INNER_HEIGHT (BOSS_BAR_HEIGHT - (2 * OUTLINE_SIZE))
+#define BOSS_BAR_X (BOSS_NAME_X - (BOSS_BAR_WIDTH / 2.0f))
+#define BOSS_BAR_Y (BOSS_NAME_Y - 20.0f)
 
 HPWindow * HPWindow::sInstance = nullptr;
 
@@ -164,9 +179,106 @@ bool HPWindow::npcPosCheck(spm::npcdrv::NPCEntry * npc)
     return cam->pos.x < npc->position.x;
 }
 
+s32 HPWindow::bossGetHp(spm::npcdrv::NPCEntry * npc)
+{
+    s32 tribe = npc->tribeId;
+    switch (tribe)
+    {
+        // Spider Mimi (2-4 & 8-2)
+        case 280:
+        case 284:
+            // Mimi only stores the number of times she's been hit,
+            // and doesn't update this to 6 on the final hit
+            if (npc->flags_10 & 0x10000)
+                return 0;
+            else
+                return 6 - npc->unitWork[3];
+
+        // Fracktail/Wracktail
+        case 313:
+        case 314:
+            // Only the number of hits remaining before death is stored
+            return npc->unitWork[3];        
+        
+        // Big Blooper
+        case 317:
+            // Only the number of hits remaining before death is stored
+            return 3 - npc->unitWork[7];
+
+        default:
+            return npc->hp;
+    }
+}
+
+s32 HPWindow::bossGetMaxHp(spm::npcdrv::NPCEntry * npc)
+{
+    s32 tribe = npc->tribeId;
+    switch (tribe)
+    {
+        // Spider Mimi (2-4 & 8-2)
+        case 280:
+        case 284:
+            return 6;
+
+        // Fracktail
+        case 313:
+            return 9;
+        
+        // Wracktail
+        case 314:
+            return 30;
+
+        // Big Blooper
+        case 317:
+            return 3;
+
+        default:
+            return npc->maxHp;
+    }
+}
+
+bool HPWindow::npcBossBlooperCheck(spm::npcdrv::NPCEntry * npc)
+{
+    // Only matters for Big Blooper
+    if (npc->tribeId != 317)
+        return true;
+    
+    return npc->unitWork[0] == 1 && npc->unitWork[1] == 0;
+}
+
 void HPWindow::bossDisp()
 {
-    
+    // Find the first active boss (multiple not supported)
+    spm::npcdrv::NPCWork * wp = spm::npcdrv::npcGetWorkPtr();
+    spm::npcdrv::NPCEntry * npc = wp->entries;
+    for (s32 i = 0; i < wp->num; i++, npc++)
+    {
+        // Check NPC is visible and a boss
+        if ((npc->flags_8 & 1) && (npc->flags_8 & 0x40000000) == 0
+            && (npc->flags_c & 0x20) == 0 && (npc->flag46C & 0x20000) == 0 
+            && npcBossTribeCheck(npc) && npcBossBlooperCheck(npc))
+        {
+            spm::npcdrv::NPCTribe * tribe = spm::npcdrv::npcTribes + npc->tribeId;
+            spm::item_data::ItemData * card = spm::item_data::itemDataTable + tribe->catchCardItemId;
+            assertf(card != 0, "No catch card for boss tribe %d", npc->tribeId);
+
+            const char * name = spm::msgdrv::msgSearch(card->nameMsg); // TODO: Bowser has "(1)" appended
+            f32 x = BOSS_NAME_X - ((spm::fontmgr::FontGetMessageWidth(name) * BOSS_NAME_SCALE) / 2);
+            Window::drawString(name, x, BOSS_NAME_Y, &colours::red, BOSS_NAME_SCALE, true);
+
+            wii::Vec2 pos = {BOSS_BAR_X, BOSS_BAR_Y};
+            Window::drawBoxGX(&colours::black, BOSS_BAR_X, BOSS_BAR_Y, BOSS_BAR_WIDTH, BOSS_BAR_HEIGHT);
+
+            pos.x += OUTLINE_SIZE;
+            pos.y -= OUTLINE_SIZE;
+
+            Window::drawBoxGX(&colours::red, pos.x, pos.y, BOSS_INNER_WIDTH, BOSS_INNER_HEIGHT);
+
+            float overlayWidth = BOSS_INNER_WIDTH * ((float)bossGetHp(npc) / (float)bossGetMaxHp(npc));
+            if (overlayWidth > 0.0f)
+                Window::drawBoxGX(&colours::yellow, pos.x, pos.y, overlayWidth, BOSS_INNER_HEIGHT);
+        }
+    }
 }
 
 void HPWindow::enemyDisp()
@@ -175,10 +287,10 @@ void HPWindow::enemyDisp()
     spm::npcdrv::NPCEntry * npc = wp->entries;
     for (s32 i = 0; i < wp->num; i++, npc++)
     {
-        // Check NPC is visible
+        // Check NPC is visible and an enemy
         if ((npc->flags_8 & 1) && (npc->flags_8 & 0x40000000) == 0
             && (npc->flags_c & 0x20) == 0 && (npc->flag46C & 0x20000) == 0 
-            && npcEnemyTribeCheck(npc) && npcPosCheck(npc) && npcDoorCheck(npc->name))
+            && npcPosCheck(npc) && npcDoorCheck(npc->name) && npcEnemyTribeCheck(npc))
         {
             // Get screen position
             wii::Vec3 pos;
