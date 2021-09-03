@@ -61,6 +61,10 @@
 80058294:getScreenPoint
 // more
 
+// casedrv.c
+8005abe4:caseCheckHitObj
+// more
+
 // dispdrv.c
 8005af04:dispEntry
 // more
@@ -70,6 +74,10 @@
 
 // fadedrv.c
 800677f8:fadeIsFinish
+// more
+
+// hitdrv.c
+8006f920:hitNameToPtr
 // more
 
 // icondrv.c
@@ -320,6 +328,7 @@
 
 // npcdrv.c
 // text
+801b6f2c:npcNameToPtr
 801bfc48:npcSearchAnimDefs
 801c9adc:npcGetWorkPtr
 // more
@@ -521,3 +530,8 @@
 // more
 // bss
 1548:danWp?1,6
+
+// wa1_02.c
+d2820:sammerDefsCh6?1,5
+d2cd0:sammerDefsEndgame?1,5
+// more

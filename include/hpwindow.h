@@ -49,6 +49,11 @@ private:
     bool npcBossBlooperCheck(spm::npcdrv::NPCEntry * npc);
 
     /*
+        Returns if a Sammer Guy is actually fighting
+    */
+    bool npcBossSammerCheck(spm::npcdrv::NPCEntry * npc);
+
+    /*
         Draws the boss HP bar at the top of the screen if a boss is active
     */
     void bossDisp();

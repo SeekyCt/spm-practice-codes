@@ -71,7 +71,8 @@ struct NPCAnim
     char animPoseName[32];
     u8 unknown_0x24[0x44 - 0x24];
     u32 flags;
-    u8 unknown_0x48[0x244 - 0x48];
+    NPCTribeAnimDef * tribeAnimDefs;
+    u8 unknown_0x4c[0x244 - 0x4c];
 };
 static_assert(sizeof(NPCAnim) == 0x244);
 
@@ -126,6 +127,7 @@ extern "C" {
 
 extern NPCTribe npcTribes[NPC_TRIBE_COUNT];
 
+NPCEntry * npcNameToPtr(const char * name);
 const char * npcSearchAnimDefs(NPCTribeAnimDef * defs, s32 id);
 NPCWork * npcGetWorkPtr();
 

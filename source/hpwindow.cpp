@@ -7,15 +7,19 @@
 
 #include <types.h>
 #include <spm/camdrv.h>
+#include <spm/casedrv.h>
 #include <spm/dispdrv.h>
 #include <spm/evt_door.h>
+#include <spm/evtmgr_cmd.h>
 #include <spm/fontmgr.h>
+#include <spm/hitdrv.h>
 #include <spm/item_data.h>
 #include <spm/mario.h>
 #include <spm/msgdrv.h>
 #include <spm/npcdrv.h>
 #include <spm/seqdrv.h>
 #include <spm/system.h>
+#include <spm/rel/wa1_02.h>
 #include <wii/mtx.h>
 #include <wii/stdio.h>
 #include <wii/string.h>
@@ -51,16 +55,17 @@ HPWindow::HPWindow()
 const s32 HPWindow::bossTribes[] = {
     270, 271, 272, 273, // o'chunks
     280, 282, 284, // mimi (TODO: disable chase version)
-    286, 287, 289, 290, 292, 293, // dimentio
+    286, 287, 289, 290, 292, // dimentio
     295, // mr l
     296, 300, // brobot
     304, // nastasia
-    305, 308, // bleck
+    305, // bleck
+    309, // super dimentio
     313, 314, // fracktail & wracktail
     315, 316, // bowser
     317, // big blooper
     318, // francis
-    319, 320, 321, 322, // king croacus
+    319, // king croacus
     327, // bonechill
     330, 331, 332, 333, // shadoo
 
@@ -100,10 +105,11 @@ const s32 HPWindow::blacklistedTribes[] = {
     265, 266, 267, // thwomp & spiny/spiky tromp
     274, 275, 276, 277, 278, 279, // o'chunks block
     281, 283, 285, // mimi rubee
-    288, 291, 294, // dimentio magic
+    288, 291, 293, 294, // dimentio magic & clones
     297, 298, 299, 301, 302, 303, 511, 512, 513, 514, // brobot projectile
-    306, 307, 309, 310, 311, // bleck projectile
-    323, // king croacus projectile
+    306, 307, 308, 309, 310, 311, // bleck projectile
+    320, 321, 322, 323, // king croacus heads & projectiles
+    324, 325, 326, // underchomp in overworld
     328, 329, // bonechill ice
     334, 335, // shell shock
     336, 337, // trap gold bar
@@ -246,6 +252,52 @@ bool HPWindow::npcBossBlooperCheck(spm::npcdrv::NPCEntry * npc)
     return npc->unitWork[0] == 1 && npc->unitWork[1] == 0;
 }
 
+bool HPWindow::npcBossSammerCheck(spm::npcdrv::NPCEntry * npc)
+{
+    // Only matters for Sammer Guys
+    s32 tribe = npc->tribeId;
+    if (tribe < 338 || tribe > 437)
+        return true;
+
+    // Check battle has started
+    spm::hitdrv::HitObj * hit = spm::hitdrv::hitNameToPtr("a2_butai");
+    if (spm::casedrv::caseCheckHitObj(hit) != nullptr)
+        return false;
+
+    // Check not already defeated
+    s32 gsw0 = spm::evtmgr_cmd::evtGetValue(nullptr, GSW(0));
+    const char * map = spm::spmario::gp->mapName;
+    if (gsw0 < 421)
+    {
+        // First room works differently
+        if (wii::string::strcmp(map, "wa1_02") == 0)
+        {
+            // Check not before battle / already beaten
+            if (gsw0 != 227)
+                return false;
+
+            // Check not in after battle cutscene
+            spm::npcdrv::NPCEntry * sammer = spm::npcdrv::npcNameToPtr("npc_1000007b");
+            return (sammer->flags_8 & 0x40000000) != 0;
+        }
+
+        spm::wa1_02::SammerDef * def = spm::wa1_02::sammerDefsCh6;
+        while (wii::string::strcmp(def->mapName, map) != 0)
+            def++;
+
+        return gsw0 < def->alreadyBeatenGsw0;
+    }
+    else
+    {
+        spm::wa1_02::SammerDef * def = spm::wa1_02::sammerDefsEndgame;
+        while (wii::string::strcmp(def->mapName, spm::spmario::gp->mapName) != 0)
+            def++;
+
+        s32 lsw1 = spm::evtmgr_cmd::evtGetValue(nullptr, LSW(1));
+        return lsw1 < def->alreadyBeatenLsw1;
+    }
+}
+
 void HPWindow::bossDisp()
 {
     // Find the first active boss (multiple not supported)
@@ -256,7 +308,7 @@ void HPWindow::bossDisp()
         // Check NPC is visible and a boss
         if ((npc->flags_8 & 1) && (npc->flags_8 & 0x40000000) == 0
             && (npc->flags_c & 0x20) == 0 && (npc->flag46C & 0x20000) == 0 
-            && npcBossTribeCheck(npc) && npcBossBlooperCheck(npc))
+            && npcBossTribeCheck(npc) && npcBossBlooperCheck(npc) && npcBossSammerCheck(npc))
         {
             spm::npcdrv::NPCTribe * tribe = spm::npcdrv::npcTribes + npc->tribeId;
             spm::item_data::ItemData * card = spm::item_data::itemDataTable + tribe->catchCardItemId;
