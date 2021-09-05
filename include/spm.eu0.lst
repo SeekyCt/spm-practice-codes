@@ -504,6 +504,20 @@
 8029c5b0:NANDCheckAsync
 // more
 
+// exi.a
+// text
+8026a940:EXIImm
+8026ad58:EXISync
+8026b058:__EXIProbe
+8026b3a8:EXISelect
+8026b4d8:EXIDeselect
+8026bb3c:EXILock
+8026bc38:EXIUnlock
+8026bd38:EXIGetID
+// more
+// bss
+80537ed8:Ecb
+
 // lzss10.c
 802e2598:lzss10GetDecompSize
 802e25d8:lzss10Decompress

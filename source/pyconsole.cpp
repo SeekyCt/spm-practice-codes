@@ -2,8 +2,10 @@
 #include "consolewindow.h"
 #include "pyconsole.h"
 #include "util.h"
+#include "ug.h"
 
 #include <types.h>
+#include <wii/OSError.h>
 #include <wii/string.h>
 
 namespace mod {
@@ -58,6 +60,13 @@ void PyConsole::init()
 
 void PyConsole::main()
 {
+    // Also check for commands from a USB Gecko
+    if (sParams.buffer[0] == 0 && ugProbe(1))
+    {
+        s32 len = ugRecv(1, sParams.buffer, sParams.bufferSize);
+        sParams.buffer[len - 1] = 0;
+    }
+
     // Check for commands
     if (sParams.buffer[0] != 0)
     {

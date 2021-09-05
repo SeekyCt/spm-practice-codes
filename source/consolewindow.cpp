@@ -3,9 +3,11 @@
 #include "consolewindow.h"
 #include "patch.h"
 #include "util.h"
+#include "ug.h"
 
 #include <types.h>
 #include <wii/OSError.h>
+#include <wii/string.h>
 
 namespace mod {
 
@@ -35,6 +37,10 @@ void ConsoleWindow::_push(const char * text, const wii::RGBA * colour, ConsoleFr
 {
     // Print to OSReport
     wii::OSError::OSReport("(Console %x) %s\n", this, text);
+
+    // Print to USB Gecko
+    if (ugProbe(1))
+        ugSend(1, text, wii::string::strlen(text)), ugSend(1, "\n", 1);
 
     // Handle colour
     wii::RGBA _colour;
