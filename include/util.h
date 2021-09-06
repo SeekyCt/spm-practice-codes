@@ -27,6 +27,9 @@ namespace mod {
 
 #define ROUND_UP_32(n) (((n) + 0x1f) & ~0x1f)
 
+#define CHECK_ALL_MASK(num, mask) (((num) & (mask)) == (mask))
+#define CHECK_ANY_MASK(num, mask) (((num) & (mask)) != 0)
+
 #define BYTES_TO_KB(size) ((((size) + 1023) & ~1023) / 1024)
 #define KB_TO_BLOCKS(size) ((((size) + 15) & ~15) / 16)
 #define BYTES_TO_BLOCKS(size) (KB_TO_BLOCKS(BYTES_TO_KB((size))))

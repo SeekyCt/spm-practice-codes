@@ -46,6 +46,7 @@ extern char evt_debug_put_reg_str[256];
 
 s32 evtGetValue(spm::evtmgr::EvtEntry * entry, s32 var);
 s32 evtSetValue(spm::evtmgr::EvtEntry * entry, s32 var, s32 val);
+f32 evtSetFloat(spm::evtmgr::EvtEntry * entry, s32 var, f32 val);
 
 // more
 

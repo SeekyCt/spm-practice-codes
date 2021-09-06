@@ -1,5 +1,6 @@
 #include "mod_ui_base/window.h"
 #include "apwindow.h"
+#include "chainloader.h"
 #include "consolewindow.h"
 #include "custompit.h"
 #include "evtdebug.h"
@@ -194,6 +195,14 @@ void main()
     Window::homebuttonDispPatch();
     PyConsole::init();
     APWindow::init();
+
+    /*
+        Uncomment this if you'd like to load another mod alongside practice codes
+        (for example, to debug it). If you'd like to link against this mod, then
+        make sure to compile it with EXTRAFLAGS="-fno-function-sections -fno-data-sections"
+        to prevent anything you need being deadstripped
+    */
+    // tryChainload();
 }
 
 }

@@ -4,6 +4,8 @@
 
 namespace wii::OSModule {
 
+typedef void (RelFunc)();
+
 struct RelHeader
 {
     u32 id;
@@ -22,9 +24,9 @@ struct RelHeader
     u8 epilogSection;
     u8 unresolvedSection;
     u8 bssSection;
-    void * prolog;
-    void * epilog;
-    void * unresolved;
+    RelFunc * prolog;
+    RelFunc * epilog;
+    RelFunc * unresolved;
     u32 align;
     u32 bssAlign;
     u32 fixSize;
@@ -35,6 +37,8 @@ extern "C" {
 
 extern RelHeader * firstRel;
 extern RelHeader * lastRel;
+
+bool OSLink(RelHeader * rel, void * bss);
 
 }
 

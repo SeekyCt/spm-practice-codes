@@ -14,6 +14,7 @@ extern "C" {
 
 int __assert2(const char * filename, int line, const char * assertion, const char * message,...);
 
+int rand();
 int irand(int limit);
 
 }
