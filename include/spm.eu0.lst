@@ -294,6 +294,7 @@
 80512360:seqWork
 
 // pausewin.c
+// text
 80184c18:pausewinEntry
 80185088:pausewinMoveTo
 801850d8:pausewinAppear

@@ -9,11 +9,11 @@ void _writeBranch(void * ptr, void * destination, bool link = false);
 void _writeWord(void * ptr, u32 value);
 
 #define writeBranch(ptr, offset, destination) \
-    patch::_writeBranch((void *)((u32)(ptr) + offset), (void *)(destination))
+    mod::patch::_writeBranch((void *)((u32)(ptr) + offset), (void *)(destination))
 #define writeBranchLink(ptr, offset, destination) \
-    patch::_writeBranch((void *)((u32)(ptr) + offset), (void *)(destination), true)
+    mod::patch::_writeBranch((void *)((u32)(ptr) + offset), (void *)(destination), true)
 #define writeWord(ptr, offset, value) \
-    patch::_writeWord((void *)((u32)(ptr) + (offset)), (value))
+    mod::patch::_writeWord((void *)((u32)(ptr) + (offset)), (value))
 
 // Common instructions
 #define NOP 0x60000000
