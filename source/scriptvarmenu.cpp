@@ -211,11 +211,11 @@ ScriptVarMenu::ScriptVarMenu()
     mGroupDisp = new MenuScroller(this, groups[mGroup].name, groupDispX, dispsY, 20.0f, groupUp, groupDown, this);
 
     // Init id select button
-    mSelectScroller = new MenuScrollGroup(this, 0, selectDispX, dispsY, idChange, this, 4, false);
+    mSelectScroller = new MenuScrollGroup(this, mId, selectDispX, dispsY, idChange, this, 4, false);
     buttonLinkHorizontal(mGroupDisp, mSelectScroller);
 
     // Init value select button
-    mEditScroller = new MenuScrollGroup(this, 0, editDispX, dispsY, valChange, this, 8, true);   
+    mEditScroller = new MenuScrollGroup(this, getVal(), editDispX, dispsY, valChange, this, 8, true);   
     buttonLinkHorizontal(mSelectScroller, mEditScroller);
 
     // Create cosmetic '= 0x' display
