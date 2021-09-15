@@ -17,7 +17,7 @@ namespace mod {
 // Handle a script being passed into any entry function
 static void evtEntryLog(const EvtScriptCode * script)
 {
-    // Don't log scripts coming from the rel
+    // Don't log scripts coming from this rel
     void * modRelAddr = getModRelLoadAddr();
     if ((u32)script >= (u32)modRelAddr)
         return;

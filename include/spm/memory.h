@@ -67,11 +67,12 @@ enum class Heap
     MAIN = 0,
     MAP = 1,
     MEM1_UNUSED = 2,
-    EFFECT = 3,
-    WPAD = 4,
-    SOUND = 5,
-    SMART = 6,
-    MEM2_UNUSED = 7
+    EXT = 3,
+    EFFECT = 4,
+    WPAD = 5,
+    SOUND = 6,
+    SMART = 7,
+    MEM2_UNUSED = 8
 };
 
 extern "C" {
