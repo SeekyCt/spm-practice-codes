@@ -30,7 +30,11 @@ private:
     static void idChange(MenuScrollGroup * scroller, s32 delta, void * param);
     static void valChange(MenuScrollGroup * scroller, s32 delta, void * param);
 
+    virtual void close() override;
+
 public:
+    virtual void fullClose() override;
+
     ScriptVarMenu();
 };
 

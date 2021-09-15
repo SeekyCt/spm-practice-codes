@@ -1,4 +1,5 @@
 #include "sequencemenu.h"
+#include "scriptlog.h"
 #include "util.h"
 
 #include <types.h>
@@ -87,10 +88,27 @@ void SequenceMenu::valChange(MenuScrollGroup * scroller, s32 delta, void * param
     instance->mLevelDisp->mMsg = instance->getLevel();
 }
 
+void SequenceMenu::close()
+{
+    // Re-enable script variable logging
+    scriptLogOnOff(true);
+
+    // Close as normal
+    MenuWindow::close();
+}
+
+void SequenceMenu::fullClose()
+{
+    // Re-enable script variable logging
+    scriptLogOnOff(true);
+
+    // Close as normal
+    MenuWindow::fullClose();
+}
+
 SequenceMenu::SequenceMenu()
 {
     // Position constants
-
     const f32 editX = FONT_WIDTH * -1.5f;
     const f32 editY = 20.0f;
     const f32 levelY = -100.0f;
@@ -98,6 +116,9 @@ SequenceMenu::SequenceMenu()
     // Init buttons
     mLevelDisp = new CentredButton(this, getLevel(), levelY);
     mScroller = new MenuScrollGroup(this, getVal(), editX, editY, valChange, this, 3, false);   
+
+    // Disable script variable logging while open
+    scriptLogOnOff(false);
 
     // Set starting button and title
     mCurButton = mScroller;

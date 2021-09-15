@@ -3,6 +3,8 @@
 #include "nandsettings.h"
 #include "patch.h"
 #include "scriptvarlog.h"
+#include "scriptvarmenu.h"
+#include "sequencemenu.h"
 
 #include <types.h>
 #include <spm/spmario.h>
@@ -23,9 +25,20 @@ enum
 
 static const char *logTypeNames[] = {"GSW", "GSWF", "LSW", "LSWF"};
 
+static bool externalDisable = false;
+
+void scriptLogOnOff(bool enabled)
+{
+    externalDisable = !enabled;
+}
+
 // Handle a variable changing
 static void evtVarLog(s32 type, s32 id, s32 value)
 {
+    // Don't print when other code has disabled it
+    if (externalDisable)
+        return;
+
     // Only log changes to actual save
     if (wii::string::strcmp(spm::spmario::gp->saveName, "default") == 0)
         return;
@@ -33,6 +46,7 @@ static void evtVarLog(s32 type, s32 id, s32 value)
     switch(gSettings->logOptions[OPTION_EVT_VAR_LOG])
     {
         case LogType::NONE:
+            // Don't print when user has disabled it
             break;
         case LogType::OSREPORT:
             // Write to OSReport

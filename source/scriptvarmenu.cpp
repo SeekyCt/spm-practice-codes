@@ -194,6 +194,24 @@ void ScriptVarMenu::valChange(MenuScrollGroup * scroller, s32 delta, void * para
     instance->updateVarDisp();
 }
 
+void ScriptVarMenu::close()
+{
+    // Re-enable script variable logging
+    scriptLogOnOff(true);
+
+    // Close as normal
+    MenuWindow::close();
+}
+
+void ScriptVarMenu::fullClose()
+{
+    // Re-enable script variable logging
+    scriptLogOnOff(true);
+
+    // Close as normal
+    MenuWindow::fullClose();
+}
+
 ScriptVarMenu::ScriptVarMenu()
 {
     // Init selection
@@ -221,6 +239,9 @@ ScriptVarMenu::ScriptVarMenu()
     // Create cosmetic '= 0x' display
     MenuButton * middleText = new MenuButton(this, "= 0x", middleTextX, dispsY);
     (void) middleText;
+
+    // Disable script variable logging while open
+    scriptLogOnOff(false);
 
     // Set starting button and title
     mCurButton = mGroupDisp;
