@@ -2,6 +2,7 @@
 #include "mod.h"
 #include "nandsettings.h"
 #include "patch.h"
+#include "util.h"
 
 #include <types.h>
 #include <spm/evtmgr.h>
@@ -16,6 +17,11 @@ namespace mod {
 // Handle a script being passed into any entry function
 static void evtEntryLog(const EvtScriptCode * script)
 {
+    // Don't log scripts coming from the rel
+    void * modRelAddr = getModRelLoadAddr();
+    if ((u32)script >= (u32)modRelAddr)
+        return;
+
     switch (gSettings->logOptions[OPTION_SCRIPT_LOG])
     {
         case LogType::NONE:
