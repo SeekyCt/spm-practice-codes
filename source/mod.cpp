@@ -7,6 +7,7 @@
 #include "exception.h"
 #include "gamesavemenu.h"
 #include "hpwindow.h"
+#include "inputwindow.h"
 #include "mainmenu.h"
 #include "mapdoorwindow.h"
 #include "mapselectmenu.h"
@@ -195,6 +196,7 @@ void main()
     Window::homebuttonDispPatch();
     PyConsole::init();
     APWindow::init();
+    InputWindow::init();
 
     /*
         Uncomment this if you'd like to load another mod alongside practice codes
