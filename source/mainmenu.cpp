@@ -1,4 +1,5 @@
 #include "gamesavemenu.h"
+#include "hitboxmenu.h"
 #include "hudmenu.h"
 #include "inventorymenu.h"
 #include "logmenu.h"
@@ -56,6 +57,18 @@ MainMenu::MainMenu()
 
             delete MenuWindow::sCurMenu;
             MenuWindow::sCurMenu = new HudMenu();
+            return false;
+        }
+    );
+    y -= FONT_HEIGHT + 5;
+    mOptions[n++] = new MenuButton(this, "Edit Hitbox Display Options", optionsX, y,
+        [](MenuButton * button, void * param)
+        {
+            (void) button;
+            (void) param;
+
+            delete MenuWindow::sCurMenu;
+            MenuWindow::sCurMenu = new HitboxMenu();
             return false;
         }
     );

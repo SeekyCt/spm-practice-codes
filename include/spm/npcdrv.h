@@ -80,7 +80,10 @@ struct NPCPart
 {
     u8 unknown_0x0[0x8 - 0x0];
     wii::Vec3 pos;
-    u8 unknown_0x14[0x38c - 0x14];
+    u8 unknown_0x14[0x2c - 0x14];
+    u32 flag2c;
+    u32 flag30;
+    u8 unknown_0x34[0x38c - 0x34];
     NPCPart * next;
     NPCPart * prev;
     u8 unknown_0x394[0x398 - 0x394];
@@ -127,6 +130,7 @@ extern "C" {
 
 extern NPCTribe npcTribes[NPC_TRIBE_COUNT];
 
+void npcDispMain();
 NPCEntry * npcNameToPtr(const char * name);
 const char * npcSearchAnimDefs(NPCTribeAnimDef * defs, s32 id);
 NPCWork * npcGetWorkPtr();

@@ -70,6 +70,8 @@ struct NandSettings
     bool enemyHpBars;
     bool hpBarHide3d;
     bool bossHpBars;
+    bool hitboxNpc;
+    bool hitboxNpcDisabled;
 };
 
 extern NandSettings * gSettings;

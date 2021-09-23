@@ -206,6 +206,8 @@ s32 evt_nandsettings_handle_read_output(spm::evtmgr::EvtEntry * entry, bool firs
             gSettings->enemyHpBars = false;
             gSettings->hpBarHide3d = false;
             gSettings->bossHpBars = false;
+            gSettings->hitboxNpc = false;
+            gSettings->hitboxNpcDisabled = false;
 
             // Increment version
             gSettings->version = 4;

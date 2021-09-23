@@ -420,6 +420,7 @@
 
 // npcdrv.c
 // text
+801adef0:npcDispMain
 801b6f2c:npcNameToPtr
 801bfc48:npcSearchAnimDefs
 801c9adc:npcGetWorkPtr

@@ -9,7 +9,7 @@
 
 namespace mod {
 
-#define MAIN_MENU_OPTION_COUNT 12
+#define MAIN_MENU_OPTION_COUNT 13
 
 class MainMenu final : public MenuWindow
 {

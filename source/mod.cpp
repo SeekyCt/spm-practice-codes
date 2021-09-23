@@ -6,6 +6,7 @@
 #include "evtdebug.h"
 #include "exception.h"
 #include "gamesavemenu.h"
+#include "hitboxmenu.h"
 #include "hpwindow.h"
 #include "inputwindow.h"
 #include "mainmenu.h"
@@ -197,6 +198,7 @@ void main()
     PyConsole::init();
     APWindow::init();
     InputWindow::init();
+    HitboxMenu::hitboxPatch();
 
     /*
         Uncomment this if you'd like to load another mod alongside practice codes
