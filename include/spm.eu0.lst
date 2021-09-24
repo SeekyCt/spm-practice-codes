@@ -363,6 +363,25 @@
 801a28ac:FontGetMessageWidth
 // more
 
+// gxsub.c
+801a37b4:gxsubInit_Tpl
+801a38f4:gxsubDrawTextureMtx
+801a3c28:gxsubDrawTexture
+801a3f98:gxsubGetTexWidth
+801a3ff0:gxsubGetTexHeight
+801a4048:gxsubEnableTexAlpha
+801a4058:gxsubInit
+801a416c:gxsubInit_Cam
+801a41a0:gxsubInit_Colour
+801a42d8:gxsubDrawQuad
+801a44a4:gxsubDrawQuadMtx
+801a4678:gxsubDrawQuadGradient
+801a4890:gxsubDrawLineSquare
+801a4a84:gxsubDrawLineSquareMtx
+801a4ca4:gxsubDrawDottedLine
+801a5134:gxsubDrawLine
+801a52e0:gxsubDrawSphere
+
 // memory.c
 // text
 801a626c:__memAlloc
@@ -469,8 +488,14 @@
 8036afc0:pitText
 // more
 
+// Runtime.PPCEABI.H.a
+// runtime.c
+802560a4:__div2i
+// more
+
 // MSL_C.PPCEABI.bare.H.a
 // printf.c
+8025cf40:vsprintf
 8025cfc0:snprintf
 8025d098:sprintf
 // scanf.c
@@ -618,6 +643,10 @@
 802e2598:lzss10GetDecompSize
 802e25d8:lzss10Decompress
 802e270c:lzss10ParseHeader
+
+// tpl.c
+802e30ec:TPLBind
+// more
 
 /* Rel */
 

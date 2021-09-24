@@ -6,6 +6,7 @@
 #include <spm/camdrv.h>
 #include <spm/dispdrv.h>
 #include <spm/fontmgr.h>
+#include <spm/gxsub.h>
 #include <spm/homebuttondrv.h>
 #include <spm/msgdrv.h>
 #include <spm/windowdrv.h>
@@ -375,6 +376,20 @@ void Window::drawLineCylinderGX(const wii::RGBA * colour, f32 x, f32 y, f32 z, f
     circleGX(colour, x, y, z, radius, n);
     cylinderBarsGX(colour, x, y, z, radius, height, barN);
     circleGX(colour, x, y + height, z, radius, n);
+}
+
+void Window::drawTexture(wii::tpl::TPLHeader * tpl, u32 texId, f32 x, f32 y, f32 scale, const wii::RGBA * colour)
+{
+    spm::gxsub::gxsubInit_Tpl(tpl);
+
+    f32 width = spm::gxsub::gxsubGetTexWidth(texId);
+    f32 height = spm::gxsub::gxsubGetTexHeight(texId);
+
+    wii::Mtx34 mtx;
+    wii::mtx::PSMTXScale(&mtx, scale, scale, scale);
+    wii::mtx::PSMTXTransApply(&mtx, &mtx, x + ((width / 2.0f) * scale), y - ((height / 2.0f) * scale), 0.0f);
+
+    spm::gxsub::gxsubDrawTextureMtx(texId, &mtx, colour);
 }
 
 void Window::windowDisp(s8 camId, void * param)

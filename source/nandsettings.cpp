@@ -213,7 +213,6 @@ s32 evt_nandsettings_handle_read_output(spm::evtmgr::EvtEntry * entry, bool firs
             gSettings->version = 4;
 
             break;
-        
 
         case SETTINGS_VER:
             wii::OSError::OSReport("nandsettings: settings version ok.\n");

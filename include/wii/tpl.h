@@ -86,4 +86,10 @@ struct TPLHeader
     };
 };
 
+extern "C" {
+
+void TPLBind(TPLHeader * tpl);
+
+}
+
 }

@@ -6,6 +6,7 @@
 #pragma once
 
 #include <types.h>
+#include <wii/tpl.h>
 #include <wii/types.h>
 
 namespace mod {
@@ -47,6 +48,7 @@ public:
 
     Window();
     virtual ~Window();
+
     static void drawString(const char * str,
                            f32 x, f32 y,
                            const wii::RGBA * colour = nullptr,
@@ -78,6 +80,9 @@ public:
                                f32 sideLength);
     void drawLineCylinderGX(const wii::RGBA * colour, f32 x, f32 y, f32 z,
                             f32 radius, f32 height, s32 n, s32 barN);
+    static void drawTexture(wii::tpl::TPLHeader * tpl, u32 texId, f32 x, f32 y,
+                            f32 scale, const wii::RGBA * colour);
+
     static void windowMain();
     static void homebuttonDispPatch();
 };
