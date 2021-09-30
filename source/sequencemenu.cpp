@@ -94,7 +94,7 @@ void SequenceMenu::close()
     scriptLogOnOff(true);
 
     // Close as normal
-    MenuWindow::close();
+    ChildMenu::close();
 }
 
 void SequenceMenu::fullClose()
