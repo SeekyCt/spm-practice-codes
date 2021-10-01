@@ -136,8 +136,8 @@ EVT_DECLARE_USER_FUNC(evt_dan_get_exit_door_name_l, 1)
 // evt_dan_get_enemy_info(int no, int enemyIdx, &int templateId, &int num)
 EVT_DECLARE_USER_FUNC(evt_dan_get_enemy_info, 4)
 
-// func_80c82d38(int no)
-EVT_DECLARE_USER_FUNC(func_80c82d38, 1)
+// evt_dan_make_spawn_table(int no)
+EVT_DECLARE_USER_FUNC(evt_dan_make_spawn_table, 1)
 
 // evt_dan_get_enemy_spawn_pos(int num, int no, int enemyIdx, &float x, &float y, &float z)
 EVT_DECLARE_USER_FUNC(evt_dan_get_enemy_spawn_pos, 6)

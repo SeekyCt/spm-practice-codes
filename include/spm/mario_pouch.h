@@ -66,6 +66,7 @@ int pouchGetXp();
 void pouchAddXp(int increase);
 
 bool pouchAddItem(int itemId);
+bool pouchCheckHaveItem(s16 itemId);
 void pouchRemoveItem(int itemId);
 void pouchRemoveShopItem(int itemId);
 

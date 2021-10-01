@@ -5,7 +5,16 @@
 namespace spm::npcdrv {
 
 #define NPC_TRIBE_COUNT 535
-#define NPC_TEMPLATE_COUNT 435
+#define NPCTEMPLATE_MAX 435
+
+struct NPCEnemyTemplate
+{
+    u8 unknown_0x0[0x8 - 0x0];
+    u32 unknown_0x8;
+    u8 unknown_0xc[0x14 - 0xc];
+    s32 tribeId;
+    u8 unknown_0x18[0x68 - 0x18];
+};
 
 struct NPCTribeAnimDef
 {
@@ -102,7 +111,9 @@ struct NPCEntry
     NPCAnim m_Anim;
     u8 unknown_0x288[0x2a0 - 0x288];
     wii::Vec3 position;
-    u8 unknown_0x2ac[0x46c - 0x2ac];
+    u8 unknown_0x2ac[0x3ac - 0x2ac];
+    float unknown_0x3ac;
+    u8 unknown_0x3b0[0x46c - 0x3b0];
     u32 flag46C;
     u8 unknown_0x470[0x49c - 0x470];
     s32 tribeId;
@@ -111,7 +122,9 @@ struct NPCEntry
     u32 hp;
     u8 unknown_0x4f4[0x510 - 0x4f4];
     s32 unitWork[16];
-    u8 unknown_0x550[0x714 - 0x550];
+    u8 unknown_0x550[0x574 - 0x550];
+    s32 dropItemId;
+    u8 unknown_0x578[0x714 - 0x578];
     NPCPart * parts;
     u8 unknown_0x718[0x748 - 0x718];
 };
@@ -128,6 +141,7 @@ static_assert(sizeof(NPCWork) == 0xb48);
 
 extern "C" {
 
+extern NPCEnemyTemplate npcEnemyTemplates[NPCTEMPLATE_MAX];
 extern NPCTribe npcTribes[NPC_TRIBE_COUNT];
 
 void npcDispMain();

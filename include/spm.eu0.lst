@@ -19,6 +19,7 @@
 804031b8:mapDataList
 
 // mobjdrv.c
+8002c834:mobjNameToPtr
 8002c8e8:mobjNameToPtrNoAssert
 // more
 
@@ -93,8 +94,10 @@
 // more
 
 // itemdrv.c
+80077660:itemGetWork
 80078b3c:itemEntry
 8007bccc:itemTypeNameToId
+8007d8b4:itemCheckForId
 // more
 
 // item_data.c
@@ -110,6 +113,10 @@
 8008d2fc:mapGrpFlagOff
 8008e11c:mapGrpFlag4On
 // more
+
+// somewhere
+800b426c:func_800b426c
+800cd554:func_800cd554
 
 // evt_snd.c
 800d2148:evt_snd_bgmon
@@ -258,6 +265,7 @@
 8014d4f8:pouchGetXp
 8014d508:pouchAddXp
 8014d5f8:pouchAddItem
+8014dbf4:pouchCheckHaveItem
 8014df4c:pouchRemoveItem
 8014eb68:pouchRemoveShopItem
 8014f31c:pouchGetCurPixl
@@ -317,6 +325,7 @@
 // hud.c
 80199490:hudLoadStats
 80199ad0:hudHide
+80199cc4:hudStartCountdown
 // more
 
 // system.c
