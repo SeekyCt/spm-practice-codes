@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "mod_ui_base/menuscrollerh.h"
+#include "mod_ui_base/passivebutton.h"
 #include "childmenu.h"
 
 namespace mod {
@@ -13,11 +13,12 @@ namespace mod {
 class MapMenu : public ChildMenu
 {
 private:
-    bool mShouldClose;
+    PassiveButton * mWarpButton;
+    static const char * getWarpEffectMsg();
+    static bool toggleWarpEffect(MenuButton * button, void * param);
 
 protected:
-    virtual void close() override;
-    virtual void disp() override;
+    MapMenu();
 };
 
 }

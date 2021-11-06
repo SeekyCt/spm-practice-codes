@@ -5,36 +5,34 @@
 
 namespace mod {
 
-void MapMenu::disp()
+const char * MapMenu::getWarpEffectMsg()
 {
-    // Run main display function
-    MenuWindow::disp();
-
-    // Menu may have been closed during that function
-    if (mShouldClose)
-    {
-        // Change back to parent menu
-        ChildMenu::close();
-    }
-    else
-    {    
-        // Toggle teleport if minus is pressed
-        if (spm::wpadmgr::wpadGetButtonsPressed(0) & WPAD_BTN_MINUS)
-            gSettings->mapChangeEffect = !gSettings->mapChangeEffect;
-        
-        // Display option text
-        const char * msg = gSettings->mapChangeEffect ?
-            "Display teleport effect (<icon PAD_MINUS 0.8 0 35 0><col ffffffff>): on" : 
-            "Display teleport effect (<icon PAD_MINUS 0.8 0 35 0><col ffffffff>): off";
-        drawMessage(msg, -320.0f, -100.0f, nullptr, 0.8f);
-    }
+    return gSettings->mapChangeEffect ?
+        "Display teleport effect (<icon PAD_MINUS 0.8 0 35 0><col ffffffff>): on" : 
+        "Display teleport effect (<icon PAD_MINUS 0.8 0 35 0><col ffffffff>): off";
 }
 
-void MapMenu::close()
+bool MapMenu::toggleWarpEffect(MenuButton * button, void * param)
 {
-    // Schedule changing back to parent menu
-    // (can't just delete now since this will return to the rest of the custom disp function)
-    mShouldClose = true;
+    (void) button;
+    
+    MapMenu * instance = reinterpret_cast<MapMenu *>(param);
+
+    // Toggle setting
+    gSettings->mapChangeEffect = !gSettings->mapChangeEffect;
+    
+    // Update option text
+    instance->mWarpButton->mMsg = getWarpEffectMsg();
+
+    // Signal menu hasn't been closed
+    return true;
+}
+
+MapMenu::MapMenu()
+{
+    mWarpButton = new PassiveButton(this, getWarpEffectMsg(), -320.0f, -100.0f,
+                                    WPAD_BTN_MINUS, toggleWarpEffect, this, 0.8f,
+                                    nullptr, true);
 }
 
 }

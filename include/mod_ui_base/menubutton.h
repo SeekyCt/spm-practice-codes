@@ -29,6 +29,7 @@ protected:
     MenuButton * mNeighbours[4];
 
     virtual void handleInputs(u32 btn, u32 btnRpt);
+    virtual void handlePassiveInputs(u32 btn, u32 btnRpt);
     virtual void disp(f32 centreX, f32 centreY, bool selected);
 
 public:
@@ -40,11 +41,13 @@ public:
     MenuAction * mAction;
     void * mActionParam;
     bool mAutoPress;
+    bool mDrawAsMessage;
 
     MenuButton(class MenuWindow * parent, const char * msg, f32 x, f32 y,
                MenuAction * action = nullptr, void * actionParam = nullptr,
                bool autoPress = false, f32 scale = 1.0f,
-               wii::RGBA * colour = nullptr, wii::RGBA * selColour = nullptr);
+               wii::RGBA * colour = nullptr, wii::RGBA * selColour = nullptr,
+               bool drawAsMessage = false);
     virtual ~MenuButton();
 };
 
