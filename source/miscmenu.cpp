@@ -29,7 +29,8 @@ void MiscMenu::optionToggle(MenuButton * button, bool &setting)
 
 enum OptionIdxs
 {
-    OPTION_PIT_TEXT = 0
+    OPTION_PIT_TEXT = 0,
+    OPTION_LAST_KEY = 1
 };
 
 void MiscMenu::disp()
@@ -57,6 +58,7 @@ MiscMenu::MiscMenu()
     int n = 0;
 
     OPTION("Load Pit Text From File", gSettings->customPitText);
+    OPTION("Force Last Key in Pit", gSettings->lastKey);
 
     for (int i = 1; i < MISC_SETTING_COUNT; i++)
         buttonLinkVertical(mOptions[i - 1], mOptions[i]);

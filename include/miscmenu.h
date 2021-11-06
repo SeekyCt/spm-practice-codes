@@ -11,7 +11,7 @@
 
 namespace mod {
 
-#define MISC_SETTING_COUNT 1
+#define MISC_SETTING_COUNT 2
 
 class MiscMenu final : public ChildMenu
 {

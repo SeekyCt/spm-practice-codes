@@ -26,7 +26,7 @@ using spm::dan::DanDungeon;
 using spm::dan::danWp;
 using spm::lz_embedded::pitText;
 
-// Re-implementation of decompiled function
+// Re-implementation of decompiled function for custom text support
 static int custom_evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
 {
     (void) entry;
@@ -134,9 +134,25 @@ static int custom_evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
     return EVT_RET_CONTINUE;
 }
 
+static int (*evt_dan_decide_key_enemy_real)(EvtEntry *, bool);
+static int lastKeyPatch(EvtEntry * entry, bool isFirstCall)
+{
+    if (gSettings->lastKey)
+    {
+        // Not assigning the key to an enemy makes it spawn 
+        // on the door once all enemies are defeated
+        return EVT_RET_CONTINUE;
+    }
+    else
+    {
+        return evt_dan_decide_key_enemy_real(entry, isFirstCall);
+    }
+}
+
 void customPitPatch()
 {
     writeBranch(spm::dan::evt_dan_read_data, 0, custom_evt_dan_read_data);
+    evt_dan_decide_key_enemy_real = patch::hookFunction(spm::dan::evt_dan_decide_key_enemy, lastKeyPatch);
 }
 
 }
