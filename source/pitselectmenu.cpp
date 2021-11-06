@@ -33,6 +33,20 @@ static const char * getGroupName(int group)
     return group == PITGROUP_FLIPSIDE ? "Flipside" : "Flopside";
 }
 
+static const char * getBossStateName()
+{
+    s32 wracktailBeat = spm::evtmgr_cmd::evtGetValue(nullptr, GSWF(409));
+    s32 encounterTimes = spm::evtmgr_cmd::evtGetValue(nullptr, GSW(24));
+    if (!wracktailBeat)
+        return "Boss state (<icon PAD_PLUS 0.8 0 35 0><col ffffffff>): Wracktail unbeaten";
+    else if (encounterTimes == 0)
+        return "Boss state (<icon PAD_PLUS 0.8 0 35 0><col ffffffff>): Wracktail beaten";
+    else if (encounterTimes == 1)
+        return "Boss state (<icon PAD_PLUS 0.8 0 35 0><col ffffffff>): Shadoo visited once";
+    else
+        return "Boss state (<icon PAD_PLUS 0.8 0 35 0><col ffffffff>): Shadoo beaten";
+}
+
 void PitSelectMenu::updateGroupDisp()
 {
     // Change message to current group name
@@ -43,6 +57,41 @@ void PitSelectMenu::updateFloorDisp()
 {
     // Set floor display to new number
     mFloorScroller->mDispValue = mFloor;
+}
+
+bool PitSelectMenu::bossStateToggle(MenuButton * button, void * param)
+{
+    (void) button;
+
+    PitSelectMenu * instance = reinterpret_cast<PitSelectMenu *>(param);
+
+    s32 wracktailBeat = spm::evtmgr_cmd::evtGetValue(nullptr, GSWF(409));
+    s32 encounterTimes = spm::evtmgr_cmd::evtGetValue(nullptr, GSW(24));
+    if (!wracktailBeat)
+    {
+        // Wracktail unbeaten -> wraacktail beaten
+        spm::evtmgr_cmd::evtSetValue(nullptr, GSWF(409), true);
+    }
+    else if (encounterTimes == 0)
+    {
+        // Wracktail beaten -> shadoo visited once
+        spm::evtmgr_cmd::evtSetValue(nullptr, GSW(24), 1);
+    }
+    else if (encounterTimes == 1)
+    {
+        // Shadoo visited once -> shadoo beaten
+        spm::evtmgr_cmd::evtSetValue(nullptr, GSW(24), 2);
+    }
+    else
+    {
+        // Shadoo beaten -> wracktail unbeaten
+        spm::evtmgr_cmd::evtSetValue(nullptr, GSWF(409), false);
+        spm::evtmgr_cmd::evtSetValue(nullptr, GSW(24), 0);
+    }
+
+    instance->mBossState->mMsg = getBossStateName();
+
+    return true;
 }
 
 void PitSelectMenu::groupSwap(MenuScroller * scroller, void * param)
@@ -245,6 +294,10 @@ PitSelectMenu::PitSelectMenu()
     const f32 floorLabelX = groupDispX + 125.0f;
     const f32 floorDispX = floorLabelX + 85.0f;
     const f32 dispsY = 20.0f;
+    const f32 passiveButtonScale = 0.8f; // from MapMenu
+    const f32 passiveButtonX = -320.0f; // from MapMenu
+    const f32 effectToggleY = -100.0f; // from MapMenu
+    const f32 bossToggleY = effectToggleY - 30.0f;
     
     // Init display buttons
     new MenuButton(this, "Pit:", groupLabelX, dispsY);
@@ -254,6 +307,9 @@ PitSelectMenu::PitSelectMenu()
     new MenuButton(this, "Floor:", floorLabelX, dispsY);
     mFloorScroller = new MenuScrollGroup(this, mFloor, floorDispX, dispsY, floorChange, this, 3, false, doMapChange, this);
     buttonLinkHorizontal(mGroupScroller, mFloorScroller);
+    mBossState = new PassiveButton(
+        this, getBossStateName(), passiveButtonX, bossToggleY, WPAD_BTN_PLUS, bossStateToggle, this, passiveButtonScale, nullptr, true
+    );
 
     // Set starting button and title
     mCurButton = mGroupScroller;

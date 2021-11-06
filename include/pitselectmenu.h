@@ -18,11 +18,13 @@ private:
     int mFloor;
     MenuScroller * mGroupScroller;
     MenuScrollGroup * mFloorScroller;
+    PassiveButton * mBossState;
 
     void updateGroupDisp();
     void updateFloorDisp();
     void _doMapChange();
 
+    static bool bossStateToggle(MenuButton * button, void * param);
     static void groupSwap(MenuScroller * scroller, void * param);
     static void floorChange(MenuScrollGroup * scroller, s32 delta, void * param);
     static bool doMapChange(MenuButton * button, void * param);
