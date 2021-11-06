@@ -73,6 +73,7 @@ struct NandSettings
     bool hitboxNpc;
     bool hitboxNpcDisabled;
     bool lastKey;
+    bool inputDisplay;
 };
 
 extern NandSettings * gSettings;

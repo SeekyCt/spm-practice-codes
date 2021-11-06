@@ -258,6 +258,7 @@ void nandSettingsDefaults()
     gSettings->hpBarHide3d = false;
     gSettings->bossHpBars = false;
     gSettings->lastKey = false;
+    gSettings->inputDisplay = false;
 }
 
 static bool (*isRelLoadedReal)() = nullptr;

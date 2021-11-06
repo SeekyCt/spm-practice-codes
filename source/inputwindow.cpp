@@ -66,8 +66,7 @@ void InputWindow::updatePressed()
 void InputWindow::disp()
 {
     // Don't draw over menu, if disabled or if not in game
-    // TODO: make own setting
-    if ((MenuWindow::sCurMenu != nullptr) || (spm::seqdrv::seqGetSeq() != spm::seqdrv::SEQ_GAME) || !gSettings->enemyHpBars)
+    if ((MenuWindow::sCurMenu != nullptr) || (spm::seqdrv::seqGetSeq() != spm::seqdrv::SEQ_GAME) || !gSettings->inputDisplay)
         return;
 
     // Process current inputs
