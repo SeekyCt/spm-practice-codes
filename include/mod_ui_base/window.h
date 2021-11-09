@@ -45,6 +45,7 @@ public:
             y: -225.0 to 225.0 bottom to top
     */
     f32 mPosX, mPosY;
+    bool mDrawOverHbm;
 
     Window();
     virtual ~Window();
@@ -84,7 +85,6 @@ public:
                             f32 scale, const wii::RGBA * colour);
 
     static void windowMain();
-    static void homebuttonDispPatch();
 };
 
 }

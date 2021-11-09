@@ -16,9 +16,7 @@ private:
     struct ButtonDef
     {
         u32 mask;
-        u32 icon;
-        f32 pressScale;
-        f32 holdScale;
+        u32 tplIdx;
     };
     static ButtonDef sDefs[];
 
@@ -26,20 +24,9 @@ private:
     struct DpadDef
     {
         u32 mask;
-        f32 xOffset;
-        f32 yOffset;
+        u32 tplIdx;
     };
     static DpadDef sDpadDefs[];
-
-    // Log of previous frames' pressed buttons
-    static u32 sPressed[3];
-    static u32 sPressedIdx;
-
-    // Checks whether a button has been pressed in the past 3 frames
-    bool showAsPressed(u32 mask);
-
-    // Updates button press log
-    void updatePressed();
 
 protected:
     virtual void disp() override;

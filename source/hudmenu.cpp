@@ -44,7 +44,7 @@ void HudMenu::optionDelta(s8 &setting, int change)
         this, false, scale);                                                  \
     y -= yDiff
 
-#define SETTING_COUNT 7
+#define SETTING_COUNT 8
 
 HudMenu::HudMenu()
 {
@@ -111,6 +111,7 @@ HudMenu::HudMenu()
     OPTION("Display Enemy HP Bars", gSettings->enemyHpBars);
     OPTION("Hide Enemy HP Bars in 3D", gSettings->hpBarHide3d);
     OPTION("Display Boss HP Bars", gSettings->bossHpBars);
+    OPTION("Display Controller Inputs", gSettings->inputDisplay);
 
     for (int i = 1; i < SETTING_COUNT; i++)
         buttonLinkVertical(options[i - 1], options[i]);

@@ -1,10 +1,13 @@
 #include "mod_ui_base/colours.h"
 #include "mod_ui_base/menuwindow.h"
+#include "assets.h"
 #include "inputwindow.h"
+#include "mod.h"
 #include "nandsettings.h"
 #include "util.h"
 
 #include <types.h>
+#include <spm/gxsub.h>
 #include <spm/icondrv.h>
 #include <spm/mario.h>
 #include <spm/seqdrv.h>
@@ -17,50 +20,59 @@ namespace mod {
 
 InputWindow * InputWindow::sInstance = nullptr;
 
-#define X_DIFF 35.0f
-#define BASE_X (X_DIFF / 2.0f) - (X_DIFF * 2.0f)
-// TODO: fix height on 4:3
-#define BASE_Y -200.0f
-#define DPAD_DISP_X BASE_X
-#define DPAD_DISP_Y -200.0f
+#define X_DIFF 17.5f
+#define BASE_X -(X_DIFF * (ARRAY_SIZEOF(InputWindow::sDefs) / 2.0f))
+#define BASE_Y -85.0f
+#define SCALE 0.3125f
+
+#define DPAD_ALL_MASK (WPAD_BTN_UP | WPAD_BTN_DOWN | WPAD_BTN_RIGHT | WPAD_BTN_LEFT)
+
+enum InputTplPos
+{
+    INP_TPL_1 = 0,
+    INP_TPL_2,
+    INP_TPL_A,
+    INP_TPL_PLUS,
+    INP_TPL_MINUS,
+    INP_TPL_HOME,
+    INP_TPL_UP,
+    INP_TPL_DOWN,
+    INP_TPL_LEFT,
+    INP_TPL_RIGHT,
+    INP_TPL_UP_LEFT,
+    INP_TPL_UP_RIGHT,
+    INP_TPL_DOWN_LEFT,
+    INP_TPL_DOWN_RIGHT,
+
+    // Placeholder
+    INP_TPL_DPAD = 0xff
+};
 
 InputWindow::ButtonDef InputWindow::sDefs[] = {
-    {WPAD_BTN_LEFT | WPAD_BTN_RIGHT | WPAD_BTN_UP | WPAD_BTN_DOWN,
-    spm::icondrv::ICON_DPAD_NEUTRAL, 0.6f, 0.6f},
-    {WPAD_BTN_1, spm::icondrv::ICON_BTN_1, 1.0f, 0.8f},
-    {WPAD_BTN_2, spm::icondrv::ICON_BTN_2, 1.0f, 0.8f},
-    {WPAD_BTN_A, spm::icondrv::ICON_BTN_A, 0.9f, 0.7f}
+    {WPAD_BTN_MINUS, INP_TPL_MINUS},
+    {WPAD_BTN_PLUS, INP_TPL_PLUS},
+    {DPAD_ALL_MASK, INP_TPL_DPAD},
+    {WPAD_BTN_2, INP_TPL_2},
+    {WPAD_BTN_1, INP_TPL_1},
+    {WPAD_BTN_A, INP_TPL_A},
+    {WPAD_BTN_HOME, INP_TPL_HOME}
 };
 
 InputWindow::DpadDef InputWindow::sDpadDefs[] = {
-    {WPAD_BTN_UP, -14.5f, 22.5f},
-    {WPAD_BTN_DOWN, 4.0f, 22.5f},
-    {WPAD_BTN_LEFT, -5.0f, 14.0f},
-    {WPAD_BTN_RIGHT, -5.0f, 30.0f}
+    {WPAD_BTN_RIGHT, INP_TPL_UP},
+    {WPAD_BTN_LEFT, INP_TPL_DOWN},
+    {WPAD_BTN_UP, INP_TPL_LEFT},
+    {WPAD_BTN_DOWN, INP_TPL_RIGHT},
+    {WPAD_BTN_RIGHT | WPAD_BTN_UP, INP_TPL_UP_LEFT},
+    {WPAD_BTN_RIGHT | WPAD_BTN_DOWN, INP_TPL_UP_RIGHT},
+    {WPAD_BTN_LEFT | WPAD_BTN_UP, INP_TPL_DOWN_LEFT},
+    {WPAD_BTN_LEFT | WPAD_BTN_DOWN, INP_TPL_DOWN_RIGHT}
 };
-
-u32 InputWindow::sPressed[3] = {0, 0, 0};
-u32 InputWindow::sPressedIdx = 0;
 
 InputWindow::InputWindow()
 {
-}
-
-bool InputWindow::showAsPressed(u32 mask)
-{
-    for (u32 i = 0; i < ARRAY_SIZEOF(sPressed); i++)
-    {
-        if (sPressed[i] & mask)
-            return true;
-    }
-
-    return false;
-}
-
-void InputWindow::updatePressed()
-{
-    sPressedIdx = (sPressedIdx + 1) % ARRAY_SIZEOF(sPressed);
-    sPressed[sPressedIdx] = spm::wpadmgr::wpadGetButtonsPressed(0);
+    // Draw over homebutton menu (since some tricks involve it)
+    mDrawOverHbm = true;
 }
 
 void InputWindow::disp()
@@ -69,50 +81,40 @@ void InputWindow::disp()
     if ((MenuWindow::sCurMenu != nullptr) || (spm::seqdrv::seqGetSeq() != spm::seqdrv::SEQ_GAME) || !gSettings->inputDisplay)
         return;
 
-    // Process current inputs
-    updatePressed();
+    // Get current inputs
     u32 held = spm::wpadmgr::wpadGetButtonsHeld(0);
 
-    // Draw normal icons
+    // Draw enabled icons
     for (u32 i = 0; i < ARRAY_SIZEOF(sDefs); i++)
     {
         ButtonDef * def = sDefs + i;
 
-        f32 scale;
-        if (showAsPressed(def->mask))
-            scale = def->pressScale;
-        else if (def->mask & held)
-            scale = def->holdScale;
-        else
+        // Skip if not pressed
+        if ((def->mask & held) == 0)
             continue;
         
-        wii::Vec3 pos = {BASE_X + (i * X_DIFF), BASE_Y, 0.0f};
-        spm::icondrv::iconDispGx(scale, &pos, 0x18, def->icon);
-    }
+        // Get tpl index
+        u32 tplIdx = def->tplIdx;
+        if (def->tplIdx == INP_TPL_DPAD)
+        {
+            // Special case for dpad since inputs merge
+            for (u32 j = 0; j < ARRAY_SIZEOF(sDpadDefs); j++)
+            {
+                DpadDef * ddef = sDpadDefs + j;
+                if (ddef->mask == (held & DPAD_ALL_MASK))
+                    tplIdx = ddef->tplIdx;
+            }
+        }
 
-    // Draw dpad directions
-    // TODO: use custom textures instead?
-    for (u32 i = 0; i < ARRAY_SIZEOF(sDpadDefs); i++)
-    {
-        DpadDef * def = sDpadDefs + i;
-
-        const wii::RGBA * colour;
-        
-        if (showAsPressed(def->mask))
-            colour = &colours::red;
-        else if (def->mask & held)
-            colour = &colours::yellow;
-        else
-            continue;
-
-        Window::drawBoxGX(colour, DPAD_DISP_X + def->xOffset, DPAD_DISP_Y +
-                          def->yOffset, 10.0f, 10.0f);
+        // Draw
+        Window::drawTexture(inpTpl, tplIdx, BASE_X + (i * X_DIFF), BASE_Y, SCALE, &colours::white);
     }
 }
 
 void InputWindow::init()
 {
     sInstance = new InputWindow();
+    wii::tpl::TPLBind(inpTpl);
 }
 
 }

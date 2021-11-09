@@ -27,6 +27,9 @@ Window::Window()
 
     // Display on default camera
     mCamera = spm::camdrv::CAM_DEBUG_3D;
+
+    // Don't draw over homebutton menu by default
+    mDrawOverHbm = false;
 }
 
 Window::~Window()
@@ -404,8 +407,9 @@ void Window::windowDisp(s8 camId, void * param)
         // Window may delete itself during disp so this has to be read now
         Window * temp = w->mNext;
 
-        // Call custom display function if window is on this camera
-        if (w->mCamera == camId)
+        // Call custom display function if window is on this camera and HBM condition met
+        if ((!(spm::homebuttondrv::homebuttonWp->flags & HOMEBUTTON_FLAG_OPEN) || w->mDrawOverHbm)
+            && w->mCamera == camId)
             w->disp();
 
         // Continue to next window
@@ -415,40 +419,22 @@ void Window::windowDisp(s8 camId, void * param)
 
 void Window::windowMain()
 {
-    if ((spm::homebuttondrv::homebuttonWp->flags & HOMEBUTTON_FLAG_OPEN) == 0)
+    // Call every window's pre-display function
+    Window * w = sWindowList;
+    while (w != nullptr)
     {
-        // Call every window's pre-display function
-        Window * w = sWindowList;
-        while (w != nullptr)
-        {
-            // Window may delete itself during preDisp so this has to be read now
-            Window * temp = w->mNext;
+        // Window may delete itself during preDisp so this has to be read now
+        Window * temp = w->mNext;
 
-            w->preDisp();
+        w->preDisp();
 
-            // Continue to next window
-            w = temp;
-        }
-
-        // Schedule windowDisp to run this frame on all cameras
-        for (s32 i = 0; i < spm::camdrv::CAM_ID_MAX; i++)
-            spm::dispdrv::dispEntry(i, 2, 0.0f, Window::windowDisp, nullptr);
+        // Continue to next window
+        w = temp;
     }
-}
 
-void Window::homebuttonDispPatch()
-{
-    // Change homebutton to display on debug 3d camera to display on top of mod graphics
-#if (defined SPM_EU0 || defined SPM_EU1)
-    #define HOMEBUTTON_MAIN_CAM_OFFSET 0x844
-#elif (defined SPM_US0 || defined SPM_JP0)
-    #define HOMEBUTTON_MAIN_CAM_OFFSET 0x804
-#elif (defined SPM_US1 || defined SPM_US2 || defined SPM_JP1)
-    #define HOMEBUTTON_MAIN_CAM_OFFSET 0x814
-#elif (defined SPM_KR0)
-    #define HOMEBUTTON_MAIN_CAM_OFFSET 0x714
-#endif
-    writeWord(spm::homebuttondrv::homebuttonMain, HOMEBUTTON_MAIN_CAM_OFFSET, 0x3860000e); // li r3, CAM_DEBUG_3D
+    // Schedule windowDisp to run this frame on all cameras
+    for (s32 i = 0; i < spm::camdrv::CAM_ID_MAX; i++)
+        spm::dispdrv::dispEntry(i, 2, 0.0f, Window::windowDisp, nullptr);
 }
 
 }

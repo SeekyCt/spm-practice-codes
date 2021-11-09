@@ -194,7 +194,6 @@ void main()
     MapSelectMenu::scanEntrances();
     customPitPatch();
     parsePatch();
-    Window::homebuttonDispPatch();
     PyConsole::init();
     APWindow::init();
     InputWindow::init();
