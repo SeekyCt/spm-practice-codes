@@ -1,3 +1,4 @@
+#ifdef PYCONSOLE_PROTOTYPE
 #include "mod_ui_base/colours.h"
 #include "consolewindow.h"
 #include "pyconsole.h"
@@ -120,3 +121,4 @@ void PyConsole::main()
 }
 
 }
+#endif

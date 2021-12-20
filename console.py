@@ -1,3 +1,5 @@
+# Not supported in releases yet, requires build with PYCONSOLE_PROTOTYPE defined
+
 import dolphin_memory_engine as dme
 from time import sleep
 from enum import Enum

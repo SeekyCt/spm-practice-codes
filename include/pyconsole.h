@@ -4,6 +4,7 @@
 */
 #pragma once
 
+#ifdef PYCONSOLE_PROTOTYPE
 #include <types.h>
 
 namespace mod {
@@ -67,4 +68,4 @@ public:
 };
 
 }
-
+#endif

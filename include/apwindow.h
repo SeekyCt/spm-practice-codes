@@ -5,6 +5,7 @@
 
 #pragma once
 
+#ifdef PYCONSOLE_PROTOTYPE
 #include "mod_ui_base/window.h"
 #include "pyconsole.h"
 
@@ -41,3 +42,4 @@ public:
 };
 
 }
+#endif

@@ -1,3 +1,4 @@
+#ifdef PYCONSOLE_PROTOTYPE
 #include "apwindow.h"
 #include "consolewindow.h"
 #include "patch.h"
@@ -217,3 +218,4 @@ void APWindow::init()
 }
 
 }
+#endif

@@ -112,7 +112,9 @@ void spmarioMainPatch()
     spmarioMainReal = patch::hookFunction(spm::spmario::spmarioMain,
         []()
         {
+#ifdef PYCONSOLE_PROTOTYPE
             PyConsole::main();
+#endif
             Window::windowMain();
             spmarioMainReal();
         }
@@ -194,8 +196,10 @@ void main()
     MapSelectMenu::scanEntrances();
     customPitPatch();
     parsePatch();
+#ifdef PYCONSOLE_PROTOTYPE
     PyConsole::init();
     APWindow::init();
+#endif
     InputWindow::init();
     HitboxMenu::hitboxPatch();
 
