@@ -3,6 +3,7 @@
 #include "custompit.h"
 #include "nandsettings.h"
 #include "patch.h"
+#include "util.h"
 
 #include <types.h>
 #include <spm/evtmgr.h>
@@ -16,7 +17,6 @@
 #include <spm/npcdrv.h>
 #include <spm/itemdrv.h>
 #include <spm/parse.h>
-#include <spm/spmario.h>
 #include <spm/system.h>
 #include <spm/rel/dan.h>
 #include <wii/DVDFS.h>
@@ -171,12 +171,6 @@ static bool isKeyDropped()
     s32 key = getKeyItemId();
     return spm::itemdrv::itemCheckForId(key)
         || spm::mario_pouch::pouchCheckHaveItem(key);
-}
-
-static bool isPitEnemyRoom()
-{
-    return wii::string::strncmp(spm::spmario::gp->mapName, "dan_0", 5) == 0  // Flipside 
-        || wii::string::strncmp(spm::spmario::gp->mapName, "dan_4", 5) == 0; // Flopside
 }
 
 static void (*npcDropItemReal)(spm::npcdrv::NPCEntry *, s32, s32);

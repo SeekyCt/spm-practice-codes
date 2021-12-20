@@ -146,4 +146,10 @@ bool fileExists(const char * path)
     return wii::DVDFS::DVDConvertPathToEntrynum(path) != -1;
 }
 
+bool isPitEnemyRoom()
+{
+    return wii::string::strncmp(spm::spmario::gp->mapName, "dan_0", 5) == 0  // Flipside 
+        || wii::string::strncmp(spm::spmario::gp->mapName, "dan_4", 5) == 0; // Flopside
+}
+
 }

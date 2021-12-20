@@ -62,4 +62,6 @@ s32 strcount(const char * str, char c);
 
 bool fileExists(const char * path);
 
+bool isPitEnemyRoom();
+
 }

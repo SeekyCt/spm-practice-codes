@@ -27,6 +27,10 @@ void MiscMenu::optionToggle(MenuButton * button, bool &setting)
         this, false, scale);                                                  \
     y -= yDiff
 
+#define NOTE_X -320.0f
+#define NOTE_Y -100.0f
+#define NOTE_SCALE 0.8f
+
 enum OptionIdxs
 {
     OPTION_PIT_TEXT = 0,
@@ -39,11 +43,22 @@ void MiscMenu::disp()
     MenuWindow::disp();
     
     // Display warning if selected
-    if (mCurButton == mOptions[OPTION_PIT_TEXT] && !gIsRiivolution && !gIsDolphin && !gIsPatchedDisc)
+    if (mCurButton == mOptions[OPTION_PIT_TEXT])
     {
-        drawString("Note: custom pit text is not supported without Riivolution",
-                   -320.0f, -100.0f, &colours::red, 0.8f);
-        drawString("or a patched ISO", -320.0f, -100.0f - FONT_HEIGHT, &colours::red, 0.8f);
+        if (!gIsRiivolution && !gIsDolphin && !gIsPatchedDisc)
+        {
+            drawString("Note: custom pit text is not supported without Riivolution",
+                    NOTE_X, NOTE_Y, &colours::red, 0.8f);
+            drawString("or a patched ISO", NOTE_X, NOTE_Y - FONT_HEIGHT, &colours::red, NOTE_SCALE);
+        }
+    }
+    else if (mCurButton == mOptions[OPTION_LAST_KEY])
+    {
+        if (isPitEnemyRoom())
+        {
+            drawString("Note: last key setting only updates on room reload",
+                    NOTE_X, NOTE_Y, &colours::red, NOTE_SCALE);
+        }
     }
 }
 
