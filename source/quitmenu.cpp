@@ -17,8 +17,7 @@ QuitMenu::QuitMenu()
 
             spm::seqdrv::seqSetSeq(spm::seqdrv::SEQ_MAPCHANGE, "title", "");
 
-            delete MenuWindow::sCurMenu;
-            MenuWindow::sCurMenu = nullptr;
+            MenuWindow::sCurMenu->fullClose();
             return false;
         }
     );
