@@ -510,6 +510,8 @@
 8025d098:sprintf
 // scanf.c
 8025e784:sscanf
+// string.c
+8025ec04:strstr
 // more
 
 // string.c

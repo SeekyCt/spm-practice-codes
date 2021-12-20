@@ -15,6 +15,7 @@ s32 strcmp(const char * s1, const char * s2);
 s32 strncmp(const char * s1, const char * s2, u32 n);
 const char * strchr(const char * str, char c);
 size_t strlen(const char * str);
+const char * strstr(const char * str1, const char * str2);
 
 // more
 

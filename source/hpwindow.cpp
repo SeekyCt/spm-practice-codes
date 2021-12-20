@@ -54,7 +54,7 @@ HPWindow::HPWindow()
 
 const s32 HPWindow::bossTribes[] = {
     270, 271, 272, 273, // o'chunks
-    280, 282, 284, // mimi (TODO: disable chase version)
+    280, 282, 284, // mimi
     286, 287, 289, 290, 292, // dimentio
     295, // mr l
     296, 300, // brobot
@@ -92,7 +92,6 @@ const s32 HPWindow::blacklistedTribes[] = {
     127, 129, 131, 133, // squig projectile
     143, 145, 147, 149, 505, // boomboxer projectiles
     151, 153, 155, // mr i projectile
-    172, // bigmeow (TODO: remove?)
     180, // foton projectile
     195, 197, 199, // barribad projectile
     206, 208, 210, // floro sapien head
@@ -100,7 +99,6 @@ const s32 HPWindow::blacklistedTribes[] = {
     231, // skellobit head
     236, // skellobait breath
     238, 240, 242, 244, // magiblot projectile
-    260, 261, // howl/growl (TODO: remove?)
     262, 263, 264, // underhand
     265, 266, 267, // thwomp & spiny/spiky tromp
     274, 275, 276, 277, 278, 279, // o'chunks block
@@ -313,8 +311,32 @@ void HPWindow::bossDisp()
             spm::npcdrv::NPCTribe * tribe = spm::npcdrv::npcTribes + npc->tribeId;
             spm::item_data::ItemData * card = spm::item_data::itemDataTable + tribe->catchCardItemId;
             assertf(card != 0, "No catch card for boss tribe %d", npc->tribeId);
+            
+            char name[64];
+            const char * nameMsg = spm::msgdrv::msgSearch(card->nameMsg);
+            if (wii::string::strcmp(card->nameMsg, "ename_256") == 0)// Bowser has "(1)" appended
+            {
+#if (defined SPM_JP0) || (defined SPM_JP1)
+                const char * extra = "\x81\x69\x82\x50\x81\x6a"; // Shift-JIS（１）
+#else
+                const char * extra = "(1)";
+#endif
+                // Remove (1)
+                const char * end = wii::string::strstr(nameMsg, extra);
+                size_t n = end - nameMsg;
+                wii::string::strncpy(name, nameMsg, n);
 
-            const char * name = spm::msgdrv::msgSearch(card->nameMsg); // TODO: Bowser has "(1)" appended
+                // Null terminate
+                // Some languages exlcude the space
+                if (name[n - 1] == ' ')
+                    name[n - 1] = 0;
+                else
+                    name[n] = 0;
+            }
+            else
+            {
+                wii::string::strcpy(name, nameMsg); 
+            }
             f32 x = BOSS_NAME_X - ((spm::fontmgr::FontGetMessageWidth(name) * BOSS_NAME_SCALE) / 2);
             Window::drawString(name, x, BOSS_NAME_Y, &colours::red, BOSS_NAME_SCALE, true);
 
