@@ -23,11 +23,11 @@ enum
     LOGTYPE_LSWF = 3
 };
 
-static const char *logTypeNames[] = {"GSW", "GSWF", "LSW", "LSWF"};
+static const char * logTypeNames[] = {"GSW", "GSWF", "LSW", "LSWF"};
 
 static bool externalDisable = false;
 
-void scriptLogOnOff(bool enabled)
+void scriptVarLogOnOff(bool enabled)
 {
     externalDisable = !enabled;
 }

@@ -1,5 +1,5 @@
 #include "sequencemenu.h"
-#include "scriptlog.h"
+#include "scriptvarlog.h"
 #include "util.h"
 
 #include <types.h>
@@ -91,7 +91,7 @@ void SequenceMenu::valChange(MenuScrollGroup * scroller, s32 delta, void * param
 void SequenceMenu::close()
 {
     // Re-enable script variable logging
-    scriptLogOnOff(true);
+    scriptVarLogOnOff(true);
 
     // Close as normal
     ChildMenu::close();
@@ -100,7 +100,7 @@ void SequenceMenu::close()
 void SequenceMenu::fullClose()
 {
     // Re-enable script variable logging
-    scriptLogOnOff(true);
+    scriptVarLogOnOff(true);
 
     // Close as normal
     MenuWindow::fullClose();
@@ -118,7 +118,7 @@ SequenceMenu::SequenceMenu()
     mScroller = new MenuScrollGroup(this, getVal(), editX, editY, valChange, this, 3, false);   
 
     // Disable script variable logging while open
-    scriptLogOnOff(false);
+    scriptVarLogOnOff(false);
 
     // Set starting button and title
     mCurButton = mScroller;

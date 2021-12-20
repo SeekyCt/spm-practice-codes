@@ -1,7 +1,7 @@
 #include "evt_cmd.h"
 #include "pitselectmenu.h"
 #include "nandsettings.h"
-#include "scriptvarmenu.h"
+#include "scriptvarlog.h"
 #include "util.h"
 
 #include <types.h>
@@ -268,7 +268,7 @@ void PitSelectMenu::_doMapChange()
 void PitSelectMenu::close()
 {
     // Re-enable script variable logging
-    scriptLogOnOff(true);
+    scriptVarLogOnOff(true);
 
     // Close as normal
     MapMenu::close();
@@ -277,7 +277,7 @@ void PitSelectMenu::close()
 void PitSelectMenu::fullClose()
 {
     // Re-enable script variable logging
-    scriptLogOnOff(true);
+    scriptVarLogOnOff(true);
 
     // Close as normal
     MapMenu::fullClose();
@@ -286,7 +286,7 @@ void PitSelectMenu::fullClose()
 PitSelectMenu::PitSelectMenu()
 {
     // Disable script variable logging while open
-    scriptLogOnOff(false);
+    scriptVarLogOnOff(false);
 
     // Try set to current floor, default to flipside 1 if not in pit
     if (wii::string::strncmp(spm::spmario::gp->mapName, "dan", 3) == 0)

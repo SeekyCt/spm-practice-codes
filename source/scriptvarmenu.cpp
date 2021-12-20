@@ -1,4 +1,5 @@
 #include "scriptvarmenu.h"
+#include "scriptvarlog.h"
 #include "util.h"
 
 #include <types.h>
@@ -197,7 +198,7 @@ void ScriptVarMenu::valChange(MenuScrollGroup * scroller, s32 delta, void * para
 void ScriptVarMenu::close()
 {
     // Re-enable script variable logging
-    scriptLogOnOff(true);
+    scriptVarLogOnOff(true);
 
     // Close as normal
     MenuWindow::close();
@@ -206,7 +207,7 @@ void ScriptVarMenu::close()
 void ScriptVarMenu::fullClose()
 {
     // Re-enable script variable logging
-    scriptLogOnOff(true);
+    scriptVarLogOnOff(true);
 
     // Close as normal
     ChildMenu::fullClose();
@@ -241,7 +242,7 @@ ScriptVarMenu::ScriptVarMenu()
     (void) middleText;
 
     // Disable script variable logging while open
-    scriptLogOnOff(false);
+    scriptVarLogOnOff(false);
 
     // Set starting button and title
     mCurButton = mGroupDisp;
