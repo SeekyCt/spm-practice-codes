@@ -23,6 +23,8 @@ private:
     void updateGroupDisp();
     void updateFloorDisp();
     void _doMapChange();
+    virtual void close() override;
+    virtual void fullClose() override;
 
     static bool bossStateToggle(MenuButton * button, void * param);
     static void groupSwap(MenuScroller * scroller, void * param);

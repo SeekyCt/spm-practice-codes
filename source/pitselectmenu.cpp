@@ -1,6 +1,7 @@
 #include "evt_cmd.h"
 #include "pitselectmenu.h"
 #include "nandsettings.h"
+#include "scriptvarmenu.h"
 #include "util.h"
 
 #include <types.h>
@@ -134,8 +135,7 @@ bool PitSelectMenu::doMapChange(MenuButton * button, void * param)
     instance->_doMapChange();
 
     // Close menu without returning to parent
-    MenuWindow::sCurMenu = nullptr;
-    delete instance;
+    MenuWindow::sCurMenu->fullClose();
     return false;
 }
 
@@ -265,8 +265,29 @@ void PitSelectMenu::_doMapChange()
     }
 }
 
+void PitSelectMenu::close()
+{
+    // Re-enable script variable logging
+    scriptLogOnOff(true);
+
+    // Close as normal
+    MapMenu::close();
+}
+
+void PitSelectMenu::fullClose()
+{
+    // Re-enable script variable logging
+    scriptLogOnOff(true);
+
+    // Close as normal
+    MapMenu::fullClose();
+}
+
 PitSelectMenu::PitSelectMenu()
 {
+    // Disable script variable logging while open
+    scriptLogOnOff(false);
+
     // Try set to current floor, default to flipside 1 if not in pit
     if (wii::string::strncmp(spm::spmario::gp->mapName, "dan", 3) == 0)
     {
