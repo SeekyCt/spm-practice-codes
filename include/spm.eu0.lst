@@ -452,6 +452,7 @@
 801b6f2c:npcNameToPtr
 801bfc48:npcSearchAnimDefs
 801c9adc:npcGetWorkPtr
+801e3a1c:npcDropItem
 // more
 // data
 8043bf30:npcTribes

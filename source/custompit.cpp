@@ -9,10 +9,14 @@
 #include <spm/evtmgr_cmd.h>
 #include <spm/filemgr.h>
 #include <spm/lzss10.h>
+#include <spm/item_data.h>
 #include <spm/lz_embedded.h>
+#include <spm/mario_pouch.h>
 #include <spm/memory.h>
+#include <spm/npcdrv.h>
 #include <spm/itemdrv.h>
 #include <spm/parse.h>
+#include <spm/spmario.h>
 #include <spm/system.h>
 #include <spm/rel/dan.h>
 #include <wii/DVDFS.h>
@@ -134,25 +138,72 @@ static int custom_evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
     return EVT_RET_CONTINUE;
 }
 
-static int (*evt_dan_decide_key_enemy_real)(EvtEntry *, bool);
-static int lastKeyPatch(EvtEntry * entry, bool isFirstCall)
+static bool isLastEnemy(spm::npcdrv::NPCEntry * npc)
 {
-    if (gSettings->lastKey)
-    {
-        // Not assigning the key to an enemy makes it spawn 
-        // on the door once all enemies are defeated
-        return EVT_RET_CONTINUE;
-    }
+        spm::npcdrv::NPCWork * wp = spm::npcdrv::npcGetWorkPtr();
+        for (s32 i = 0; i < wp->num; i++)
+        {
+            spm::npcdrv::NPCEntry * otherNpc = wp->entries + i;
+
+            // Ignore this npc
+            if (otherNpc == npc)
+                continue;
+            
+            // False if any other alive
+            if (otherNpc->flags_8 & 1)
+                return false;
+        }
+
+        // True if no others found alive
+        return true;
+}
+
+static s32 getKeyItemId()
+{
+    if (spm::evtmgr_cmd::evtGetValue(nullptr, GSW(1)) >= 100)
+        return spm::item_data::URA_DAN_KEY;
     else
-    {
+        return spm::item_data::DAN_KEY;
+}
+
+static bool isKeyDropped()
+{
+    s32 key = getKeyItemId();
+    return spm::itemdrv::itemCheckForId(key)
+        || spm::mario_pouch::pouchCheckHaveItem(key);
+}
+
+static bool isPitEnemyRoom()
+{
+    return wii::string::strncmp(spm::spmario::gp->mapName, "dan_0", 5) == 0  // Flipside 
+        || wii::string::strncmp(spm::spmario::gp->mapName, "dan_4", 5) == 0; // Flopside
+}
+
+static void (*npcDropItemReal)(spm::npcdrv::NPCEntry *, s32, s32);
+static int (*evt_dan_decide_key_enemy_real)(EvtEntry *, bool);
+
+static void handleKeyDrop(spm::npcdrv::NPCEntry * npc, s32 itemType, s32 coinCount)
+{
+    if (gSettings->lastKey && isPitEnemyRoom() && isLastEnemy(npc) && !isKeyDropped())
+        itemType = getKeyItemId();
+
+    npcDropItemReal(npc, itemType, coinCount);
+}
+
+static int handleKeyAssign(EvtEntry * entry, bool isFirstCall)
+{
+    // Key is manually dropped later in lastKey mode
+    if (gSettings->lastKey)
+        return EVT_RET_CONTINUE;
+    else
         return evt_dan_decide_key_enemy_real(entry, isFirstCall);
-    }
 }
 
 void customPitPatch()
 {
     writeBranch(spm::dan::evt_dan_read_data, 0, custom_evt_dan_read_data);
-    evt_dan_decide_key_enemy_real = patch::hookFunction(spm::dan::evt_dan_decide_key_enemy, lastKeyPatch);
+    evt_dan_decide_key_enemy_real = patch::hookFunction(spm::dan::evt_dan_decide_key_enemy, handleKeyAssign);
+    npcDropItemReal = patch::hookFunction(spm::npcdrv::npcDropItem, handleKeyDrop);
 }
 
 }

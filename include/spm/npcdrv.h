@@ -148,6 +148,7 @@ void npcDispMain();
 NPCEntry * npcNameToPtr(const char * name);
 const char * npcSearchAnimDefs(NPCTribeAnimDef * defs, s32 id);
 NPCWork * npcGetWorkPtr();
+void npcDropItem(NPCEntry * npc, s32 itemType, s32 coinCount);
 
 }
 
