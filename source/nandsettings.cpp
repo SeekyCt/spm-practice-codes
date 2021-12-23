@@ -209,6 +209,7 @@ s32 evt_nandsettings_handle_read_output(spm::evtmgr::EvtEntry * entry, bool firs
             gSettings->hitboxNpc = false;
             gSettings->hitboxNpcDisabled = false;
             gSettings->lastKey = false;
+            gSettings->inputDisplay = false;
 
             // Increment version
             gSettings->version = 4;
@@ -257,6 +258,8 @@ void nandSettingsDefaults()
     gSettings->enemyHpBars = false;
     gSettings->hpBarHide3d = false;
     gSettings->bossHpBars = false;
+    gSettings->hitboxNpc = false;
+    gSettings->hitboxNpcDisabled = false;
     gSettings->lastKey = false;
     gSettings->inputDisplay = false;
 }
