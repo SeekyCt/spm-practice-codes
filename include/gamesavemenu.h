@@ -9,7 +9,7 @@
 
 namespace mod {
 
-class GameSaveMenu : public ChildMenu
+class GameSaveMenu final : public ChildMenu
 {
 private:
     MenuButton * mButtons[2];

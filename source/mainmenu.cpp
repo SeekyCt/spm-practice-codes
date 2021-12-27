@@ -1,4 +1,5 @@
 #include "gamesavemenu.h"
+#include "hitboxmenu.h"
 #include "hudmenu.h"
 #include "inventorymenu.h"
 #include "logmenu.h"
@@ -10,6 +11,7 @@
 #include "pitselectmenu.h"
 #include "quitmenu.h"
 #include "scriptvarmenu.h"
+#include "sequencemenu.h"
 #include "statmenu.h"
 
 #include <types.h>
@@ -59,6 +61,18 @@ MainMenu::MainMenu()
         }
     );
     y -= FONT_HEIGHT + 5;
+    mOptions[n++] = new MenuButton(this, "Edit Hitbox Display Options", optionsX, y,
+        [](MenuButton * button, void * param)
+        {
+            (void) button;
+            (void) param;
+
+            delete MenuWindow::sCurMenu;
+            MenuWindow::sCurMenu = new HitboxMenu();
+            return false;
+        }
+    );
+    y -= FONT_HEIGHT + 5;
     mOptions[n++] = new MenuButton(this, "Edit Logging Options", optionsX, y,
         [](MenuButton * button, void * param)
         {
@@ -67,6 +81,18 @@ MainMenu::MainMenu()
 
             delete MenuWindow::sCurMenu;
             MenuWindow::sCurMenu = new LogMenu();
+            return false;
+        }
+    );
+    y -= FONT_HEIGHT + 5;
+    mOptions[n++] = new MenuButton(this, "Edit Sequence Position", optionsX, y,
+        [](MenuButton * button, void * param)
+        {
+            (void) button;
+            (void) param;
+
+            delete MenuWindow::sCurMenu;
+            MenuWindow::sCurMenu = new SequenceMenu();
             return false;
         }
     );

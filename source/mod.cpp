@@ -1,15 +1,21 @@
 #include "mod_ui_base/window.h"
+#include "apwindow.h"
+#include "chainloader.h"
 #include "consolewindow.h"
 #include "custompit.h"
 #include "evtdebug.h"
 #include "exception.h"
 #include "gamesavemenu.h"
+#include "hitboxmenu.h"
+#include "hpwindow.h"
+#include "inputwindow.h"
 #include "mainmenu.h"
 #include "mapdoorwindow.h"
 #include "mapselectmenu.h"
 #include "mod.h"
 #include "nandsettings.h"
 #include "patch.h"
+#include "pyconsole.h"
 #include "parsepatches.h"
 #include "romfontexpand.h"
 #include "scriptlog.h"
@@ -45,35 +51,6 @@ bool gIsDolphin;
 bool gIsRiivolution;
 bool gIsPatchedDisc;
 bool gIs4_3;
-
-/*
-    seq_title hooks
-*/
-
-static spm::seqdef::SeqDef seq_titleReal;
-
-static void seq_titleInitOverride(spm::seqdrv::SeqWork * wp)
-{
-    TitleTextWindow::sInstance = new TitleTextWindow();
-
-    seq_titleReal.init(wp);
-}
-
-static void seq_titleExitOverride(spm::seqdrv::SeqWork * wp)
-{
-    delete TitleTextWindow::sInstance;
-    TitleTextWindow::sInstance = nullptr;
-
-    seq_titleReal.exit(wp);
-}
-
-static void seq_titlePatch()
-{
-    seq_titleReal = spm::seqdef::seq_data[spm::seqdrv::SEQ_TITLE];
-    spm::seqdef::seq_data[spm::seqdrv::SEQ_TITLE] = {
-        seq_titleInitOverride, seq_titleReal.main, seq_titleExitOverride
-    };
-}
 
 /*
     seq_game hooks
@@ -135,6 +112,9 @@ void spmarioMainPatch()
     spmarioMainReal = patch::hookFunction(spm::spmario::spmarioMain,
         []()
         {
+#ifdef PYCONSOLE_PROTOTYPE
+            PyConsole::main();
+#endif
             Window::windowMain();
             spmarioMainReal();
         }
@@ -142,7 +122,7 @@ void spmarioMainPatch()
 }
 
 /*
-    Entrypoint
+    Platform detection to adjust certain settings
 */
 
 static void checkForDolphin()
@@ -173,6 +153,10 @@ static void checkForPatchedDisc()
     gIsPatchedDisc = wii::DVDFS::DVDConvertPathToEntrynum("./mod/") != -1;
 }
 
+/*
+    Entrypoint
+*/
+
 void main()
 {
     wii::OSError::OSReport(MOD_VERSION": main running\n");
@@ -196,12 +180,13 @@ void main()
     if (gIs4_3)
         cam->pos.z = 1350.0f;
 
-    ConsoleWindow::sInstance = new ConsoleWindow();
-    MapDoorWindow::sInstance = new MapDoorWindow();
-    XYZWindow::sInstance = new XYZWindow();
+    ConsoleWindow::init();
+    HPWindow::init();
+    MapDoorWindow::init();
+    XYZWindow::init();
+    TitleTextWindow::init();
 
     spmarioMainPatch();
-    seq_titlePatch();
     seq_gamePatch();
     evtScriptLoggerPatch();
     evtVarLogPatch();
@@ -211,7 +196,20 @@ void main()
     MapSelectMenu::scanEntrances();
     customPitPatch();
     parsePatch();
-    Window::homebuttonDispPatch();
+#ifdef PYCONSOLE_PROTOTYPE
+    PyConsole::init();
+    APWindow::init();
+#endif
+    InputWindow::init();
+    HitboxMenu::hitboxPatch();
+
+    /*
+        Uncomment this if you'd like to load another mod alongside practice codes
+        (for example, to debug it). If you'd like to link against this mod, then
+        make sure to compile it with EXTRAFLAGS="-fno-function-sections -fno-data-sections"
+        to prevent anything you need being deadstripped
+    */
+    // tryChainload();
 }
 
 }

@@ -1,9 +1,13 @@
+#include "mod_ui_base/colours.h"
 #include "mod_ui_base/menuwindow.h"
 #include "consolewindow.h"
 #include "patch.h"
+#include "util.h"
+#include "ug.h"
 
 #include <types.h>
 #include <wii/OSError.h>
+#include <wii/string.h>
 
 namespace mod {
 
@@ -19,20 +23,41 @@ ConsoleWindow::ConsoleWindow()
     mLineLifetime = 450;
 }
 
-void ConsoleWindow::push(const char *text, ConsoleFreeCallback *cb, const wii::RGBA *colour)
+void ConsoleWindow::push(const char * text, const wii::RGBA * colour, ConsoleFreeCallback * cb)
+{
+    sInstance->_push(text, colour, cb);
+}
+
+void ConsoleWindow::pushClone(const char * text, const wii::RGBA * colour)
+{
+    sInstance->_push(cloneString(text), colour, autoFreeCb);
+}
+
+void ConsoleWindow::_push(const char * text, const wii::RGBA * colour, ConsoleFreeCallback * cb)
 {
     // Print to OSReport
     wii::OSError::OSReport("(Console %x) %s\n", this, text);
+
+#ifdef PYCONSOLE_PROTOYPE
+    // Print to USB Gecko
+    if (ugProbe(1))
+        ugSend(1, text, wii::string::strlen(text)), ugSend(1, "\n", 1);
+#endif
 
     // Handle colour
     wii::RGBA _colour;
     if (colour != nullptr)
         _colour = *colour, _colour.a = 0xff; // override alpha for timed fade effect
     else
-        _colour = {0, 0xff, 0, 0xff};
+        _colour = colours::green;
 
     // Append to list of active console lines for mLineLifetime frames
     mLines = new ConsoleLine {text, _colour, mLineLifetime, mLines, cb};
+}
+
+void ConsoleWindow::autoFreeCb(const char * line)
+{
+    delete[] line;
 }
 
 void ConsoleWindow::disp()
@@ -90,6 +115,11 @@ void ConsoleWindow::disp()
             line = line->next;
         }
     }
+}
+
+void ConsoleWindow::init()
+{
+    sInstance = new ConsoleWindow();
 }
 
 }

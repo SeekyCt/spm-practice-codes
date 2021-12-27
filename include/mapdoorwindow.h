@@ -8,7 +8,7 @@
 
 namespace mod {
 
-class MapDoorWindow : public Window
+class MapDoorWindow final : public Window
 {
 protected:
     virtual void disp() override;
@@ -16,13 +16,15 @@ protected:
     char mDoorMsg[40];
     wii::RGBA mColour;
     f32 mScale;
+
+    MapDoorWindow();
     
 public:
     // Window::mPosX/Y are used for top left corner of window
 
     static MapDoorWindow * sInstance;
 
-    MapDoorWindow();    
+    static void init();
 };
 
 }

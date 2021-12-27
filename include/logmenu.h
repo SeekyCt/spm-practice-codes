@@ -17,7 +17,7 @@ struct LogOptionGroup
     MenuButton * value;
 };
 
-class LogMenu : public ChildMenu
+class LogMenu final : public ChildMenu
 {
 private:
     LogOptionGroup mOptions[LOG_OPTION_COUNT];

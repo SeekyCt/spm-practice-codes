@@ -1,4 +1,5 @@
 #include "scriptvarmenu.h"
+#include "scriptvarlog.h"
 #include "util.h"
 
 #include <types.h>
@@ -24,7 +25,7 @@ struct VarGroup
 
 enum
 {
-    GW = 0,  GF = 1,
+    GW  = 0, GF   = 1,
     GSW = 2, GSWF = 3,
     LSW = 4, LSWF = 5
 };
@@ -43,22 +44,9 @@ void ScriptVarMenu::updateGroupDisp()
 
 void ScriptVarMenu::updateVarDisp()
 {
-    // Set select display to each individual decimal digit of id
-    wii::stdio::sprintf(mSelectStrs[0], "%d", DIGIT_1000(mId));
-    wii::stdio::sprintf(mSelectStrs[1], "%d", DIGIT_100(mId));
-    wii::stdio::sprintf(mSelectStrs[2], "%d", DIGIT_10(mId));
-    wii::stdio::sprintf(mSelectStrs[3], "%d", DIGIT_1(mId));
-
-    // Set value display to each individual hex digit of the value
-    u32 val = getVal();
-    wii::stdio::sprintf(mEditStrs[0], "%x", NYBBLE_0(val));
-    wii::stdio::sprintf(mEditStrs[1], "%x", NYBBLE_1(val));
-    wii::stdio::sprintf(mEditStrs[2], "%x", NYBBLE_2(val));
-    wii::stdio::sprintf(mEditStrs[3], "%x", NYBBLE_3(val));
-    wii::stdio::sprintf(mEditStrs[4], "%x", NYBBLE_4(val));
-    wii::stdio::sprintf(mEditStrs[5], "%x", NYBBLE_5(val));
-    wii::stdio::sprintf(mEditStrs[6], "%x", NYBBLE_6(val));
-    wii::stdio::sprintf(mEditStrs[7], "%x", NYBBLE_7(val));
+    // Display current id and value
+    mSelectScroller->mDispValue = mId;
+    mEditScroller->mDispValue = getVal();
 }
 
 u32 ScriptVarMenu::getVal()
@@ -159,53 +147,17 @@ void ScriptVarMenu::groupDown(MenuScroller * scroller, void * param)
     instance->updateVarDisp();
 }
 
-void ScriptVarMenu::idUp(MenuScroller * scroller, void * param)
+void ScriptVarMenu::idChange(MenuScrollGroup * scroller, s32 delta, void * param)
 {
+    (void) scroller;
     ScriptVarMenu * instance = reinterpret_cast<ScriptVarMenu *>(param);
 
-    // Figure out which digit is being changed and its place value
-    s32 increment = 1000;
-    for (int i = 0; i < 4; i++)
-    {
-        if (scroller == instance->mSelectScrollers[i])
-            // Use current increment and exit loop
-            break;
-        else
-            // Each digit has a value 10 times lower than the previous
-            increment /= 10;
-    }
-
     // Update value
-    instance->mId += increment;
+    instance->mId += delta;
 
-    // Set value with prevention of overflow
+    // Set value with prevention of over/underflow
     if (instance->mId >= groups[instance->mGroup].count)
         instance->mId = groups[instance->mGroup].count - 1;
-
-    // Update display
-    instance->updateVarDisp();
-}
-
-void ScriptVarMenu::idDown(MenuScroller * scroller, void * param)
-{
-    ScriptVarMenu * instance = reinterpret_cast<ScriptVarMenu *>(param);
-
-    // Figure out which digit is being changed and its place value
-    s32 increment = 1000;
-    for (int i = 0; i < 4; i++)
-    {
-        if (scroller == instance->mSelectScrollers[i])
-            // Use current increment and exit loop
-            break;
-        else
-            // Each digit has a value 10 times lower than the previous
-            increment /= 10;
-    }
-
-    // Update value
-    instance->mId -= increment;
-
-    // Change id with prevention of underflow
     if (instance->mId < 0)
         instance->mId = 0;
 
@@ -213,21 +165,11 @@ void ScriptVarMenu::idDown(MenuScroller * scroller, void * param)
     instance->updateVarDisp();
 }
 
-void ScriptVarMenu::valUp(MenuScroller * scroller, void * param)
+void ScriptVarMenu::valChange(MenuScrollGroup * scroller, s32 delta, void * param)
 {
-    ScriptVarMenu * instance = reinterpret_cast<ScriptVarMenu *>(param);
+    (void) scroller;
 
-    // Figure out which digit is being changed and its place value
-    u32 increment = 0x10000000;
-    for (int i = 0; i < 8; i++)
-    {
-        if (scroller == instance->mEditScrollers[i])
-            // Exit loop with current increment
-            break;
-        else
-            // Each digit has a value 0x10 times lower than the previous
-            increment /= 0x10;
-    }
+    ScriptVarMenu * instance = reinterpret_cast<ScriptVarMenu *>(param);
 
     // Find maximum value
     s64 max;
@@ -238,45 +180,37 @@ void ScriptVarMenu::valUp(MenuScroller * scroller, void * param)
         max = 0xff;
     else
         max = 1;
-        
+
     // Set value with prevention of overflow
     s64 val = instance->getVal();
-    if ((val + increment) > max)
+    if ((val + delta) > max)
         val = max;
+    else if ((val + delta) < 0)
+        val = 0;
     else
-        val = val + increment;
+        val = val + delta;
     instance->setVal(val);
 
     // Update display
     instance->updateVarDisp();
 }
 
-void ScriptVarMenu::valDown(MenuScroller * scroller, void * param)
+void ScriptVarMenu::close()
 {
-    ScriptVarMenu * instance = reinterpret_cast<ScriptVarMenu *>(param);
+    // Re-enable script variable logging
+    scriptVarLogOnOff(true);
 
-    // Figure out which digit is being changed and its place value
-    u32 increment = 0x10000000;
-    for (int i = 0; i < 8; i++)
-    {
-        if (scroller == instance->mEditScrollers[i])
-            // Exit loop with current increment
-            break;
-        else
-            // Each digit has a value 0x10 times lower than the previous
-            increment /= 0x10;
-    }
+    // Close as normal
+    MenuWindow::close();
+}
 
-    // Set value with prevention of underflow
-    s64 val = instance->getVal();
-    if ((val - increment) < 0)
-        val = 0;
-    else
-        val = val - increment;
-    instance->setVal(val);
+void ScriptVarMenu::fullClose()
+{
+    // Re-enable script variable logging
+    scriptVarLogOnOff(true);
 
-    // Update display
-    instance->updateVarDisp();
+    // Close as normal
+    ChildMenu::fullClose();
 }
 
 ScriptVarMenu::ScriptVarMenu()
@@ -288,37 +222,27 @@ ScriptVarMenu::ScriptVarMenu()
     // Position constants
     const f32 groupDispX = -200.0f;
     const f32 selectDispX = groupDispX + 85.0f;
-    const f32 selectXDiff = 20.0f;
-    const f32 middleTextX = selectDispX + (selectXDiff * 4.5f);
-    const f32 editDispX = middleTextX + (selectXDiff * 3);
+    const f32 middleTextX = selectDispX + (FONT_WIDTH * 4.5f);
+    const f32 editDispX = middleTextX + (FONT_WIDTH * 3.0f);
     const f32 dispsY = 20.0f;
 
     // Init group select buttons
     mGroupDisp = new MenuScroller(this, groups[mGroup].name, groupDispX, dispsY, 20.0f, groupUp, groupDown, this);
 
-    // Init id select buttons
-    for (int i = 0; i < 4; i++)
-    {
-        wii::stdio::sprintf(mSelectStrs[i], "%d", 0);
-        mSelectScrollers[i] = new MenuScroller(this, mSelectStrs[i], selectDispX + (selectXDiff * i), dispsY, 0.0f, idUp, idDown, this);
-    }
-    for (int i = 0; i < 3; i++)
-        buttonLinkHorizontal(mSelectScrollers[i], mSelectScrollers[i + 1]);
-    buttonLinkHorizontal(mGroupDisp, mSelectScrollers[0]);
+    // Init id select button
+    mSelectScroller = new MenuScrollGroup(this, mId, selectDispX, dispsY, idChange, this, 4, false);
+    buttonLinkHorizontal(mGroupDisp, mSelectScroller);
 
-    // Init value select buttons
-    for (int i = 0; i < 8; i++)
-    {
-        wii::stdio::sprintf(mEditStrs[i], "%x", 0);
-        mEditScrollers[i] = new MenuScroller(this, mEditStrs[i], editDispX + (selectXDiff * i), dispsY, 0.0f, valUp, valDown, this);
-    }
-    for (int i = 0; i < 7; i++)
-        buttonLinkHorizontal(mEditScrollers[i], mEditScrollers[i + 1]);
-    buttonLinkHorizontal(mSelectScrollers[3], mEditScrollers[0]);
+    // Init value select button
+    mEditScroller = new MenuScrollGroup(this, getVal(), editDispX, dispsY, valChange, this, 8, true);   
+    buttonLinkHorizontal(mSelectScroller, mEditScroller);
 
     // Create cosmetic '= 0x' display
     MenuButton * middleText = new MenuButton(this, "= 0x", middleTextX, dispsY);
     (void) middleText;
+
+    // Disable script variable logging while open
+    scriptVarLogOnOff(false);
 
     // Set starting button and title
     mCurButton = mGroupDisp;

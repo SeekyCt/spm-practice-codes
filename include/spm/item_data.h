@@ -6,6 +6,13 @@ namespace spm::item_data {
 
 #define ITEM_DATA_COUNT 538
 
+enum ItemType
+{
+    URA_DAN_KEY = 44,
+    DAN_KEY = 48
+    // more
+};
+
 struct ItemData 
 {
     const char * itemName;

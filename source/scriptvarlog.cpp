@@ -3,6 +3,8 @@
 #include "nandsettings.h"
 #include "patch.h"
 #include "scriptvarlog.h"
+#include "scriptvarmenu.h"
+#include "sequencemenu.h"
 
 #include <types.h>
 #include <spm/spmario.h>
@@ -21,36 +23,38 @@ enum
     LOGTYPE_LSWF = 3
 };
 
-static const char *logTypeNames[] = {"GSW", "GSWF", "LSW", "LSWF"};
+static const char * logTypeNames[] = {"GSW", "GSWF", "LSW", "LSWF"};
+
+static bool externalDisable = false;
+
+void scriptVarLogOnOff(bool enabled)
+{
+    externalDisable = !enabled;
+}
 
 // Handle a variable changing
 static void evtVarLog(s32 type, s32 id, s32 value)
 {
+    // Don't print when other code has disabled it
+    if (externalDisable)
+        return;
+
     // Only log changes to actual save
     if (wii::string::strcmp(spm::spmario::gp->saveName, "default") == 0)
         return;
 
-    char * p;
     switch(gSettings->logOptions[OPTION_EVT_VAR_LOG])
     {
         case LogType::NONE:
+            // Don't print when user has disabled it
             break;
         case LogType::OSREPORT:
             // Write to OSReport
             wii::OSError::OSReport("%s %d set to 0x%x\n", logTypeNames[type], id, value);
             break;
         case LogType::SCREEN:
-            // Format string
-            p = new char[32];
-            wii::stdio::sprintf(p, "%s %d set to 0x%x", logTypeNames[type], id, value);
-
-            // Write to console
-            ConsoleWindow::sInstance->push(p,
-                [](const char * line)
-                {
-                    delete[] line;
-                }
-            );
+            // Write to screem
+            CONSOLE_PUSH_FMT("%s %d set to 0x%x", logTypeNames[type], id, value);
             break;
     }
 }

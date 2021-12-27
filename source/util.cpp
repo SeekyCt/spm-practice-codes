@@ -1,10 +1,13 @@
 #include "util.h"
 
+#include <spm/camdrv.h>
 #include <spm/evtmgr_cmd.h>
 #include <spm/mario.h>
 #include <spm/mario_pouch.h>
 #include <spm/spmario.h>
+#include <wii/DVDFS.h>
 #include <wii/OSModule.h>
+#include <wii/string.h>
 
 namespace mod {
 
@@ -103,6 +106,50 @@ const char * getToggleName(bool value)
         case false:
             return "Disabled";
     }
+}
+
+s32 pow(s32 val, s32 power)
+{
+    s32 x = 1;
+    for (s32 i = power; i > 0; i--)
+        x *= val;
+    return x;
+}
+
+bool check3d()
+{
+    spm::camdrv::CamEntry * cam = spm::camdrv::camGetPtr(spm::camdrv::CAM_3D);
+    return !cam->isOrtho;
+}
+
+char * cloneString(const char * str)
+{
+    size_t len = wii::string::strlen(str);
+    char * newStr = new char[len + 1]; // include terminating null
+    wii::string::strcpy(newStr, str);
+    return newStr;
+}
+
+s32 strcount(const char * str, char c)
+{
+    u32 n = 0;
+    for (const char * p = str; *p; p++)
+    {
+        if (*p == c)
+            n++;
+    }
+    return n;
+}
+
+bool fileExists(const char * path)
+{
+    return wii::DVDFS::DVDConvertPathToEntrynum(path) != -1;
+}
+
+bool isPitEnemyRoom()
+{
+    return wii::string::strncmp(spm::spmario::gp->mapName, "dan_0", 5) == 0  // Flipside 
+        || wii::string::strncmp(spm::spmario::gp->mapName, "dan_4", 5) == 0; // Flopside
 }
 
 }

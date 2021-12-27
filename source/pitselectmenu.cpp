@@ -1,6 +1,7 @@
 #include "evt_cmd.h"
 #include "pitselectmenu.h"
 #include "nandsettings.h"
+#include "scriptvarlog.h"
 #include "util.h"
 
 #include <types.h>
@@ -33,6 +34,20 @@ static const char * getGroupName(int group)
     return group == PITGROUP_FLIPSIDE ? "Flipside" : "Flopside";
 }
 
+static const char * getBossStateName()
+{
+    s32 wracktailBeat = spm::evtmgr_cmd::evtGetValue(nullptr, GSWF(409));
+    s32 encounterTimes = spm::evtmgr_cmd::evtGetValue(nullptr, GSW(24));
+    if (!wracktailBeat)
+        return "Boss state (<icon PAD_PLUS 0.8 0 35 0><col ffffffff>): Wracktail unbeaten";
+    else if (encounterTimes == 0)
+        return "Boss state (<icon PAD_PLUS 0.8 0 35 0><col ffffffff>): Wracktail beaten";
+    else if (encounterTimes == 1)
+        return "Boss state (<icon PAD_PLUS 0.8 0 35 0><col ffffffff>): Shadoo visited once";
+    else
+        return "Boss state (<icon PAD_PLUS 0.8 0 35 0><col ffffffff>): Shadoo beaten";
+}
+
 void PitSelectMenu::updateGroupDisp()
 {
     // Change message to current group name
@@ -41,10 +56,43 @@ void PitSelectMenu::updateGroupDisp()
 
 void PitSelectMenu::updateFloorDisp()
 {
-    // Format map number to digit strings and display
-    wii::stdio::sprintf(mFloorStrs[0], "%d", DIGIT_100(mFloor));
-    wii::stdio::sprintf(mFloorStrs[1], "%d", DIGIT_10(mFloor));
-    wii::stdio::sprintf(mFloorStrs[2], "%d", DIGIT_1(mFloor));
+    // Set floor display to new number
+    mFloorScroller->mDispValue = mFloor;
+}
+
+bool PitSelectMenu::bossStateToggle(MenuButton * button, void * param)
+{
+    (void) button;
+
+    PitSelectMenu * instance = reinterpret_cast<PitSelectMenu *>(param);
+
+    s32 wracktailBeat = spm::evtmgr_cmd::evtGetValue(nullptr, GSWF(409));
+    s32 encounterTimes = spm::evtmgr_cmd::evtGetValue(nullptr, GSW(24));
+    if (!wracktailBeat)
+    {
+        // Wracktail unbeaten -> wraacktail beaten
+        spm::evtmgr_cmd::evtSetValue(nullptr, GSWF(409), true);
+    }
+    else if (encounterTimes == 0)
+    {
+        // Wracktail beaten -> shadoo visited once
+        spm::evtmgr_cmd::evtSetValue(nullptr, GSW(24), 1);
+    }
+    else if (encounterTimes == 1)
+    {
+        // Shadoo visited once -> shadoo beaten
+        spm::evtmgr_cmd::evtSetValue(nullptr, GSW(24), 2);
+    }
+    else
+    {
+        // Shadoo beaten -> wracktail unbeaten
+        spm::evtmgr_cmd::evtSetValue(nullptr, GSWF(409), false);
+        spm::evtmgr_cmd::evtSetValue(nullptr, GSW(24), 0);
+    }
+
+    instance->mBossState->mMsg = getBossStateName();
+
+    return true;
 }
 
 void PitSelectMenu::groupSwap(MenuScroller * scroller, void * param)
@@ -61,49 +109,16 @@ void PitSelectMenu::groupSwap(MenuScroller * scroller, void * param)
     instance->updateFloorDisp();
 }
 
-void PitSelectMenu::floorUp(MenuScroller * scroller, void * param)
+void PitSelectMenu::floorChange(MenuScrollGroup * scroller, s32 delta, void * param)
 {
+    (void) scroller;
+
     PitSelectMenu * instance = reinterpret_cast<PitSelectMenu *>(param);
 
-    // Figure out which digit is being changed and its place value
-    int increment = 100;
-    for (int i = 0; i < 3; i++)
-    {
-        if (instance->mFloorScrollers[i] == scroller)
-            // Use current increment and exit loop
-            break;
-        else
-            // Each digit has a value 10 times lower than the previous
-            increment /= 10;
-    }
-
-    // Update value, limit at 100
-    instance->mFloor += increment;
+    // Update value, ensure between 1 and 100
+    instance->mFloor += delta;
     if (instance->mFloor > 100)
         instance->mFloor = 100;
-
-    // Update display
-    instance->updateFloorDisp();
-}
-
-void PitSelectMenu::floorDown(MenuScroller * scroller, void * param)
-{
-    PitSelectMenu * instance = reinterpret_cast<PitSelectMenu *>(param);
-
-    // Figure out which digit is being changed and its place value
-    int increment = 100;
-    for (int i = 0; i < 3; i++)
-    {
-        if (instance->mFloorScrollers[i] == scroller)
-            // Use current increment and exit loop
-            break;
-        else
-            // Each digit has a value 10 times lower than the previous
-            increment /= 10;
-    }
-
-    // Update value, limit at 0
-    instance->mFloor -= increment;
     if (instance->mFloor < 1)
         instance->mFloor = 1;
 
@@ -120,8 +135,7 @@ bool PitSelectMenu::doMapChange(MenuButton * button, void * param)
     instance->_doMapChange();
 
     // Close menu without returning to parent
-    MenuWindow::sCurMenu = nullptr;
-    delete instance;
+    MenuWindow::sCurMenu->fullClose();
     return false;
 }
 
@@ -251,8 +265,29 @@ void PitSelectMenu::_doMapChange()
     }
 }
 
+void PitSelectMenu::close()
+{
+    // Re-enable script variable logging
+    scriptVarLogOnOff(true);
+
+    // Close as normal
+    MapMenu::close();
+}
+
+void PitSelectMenu::fullClose()
+{
+    // Re-enable script variable logging
+    scriptVarLogOnOff(true);
+
+    // Close as normal
+    MapMenu::fullClose();
+}
+
 PitSelectMenu::PitSelectMenu()
 {
+    // Disable script variable logging while open
+    scriptVarLogOnOff(false);
+
     // Try set to current floor, default to flipside 1 if not in pit
     if (wii::string::strncmp(spm::spmario::gp->mapName, "dan", 3) == 0)
     {
@@ -279,8 +314,11 @@ PitSelectMenu::PitSelectMenu()
     const f32 groupDispX = groupLabelX + 55.0f;
     const f32 floorLabelX = groupDispX + 125.0f;
     const f32 floorDispX = floorLabelX + 85.0f;
-    const f32 floorXDiff = 20.0f;
     const f32 dispsY = 20.0f;
+    const f32 passiveButtonScale = 0.8f; // from MapMenu
+    const f32 passiveButtonX = -320.0f; // from MapMenu
+    const f32 effectToggleY = -100.0f; // from MapMenu
+    const f32 bossToggleY = effectToggleY - 30.0f;
     
     // Init display buttons
     new MenuButton(this, "Pit:", groupLabelX, dispsY);
@@ -288,16 +326,11 @@ PitSelectMenu::PitSelectMenu()
         this, getGroupName(mGroup), groupDispX, dispsY, 45.0f, groupSwap, groupSwap, this, doMapChange, this
     );
     new MenuButton(this, "Floor:", floorLabelX, dispsY);
-    updateFloorDisp(); // generates mFloorStrs
-    for (int i = 0; i < 3; i++)
-    {
-        mFloorScrollers[i] = new MenuScroller(
-            this, mFloorStrs[i], floorDispX + (floorXDiff * i), dispsY, 0.0f, floorUp, floorDown, this, doMapChange, this
-        );
-        if (i > 0)
-            buttonLinkHorizontal(mFloorScrollers[i - 1], mFloorScrollers[i]);
-    }
-    buttonLinkHorizontal(mGroupScroller, mFloorScrollers[0]);
+    mFloorScroller = new MenuScrollGroup(this, mFloor, floorDispX, dispsY, floorChange, this, 3, false, doMapChange, this);
+    buttonLinkHorizontal(mGroupScroller, mFloorScroller);
+    mBossState = new PassiveButton(
+        this, getBossStateName(), passiveButtonX, bossToggleY, WPAD_BTN_PLUS, bossStateToggle, this, passiveButtonScale, nullptr, true
+    );
 
     // Set starting button and title
     mCurButton = mGroupScroller;

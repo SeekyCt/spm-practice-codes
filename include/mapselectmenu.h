@@ -10,7 +10,7 @@
 
 namespace mod {
 
-class MapSelectMenu : public MapMenu
+class MapSelectMenu final : public MapMenu
 {
 private:
     int mGroup;

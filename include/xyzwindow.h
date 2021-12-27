@@ -8,7 +8,7 @@
 
 namespace mod {
 
-class XYZWindow : public Window
+class XYZWindow final : public Window
 {
 protected:
     virtual void disp() override;
@@ -16,13 +16,15 @@ protected:
     wii::RGBA mColour;
     f32 mScale;
     int mFrameCount;
+
+    XYZWindow();
     
 public:
     // Window::mPosX/Y are used for top left corner of window
 
     static XYZWindow * sInstance;
 
-    XYZWindow();    
+    static void init();
 };
 
 }

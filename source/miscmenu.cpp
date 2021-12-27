@@ -1,3 +1,4 @@
+#include "mod_ui_base/colours.h"
 #include "miscmenu.h"
 #include "mod.h"
 #include "nandsettings.h"
@@ -26,9 +27,14 @@ void MiscMenu::optionToggle(MenuButton * button, bool &setting)
         this, false, scale);                                                  \
     y -= yDiff
 
+#define NOTE_X -320.0f
+#define NOTE_Y -100.0f
+#define NOTE_SCALE 0.8f
+
 enum OptionIdxs
 {
-    OPTION_PIT_TEXT = 0
+    OPTION_PIT_TEXT = 0,
+    OPTION_LAST_KEY = 1
 };
 
 void MiscMenu::disp()
@@ -37,12 +43,22 @@ void MiscMenu::disp()
     MenuWindow::disp();
     
     // Display warning if selected
-    if (mCurButton == mOptions[OPTION_PIT_TEXT] && !gIsRiivolution && !gIsDolphin && !gIsPatchedDisc)
+    if (mCurButton == mOptions[OPTION_PIT_TEXT])
     {
-        static const wii::RGBA colour {0xff, 0x00, 0x00, 0xff};
-        drawString("Note: custom pit text is not supported without Riivolution",
-                   -320.0f, -100.0f, &colour, 0.8f);
-        drawString("or a patched ISO", -320.0f, -100.0f - FONT_HEIGHT, &colour, 0.8f);
+        if (!gIsRiivolution && !gIsDolphin && !gIsPatchedDisc)
+        {
+            drawString("Note: custom pit text is not supported without Riivolution",
+                    NOTE_X, NOTE_Y, &colours::red, 0.8f);
+            drawString("or a patched ISO", NOTE_X, NOTE_Y - FONT_HEIGHT, &colours::red, NOTE_SCALE);
+        }
+    }
+    else if (mCurButton == mOptions[OPTION_LAST_KEY])
+    {
+        if (isPitEnemyRoom())
+        {
+            drawString("Note: last key setting only updates on room reload",
+                    NOTE_X, NOTE_Y, &colours::red, NOTE_SCALE);
+        }
     }
 }
 
@@ -57,6 +73,7 @@ MiscMenu::MiscMenu()
     int n = 0;
 
     OPTION("Load Pit Text From File", gSettings->customPitText);
+    OPTION("Force Last Key in Pit", gSettings->lastKey);
 
     for (int i = 1; i < MISC_SETTING_COUNT; i++)
         buttonLinkVertical(mOptions[i - 1], mOptions[i]);

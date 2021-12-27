@@ -382,7 +382,7 @@ MapSelectMenu::MapSelectMenu()
     if (mGroup != -1)
     {
         // Extract current map number if group is valid
-        wii::string::sscanf(spm::spmario::gp->mapName + 4, "%d", &mMap);
+        wii::stdio::sscanf(spm::spmario::gp->mapName + 4, "%d", &mMap);
 
         // dan has special handling since only the unused maps are available here
         if (wii::string::strncmp(spm::spmario::gp->mapName, "dan", 3) == 0)

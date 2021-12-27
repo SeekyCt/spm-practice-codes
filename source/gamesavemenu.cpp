@@ -31,8 +31,7 @@ static bool saveGame(MenuButton * button, void * param)
     (void) param;
 
     // Close menu
-    delete MenuWindow::sCurMenu;
-    MenuWindow::sCurMenu = nullptr;
+    MenuWindow::sCurMenu->fullClose();
 
     // Run save script
     spm::evtmgr::evtEntryType(save_wrapper_evt, 0, 0, 0);
@@ -47,8 +46,7 @@ static bool reloadSave(MenuButton * button, void * param)
     (void) param;
 
     // Close menu
-    delete MenuWindow::sCurMenu;
-    MenuWindow::sCurMenu = nullptr;
+    MenuWindow::sCurMenu->fullClose();
 
     // Unload current map
     spm::seq_mapchange::_unload(spm::spmario::gp->mapName, nullptr, nullptr);

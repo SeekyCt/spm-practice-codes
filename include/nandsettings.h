@@ -10,7 +10,7 @@
 
 namespace mod {
 
-#define SETTINGS_VER 3
+#define SETTINGS_VER 4
 #define SETTINGS_FILE_NAME "pcset.bin"
 
 enum class LogType : u8
@@ -66,6 +66,14 @@ struct NandSettings
     bool mapChangeEffect;
 
     bool customPitText;
+
+    bool enemyHpBars;
+    bool hpBarHide3d;
+    bool bossHpBars;
+    bool hitboxNpc;
+    bool hitboxNpcDisabled;
+    bool lastKey;
+    bool inputDisplay;
 };
 
 extern NandSettings * gSettings;

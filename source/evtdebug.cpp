@@ -2,6 +2,7 @@
 #include "evtdebug.h"
 #include "nandsettings.h"
 #include "patch.h"
+#include "util.h"
 
 #include <types.h>
 #include <spm/evtmgr_cmd.h>
@@ -18,13 +19,15 @@ static s32 debugPutMsg(spm::evtmgr::EvtEntry * entry)
     {
         case LogType::NONE:
             break;
+
         case LogType::OSREPORT:
             // Write to OSReport
             wii::OSError::OSReport("%s\n", str);
             break;
+
         case LogType::SCREEN:
             // Write to screen
-            ConsoleWindow::sInstance->push(str);
+            ConsoleWindow::push(str);
             break;
     }
 
@@ -33,27 +36,19 @@ static s32 debugPutMsg(spm::evtmgr::EvtEntry * entry)
 
 static s32 debugPutReg(s32 ret)
 {
-    char * str;
     switch(gSettings->logOptions[OPTION_DEBUG_INSTR])
     {
         case LogType::NONE:
             break;
+
         case LogType::OSREPORT:
             // Write to OSReport
             wii::OSError::OSReport("%s\n", spm::evtmgr_cmd::evt_debug_put_reg_str);
             break;
-        case LogType::SCREEN:
-            // String could be changed while still in use, so a copy is made
-            str = new char[wii::string::strlen(spm::evtmgr_cmd::evt_debug_put_reg_str) + 1];
-            wii::string::strcpy(str, spm::evtmgr_cmd::evt_debug_put_reg_str);
 
-            // Write to screen
-            ConsoleWindow::sInstance->push(str,
-                [](const char * line)
-                {
-                    delete[] line;
-                }
-            );
+        case LogType::SCREEN:
+            // Write to screen (cloned since it could be changed while still in use)
+            ConsoleWindow::pushClone(spm::evtmgr_cmd::evt_debug_put_reg_str);
             break;
     }
 

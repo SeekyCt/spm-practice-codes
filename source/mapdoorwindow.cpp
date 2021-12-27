@@ -1,3 +1,4 @@
+#include "mod_ui_base/colours.h"
 #include "mod_ui_base/menuwindow.h"
 #include "mapdoorwindow.h"
 #include "nandsettings.h"
@@ -16,9 +17,9 @@ MapDoorWindow::MapDoorWindow()
 {
     // Set text pos, scale and colour
     mPosX = -365.0f;
-    mPosY = 128.0f;
+    mPosY = 120.0f;
     mScale = 0.8f;
-    mColour = {0, 0xff, 0, 0xff};
+    mColour = colours::green;
 }
 
 void MapDoorWindow::disp()
@@ -34,6 +35,11 @@ void MapDoorWindow::disp()
     // Draw strings
     drawString(mMapMsg, mPosX, mPosY, &mColour, mScale, true);
     drawString(mDoorMsg, mPosX, mPosY - (FONT_HEIGHT * mScale), &mColour, mScale, true);
+}
+
+void MapDoorWindow::init()
+{
+    sInstance = new MapDoorWindow();
 }
 
 }

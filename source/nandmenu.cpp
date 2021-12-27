@@ -164,7 +164,7 @@ NandMenu::NandMenu()
     mShouldClose = false;
     mCurButtonIdx = 0;
     spawnButtons();
-    mTitle = "SPM Practice Codes v1.0";
+    mTitle = "Saved Settings Manager";
 }
 
 void NandMenu::close()

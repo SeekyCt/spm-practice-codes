@@ -18,7 +18,7 @@ struct StatOptionGroup
     MenuScrollerH * value;
 };
 
-class StatMenu : public ChildMenu
+class StatMenu final : public ChildMenu
 {
 private:
     StatOptionGroup mStats[STAT_COUNT];

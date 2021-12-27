@@ -30,6 +30,8 @@
 #define EVT_HELPER_FLOAT_BASE -240000000
 #define EVT_HELPER_POINTER_BASE -270000000
 
+#define EVT_NULLPTR EVT_HELPER_POINTER_BASE
+
 #define LW(id) \
     EVT_HELPER_EXPR(EVT_HELPER_LW_BASE, id)
 #define GW(id) \
@@ -138,9 +140,9 @@
     EVT_HELPER_CMD(0, 33),
 
 #define SWITCH(val) \
-    EVT_HELPER_CMD(1, 34), EVT_HELPER_OP(val)
+    EVT_HELPER_CMD(1, 34), EVT_HELPER_OP(val),
 #define SWITCHI(val) \
-    EVT_HELPER_CMD(1, 35), EVT_HELPER_OP(val)
+    EVT_HELPER_CMD(1, 35), EVT_HELPER_OP(val),
 
 #define CASE_EQUAL(val) \
     EVT_HELPER_CMD(1, 36), EVT_HELPER_OP(val),

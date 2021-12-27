@@ -1,3 +1,4 @@
+#include "mod_ui_base/colours.h"
 #include "mod_ui_base/menuwindow.h"
 
 #include <types.h>
@@ -76,27 +77,24 @@ void MenuWindow::disp()
     BgWindow::disp();
 
     // Draw title
-    const wii::RGBA white {0xff, 0xff, 0xff, 0xff};
-    drawStringCentre(mTitle, mPosY - 5, &white, 0.9, true, false, false);
+    drawStringCentre(mTitle, mPosY - 5, &colours::white, 0.9, true, false, false);
 
     // Render buttons
-    MenuButton * p = mButtons;
     f32 centreX = mPosX + (mWidth / 2);
     f32 centreY = mPosY - (mHeight / 2);
-    while (p != nullptr)
-    {
+    for (MenuButton * p = mButtons; p != nullptr; p = p->mNext)
         p->disp(centreX, centreY, p == mCurButton);
-        p = p->mNext;
-    }
+
+    u32 btn = spm::wpadmgr::wpadGetButtonsPressed(0);
+    u32 btnRpt = spm::wpadmgr::wpadGetButtonsHeldRepeat(0);
 
     // Handle inputs on current button
     if (mCurButton != nullptr)
-    {
-        mCurButton->handleInputs(
-            spm::wpadmgr::wpadGetButtonsPressed(0),
-            spm::wpadmgr::wpadGetButtonsHeldRepeat(0)
-        );
-    }
+        mCurButton->handleInputs(btn, btnRpt);
+
+    // Handle other buttons listening for inputs
+    for (MenuButton * p = mButtons; p != nullptr; p = p->mNext)
+        p->handlePassiveInputs(btn, btnRpt);
 }
 
 void MenuWindow::close()

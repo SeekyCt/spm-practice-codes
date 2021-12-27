@@ -1,8 +1,10 @@
+#include "mod_ui_base/colours.h"
 #include "mod.h"
 #include "patch.h"
 #include "util.h"
 
 #include <types.h>
+#include <spm/evtmgr_cmd.h>
 #include <spm/romfont.h>
 #include <spm/relmgr.h>
 #include <spm/spmario.h>
@@ -32,6 +34,8 @@ static bool inException = false;
 static char exceptionText[4096];
 static u32 head = 0;
 static void (*__OSUnhandledExceptionReal)(int p1, int p2, int p3, int p4);
+static spm::evtmgr::EvtScriptCode * lastScript = nullptr;
+static s32 (*evtmgrCmdReal)(spm::evtmgr::EvtEntry * entry) = nullptr;
 
 #define SCREEN_TOP 228.0f
 #define SCREEN_BOTTOM -228.0f
@@ -41,14 +45,16 @@ static void (*__OSUnhandledExceptionReal)(int p1, int p2, int p3, int p4);
 #define TEXT_LEFT -300.0f
 #define LINE_HEIGHT 15.0f
 
+static wii::RGBA titleColour {0xff, 0x20, 0x20, 0xff};
+
 static void drawTitle(f32 scale)
 {
-    spm::romfont::romFontPrintGX(TEXT_LEFT, TITLE_Y, scale, {0xff, 0x20, 0x20, 0xff},
+    spm::romfont::romFontPrintGX(TEXT_LEFT, TITLE_Y, scale, titleColour,
                                  "Exception - " MOD_VERSION " - %s Revison %d",
                                  getGameRegion(), getGameRevision());
-    spm::romfont::romFontPrintGX(TEXT_LEFT, TITLE_Y - LINE_HEIGHT, scale, {0xff, 0x20, 0x20, 0xff},
-                                 "relF %x - mod.rel %x", (u32) spm::relmgr::relWp->relFile,
-                                 (u32) getModRelLoadAddr());
+    spm::romfont::romFontPrintGX(TEXT_LEFT, TITLE_Y - LINE_HEIGHT, scale, titleColour,
+                                 "Last Evt %x - relF %x - mod.rel %x", (u32) lastScript,
+                                 (u32) spm::relmgr::relWp->relFile, (u32) getModRelLoadAddr());
 }
 
 static void draw(char * msg, f32 yShift, f32 scale)
@@ -70,7 +76,7 @@ static void draw(char * msg, f32 yShift, f32 scale)
         
         // Draw line if on screen
         if ((y >= TEXT_BOTTOM) && (y <= TEXT_TOP))
-            spm::romfont::romFontPrintGX(x, y, scale, {0xff, 0xff, 0xff, 0xff}, p);
+            spm::romfont::romFontPrintGX(x, y, scale, colours::white, p);
 
         // Move to next line
         y -= LINE_HEIGHT;
@@ -235,6 +241,15 @@ void exceptionPatch()
     writeBranchLink(wii::OSContext::OSDumpContext, 0x1ac, exceptionOSReportForwarder);
     writeBranchLink(wii::OSContext::OSDumpContext, 0x1fc, exceptionOSReportForwarder);
     writeBranchLink(wii::OSContext::OSDumpContext, 0x220, exceptionOSReportForwarder);
+
+    // Track last script
+    evtmgrCmdReal = patch::hookFunction(spm::evtmgr_cmd::evtmgrCmd,
+        [](spm::evtmgr::EvtEntry * entry)
+        {
+            lastScript = entry->scriptStart;
+            return evtmgrCmdReal(entry);
+        }
+    );
 }
 
 #else

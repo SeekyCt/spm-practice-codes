@@ -32,14 +32,23 @@ void MenuButton::handleInputs(u32 btn, u32 btnRpt)
         mWindow->close();
 }
 
+void MenuButton::handlePassiveInputs(u32 btn, u32 btnRpt)
+{
+    (void) btn;
+    (void) btnRpt;
+}
+
 void MenuButton::disp(f32 centreX, f32 centreY, bool selected)
 {
     wii::RGBA * colour = selected ? &mSelColour : &mColour;
-    mWindow->drawString(mMsg, mPosX + centreX, mPosY + centreY, colour, mScale, true);
+    if (mDrawAsMessage)
+        mWindow->drawMessage(mMsg, mPosX + centreX, mPosY + centreY, colour, mScale, true);
+    else
+        mWindow->drawString(mMsg, mPosX + centreX, mPosY + centreY, colour, mScale, true);
 }
 
 MenuButton::MenuButton(MenuWindow * parent, const char * msg, f32 x, f32 y, MenuAction * action, void * actionParam,
-                       bool autoPress, f32 scale, wii::RGBA * colour, wii::RGBA * selColour)
+                       bool autoPress, f32 scale, wii::RGBA * colour, wii::RGBA * selColour, bool drawAsMessage)
 {
     // Record parent and insert into linked list
     mWindow = parent;
@@ -62,6 +71,7 @@ MenuButton::MenuButton(MenuWindow * parent, const char * msg, f32 x, f32 y, Menu
     mAction = action;
     mActionParam = actionParam;
     mAutoPress = autoPress;
+    mDrawAsMessage = drawAsMessage;
     
     // Neighbours may not exist yet so they're left to be set externally
     for (int i = 0; i < 4; i++)

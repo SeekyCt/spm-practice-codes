@@ -1,4 +1,5 @@
 .global OSPanicForwarder
+.type OSPanicForwarder, @function
 OSPanicForwarder:
     li 0, 1
     lis 4, inOSPanic@ha
@@ -7,6 +8,7 @@ OSPanicForwarder:
     b exceptionMessageHandler
 
 .global exceptionOSReportForwarder
+.type OSPanicForwarder, @function
 exceptionOSReportForwarder:
     mflr 0
     stw 0, 4 (1)

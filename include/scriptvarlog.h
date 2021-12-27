@@ -7,6 +7,7 @@
 
 namespace mod {
 
+void scriptVarLogOnOff(bool on);
 void evtVarLogPatch();
 
 }

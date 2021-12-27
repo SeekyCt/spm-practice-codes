@@ -2,6 +2,7 @@
 #include "mod.h"
 #include "nandsettings.h"
 #include "patch.h"
+#include "util.h"
 
 #include <types.h>
 #include <spm/evtmgr.h>
@@ -16,27 +17,24 @@ namespace mod {
 // Handle a script being passed into any entry function
 static void evtEntryLog(const EvtScriptCode * script)
 {
-    char * str;
+    // Don't log scripts coming from this rel
+    void * modRelAddr = getModRelLoadAddr();
+    if ((u32)script >= (u32)modRelAddr)
+        return;
+
     switch (gSettings->logOptions[OPTION_SCRIPT_LOG])
     {
         case LogType::NONE:
             break;
+
         case LogType::OSREPORT:
             // Write to OSReport
             wii::OSError::OSReport("Evt entry: 0x%x\n", (u32) script);
             break;
-        case LogType::SCREEN:
-            // Format string
-            str = new char[32];
-            wii::stdio::sprintf(str, "Evt entry: 0x%x", (u32) script);
 
+        case LogType::SCREEN:
             // Write to screen
-            ConsoleWindow::sInstance->push(str,
-                [](const char * line)
-                {
-                    delete[] line;
-                }
-            );
+            CONSOLE_PUSH_FMT("Evt entry: 0x%x", (u32) script);
             break;
     }
 }
