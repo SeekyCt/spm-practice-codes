@@ -72,8 +72,13 @@ void HitboxMenu::activateCheck(s8 cameraId, u8 renderMode, f32 z, spm::dispdrv::
 void HitboxMenu::hitboxPatch()
 {
     // Remove hitbox check to implement our own
-    writeWord(spm::npcdrv::npcDispMain, 0x51c, NOP);
-    writeBranchLink(spm::npcdrv::npcDispMain, 0x538, activateCheck);
+#if (defined SPM_EU0 || defined SPM_EU1 || defined SPM_KR0)
+    const u32 baseOffset = 0x51c;
+#else
+    const u32 baseOffset = 0x504;
+#endif
+    writeWord(spm::npcdrv::npcDispMain, baseOffset, NOP);
+    writeBranchLink(spm::npcdrv::npcDispMain, baseOffset + 0x1c, activateCheck);
 }
 
 }

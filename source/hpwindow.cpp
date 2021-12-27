@@ -316,13 +316,10 @@ void HPWindow::bossDisp()
             const char * nameMsg = spm::msgdrv::msgSearch(card->nameMsg);
             if (wii::string::strcmp(card->nameMsg, "ename_256") == 0)// Bowser has "(1)" appended
             {
-#if (defined SPM_JP0) || (defined SPM_JP1)
-                const char * extra = "\x81\x69\x82\x50\x81\x6a"; // Shift-JIS（１）
-#else
-                const char * extra = "(1)";
-#endif
                 // Remove (1)
-                const char * end = wii::string::strstr(nameMsg, extra);
+                const char * end = wii::string::strstr(nameMsg, "(1)");
+                if (end == nullptr)
+                    end = wii::string::strstr(nameMsg, "\x81\x69\x82\x50\x81\x6a"); // Shift-JIS（１）
                 size_t n = end - nameMsg;
                 wii::string::strncpy(name, nameMsg, n);
 
