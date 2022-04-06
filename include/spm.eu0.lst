@@ -623,6 +623,7 @@
 // ipc.a
 80298268:IOS_Open
 80298448:IOS_Close
+80298e68:IOS_Ioctlv
 // more
 
 // NAND.a
