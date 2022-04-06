@@ -43,7 +43,7 @@ const char * SequenceMenu::getLevel()
         case 291 ... 291: return "6-4";
         case 292 ... 306: return "7-1";
         case 307 ... 327: return "7-2";
-        case 328 ... 339: return "7-4";
+        case 328 ... 339: return "7-3";
         case 340 ... 358: return "7-4";
         case 359 ... 370: return "8-1";
         case 371 ... 386: return "8-2";
