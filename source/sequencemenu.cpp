@@ -103,7 +103,7 @@ void SequenceMenu::fullClose()
     scriptVarLogOnOff(true);
 
     // Close as normal
-    MenuWindow::fullClose();
+    ChildMenu::fullClose();
 }
 
 SequenceMenu::SequenceMenu()

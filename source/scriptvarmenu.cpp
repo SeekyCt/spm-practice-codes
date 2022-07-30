@@ -201,7 +201,7 @@ void ScriptVarMenu::close()
     scriptVarLogOnOff(true);
 
     // Close as normal
-    MenuWindow::close();
+    ChildMenu::close();
 }
 
 void ScriptVarMenu::fullClose()
