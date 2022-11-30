@@ -332,6 +332,10 @@ void MapSelectMenu::_doMapChange()
         wii::string::strcpy(sDoorStr, "");
     else
         wii::string::strcpy(sDoorStr, groups[mGroup].entranceNames[mMap - 1]->names[mEntrance - 1]);
+    
+    // Fix crash when entering Francis's room with sequence position lower than 124
+    if (wii::string::strcmp(sFullMapStr, "ta4_13") == 0 && wii::string::strcmp(sDoorStr, "K_doa_L") == 0 && spm::spmario::gp->gsw0 < 124)
+        spm::spmario::gp->gsw0 = 124;
 
     if (gSettings->mapChangeEffect)
     {

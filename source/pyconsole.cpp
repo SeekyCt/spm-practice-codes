@@ -1,4 +1,3 @@
-#ifdef PYCONSOLE_PROTOTYPE
 #include "mod_ui_base/colours.h"
 #include "consolewindow.h"
 #include "pyconsole.h"
@@ -8,6 +7,8 @@
 #include <types.h>
 #include <wii/OSError.h>
 #include <wii/string.h>
+
+#ifdef PYCONSOLE_PROTOTYPE
 
 namespace mod {
 

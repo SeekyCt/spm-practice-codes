@@ -50,7 +50,7 @@ static wii::RGBA titleColour {0xff, 0x20, 0x20, 0xff};
 static void drawTitle(f32 scale)
 {
     spm::romfont::romFontPrintGX(TEXT_LEFT, TITLE_Y, scale, titleColour,
-                                 "Exception - " MOD_VERSION " - %s Revison %d",
+                                 "Exception - " MOD_VERSION " - %s Revision %d",
                                  getGameRegion(), getGameRevision());
     spm::romfont::romFontPrintGX(TEXT_LEFT, TITLE_Y - LINE_HEIGHT, scale, titleColour,
                                  "Last Evt %x - relF %x - mod.rel %x", (u32) lastScript,
