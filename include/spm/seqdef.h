@@ -16,7 +16,7 @@ struct SeqDef
 
 extern "C" {
 
-extern SeqDef seq_data[8];
+extern SeqDef seq_data[5];
 
 }
 
