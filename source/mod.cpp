@@ -57,6 +57,7 @@ bool gIs4_3;
 */
 
 static spm::seqdef::SeqDef seq_gameReal;
+static spm::seqdef::SeqDef seq_mapChangeReal;
 
 static void seq_gameInitOverride(spm::seqdrv::SeqWork * wp)
 {
@@ -98,6 +99,24 @@ static void seq_gamePatch()
     seq_gameReal = spm::seqdef::seq_data[spm::seqdrv::SEQ_GAME];
     spm::seqdef::seq_data[spm::seqdrv::SEQ_GAME] = {
         seq_gameInitOverride, seq_gameMainOverride, seq_gameReal.exit
+    };
+}
+
+static void seq_mapChangeInitOverride(spm::seqdrv::SeqWork *wp) {
+
+    // Fix crash when entering Francis's room with sequence position lower than 124
+    if (wii::string::strcmp(wp->p0, "ta4_13") == 0 && wii::string::strcmp(wp->p1, "K_doa_L") == 0 && spm::spmario::gp->gsw0 < 124)
+        spm::spmario::gp->gsw0 = 124;
+    
+    // Call real function
+    seq_mapChangeReal.init(wp);
+}
+
+static void seq_mapChangePatch()
+{
+    seq_mapChangeReal = spm::seqdef::seq_data[spm::seqdrv::SEQ_MAPCHANGE];
+    spm::seqdef::seq_data[spm::seqdrv::SEQ_MAPCHANGE] = {
+        seq_mapChangeInitOverride, seq_mapChangeReal.main, seq_mapChangeReal.exit
     };
 }
 
@@ -188,6 +207,7 @@ void main()
 
     spmarioMainPatch();
     seq_gamePatch();
+    seq_mapChangePatch();
     evtScriptLoggerPatch();
     evtVarLogPatch();
     evtDebugPatch();

@@ -20,8 +20,8 @@ struct SeqWork
 {
     s32 seq; // enum above, or -1 if none
     s32 stage;
-    char * p0;
-    char * p1;
+    char * p0; // Used only for MapChange, next map id
+    char * p1; // Used only for MapChange, next door/bero id
     u8 unknown_0x10[0x20 - 0x10];
     spm::seqdef::SeqFunc *afterFunc;
 };

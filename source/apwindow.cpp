@@ -1,4 +1,3 @@
-#ifdef PYCONSOLE_PROTOTYPE
 #include "apwindow.h"
 #include "consolewindow.h"
 #include "patch.h"
@@ -11,6 +10,8 @@
 #include <wii/mtx.h>
 #include <wii/string.h>
 #include <wii/stdio.h>
+
+#ifdef PYCONSOLE_PROTOTYPE
 
 namespace mod {
 
