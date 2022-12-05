@@ -107,14 +107,14 @@ void InputWindow::disp()
         }
 
         // Draw
-        Window::drawTexture(inpTpl, tplIdx, BASE_X + (i * X_DIFF), BASE_Y, SCALE, &colours::white);
+        Window::drawTexture(&inpTpl, tplIdx, BASE_X + (i * X_DIFF), BASE_Y, SCALE, &colours::white);
     }
 }
 
 void InputWindow::init()
 {
     sInstance = new InputWindow();
-    wii::tpl::TPLBind(inpTpl);
+    wii::tpl::TPLBind(&inpTpl);
 }
 
 }
