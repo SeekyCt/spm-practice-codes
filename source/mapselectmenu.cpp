@@ -12,6 +12,7 @@
 #include <spm/evt_mario.h>
 #include <spm/evt_npc.h>
 #include <spm/evt_seq.h>
+#include <spm/evt_sub.h>
 #include <spm/mapdata.h>
 #include <spm/seqdrv.h>
 #include <spm/spmario.h>
@@ -20,6 +21,8 @@
 #include <wii/string.h>
 #include <wii/stdio.h>
 #include <wii/wpad.h>
+
+#include <spm/memory.h>
 
 namespace mod {
 
@@ -446,6 +449,10 @@ static EntranceNameList * scanScript(const int * script)
     int mapDoorCount = 0;
     spm::machi::ElvDesc * elvs = nullptr;
     int elvCount = 0;
+
+    // Initialize 15 entrances for cutscenes and other stuff
+    char ** others = new char*[15];
+    int othersCount = 0;
     
     // Find entrances
     int cmdn;
@@ -474,13 +481,27 @@ static EntranceNameList * scanScript(const int * script)
                 elvs = reinterpret_cast<spm::machi::ElvDesc *>(script[2]);
                 elvCount = script[3];
             }
+            else if (func == (u32) spm::evt_sub::evt_sub_get_entername)
+            {
+                const int * next_script = script + cmdn + 1;
+                const short * next_p = reinterpret_cast<const short *>(next_script);
+                int next_cmd = next_p[1];
+
+                if (next_cmd == 0xc) // if_str_equal
+                {
+                    if (othersCount < 15) {
+                        others[othersCount] = reinterpret_cast<char *>(next_script[2]);
+                        othersCount++;
+                    }
+                }
+            }
         }
 
         script += cmdn + 1;
     }
 
     // Create list
-    int entranceCount = dokanCount + mapDoorCount + elvCount;
+    int entranceCount = dokanCount + mapDoorCount + elvCount + othersCount;
     
     EntranceNameList * list = reinterpret_cast<EntranceNameList *>(new int[entranceCount + 1]);
     list->count = entranceCount;
@@ -492,6 +513,10 @@ static EntranceNameList * scanScript(const int * script)
         list->names[n++] = mapDoors[i].name;
     for (int i = 0; i < elvCount; i++)
         list->names[n++] = elvs[i].name;
+    for (int i = 0; i < othersCount; i++)
+         list->names[n++] = others[i];
+
+    delete[] others;
 
     return list;
 }
