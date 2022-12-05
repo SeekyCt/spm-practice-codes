@@ -105,8 +105,19 @@ static void seq_gamePatch()
 static void seq_mapChangeInitOverride(spm::seqdrv::SeqWork *wp) {
 
     // Fix crash when entering Francis's room with sequence position lower than 124
-    if (wii::string::strcmp(wp->p0, "ta4_13") == 0 && wii::string::strcmp(wp->p1, "K_doa_L") == 0 && spm::spmario::gp->gsw0 < 124)
-        spm::spmario::gp->gsw0 = 124;
+    if (wii::string::strcmp(wp->p0, "ta4_13") == 0 && wii::string::strcmp(wp->p1, "K_doa_L") == 0)
+    {
+        if (spm::spmario::gp->gsw0 < 124)
+            spm::spmario::gp->gsw0 = 124;
+    } 
+    
+    // Fix hang when entering credits with music playing
+    if (wii::string::strcmp(wp->p0, "aa3_01") == 0 && wii::string::strcmp(wp->p1, "epi_01") == 0)
+    {
+        // Stop music like before the actual credits warp
+        if (spm::spmario_snd::spsndCheckBgmPlaying(0))
+            spm::spmario_snd::spsndBGMOff_f_d(0, 4000);
+    }
     
     // Call real function
     seq_mapChangeReal.init(wp);

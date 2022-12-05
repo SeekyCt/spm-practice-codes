@@ -469,6 +469,7 @@
 80238598:spsndExit
 8023c93c:spsndBGMOn
 8023c948:spsndBGMOff_f_d
+8023d1b0:spsndCheckBgmPlaying
 // more
 
 // relmgr.c
