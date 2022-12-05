@@ -387,6 +387,7 @@
 80269B48:EXIGetID
 804CB7D8:Ecb
 802E0D88:TPLBind
+800D49BC:evt_sub_get_entername
 1,1,3c0d8:evt_dan_handle_map_parts
 1,1,3c398:evt_dan_handle_dokans
 1,1,3c5ec:evt_dan_handle_doors

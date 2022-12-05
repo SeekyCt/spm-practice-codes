@@ -128,6 +128,7 @@
 800d3878:evt_sub_intpl_msec_get_value
 800d40a4:evt_sub_random
 800d4de4:func_800d4de4
+800d4774:evt_sub_get_entername
 800d74a0:func_800d74a0
 // more
 

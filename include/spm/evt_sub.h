@@ -17,6 +17,10 @@ EVT_DECLARE_USER_FUNC(evt_sub_random, 2)
 EVT_DECLARE_USER_FUNC(func_800d4de4, 2)
 EVT_DECLARE_USER_FUNC(func_800d74a0, 2)
 
+// Returns the door/bero name
+// evt_sub_get_entername(&int ret)
+EVT_DECLARE_USER_FUNC(evt_sub_get_entername, 1)
+
 }
 
 }
