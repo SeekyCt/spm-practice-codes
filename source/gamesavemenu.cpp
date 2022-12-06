@@ -10,6 +10,7 @@
 #include <spm/evt_mobj.h>
 #include <spm/nandmgr.h>
 #include <spm/hud.h>
+#include <spm/mario.h>
 #include <spm/seq_mapchange.h>
 #include <spm/seqdrv.h>
 #include <spm/spmario.h>
@@ -48,6 +49,8 @@ static bool reloadSave(MenuButton * button, void * param)
     // Close menu
     MenuWindow::sCurMenu->fullClose();
 
+    spm::mario::marioGetPtr()->motionId = 0;
+    
     // Unload current map
     spm::seq_mapchange::_unload(spm::spmario::gp->mapName, nullptr, nullptr);
     wii::string::strcpy(spm::spmario::gp->mapName, "");

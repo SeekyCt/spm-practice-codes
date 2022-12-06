@@ -24,7 +24,9 @@ enum
 struct MarioWork
 {
     u32 flags;
-    u8 unknown_0x4[0x38 - 0x4];
+    u8 unknown_0x4[0x2c - 0x4];
+    u16 motionId;
+    u8 unknown_0x30[0x38 - 0x30];
     u8 character;
     u8 unknown_0x39[0x5c - 0x39];
     wii::Vec3 position;
