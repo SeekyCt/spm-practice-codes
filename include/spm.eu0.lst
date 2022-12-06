@@ -75,7 +75,9 @@
 
 // fadedrv.c
 800677f8:fadeIsFinish
+800678e8:setTransition
 // more
+805ae828:fadedrvWp2
 
 // hitdrv.c
 8006f920:hitNameToPtr

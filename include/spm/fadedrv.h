@@ -17,7 +17,10 @@ static_assert(sizeof(FadeWork) == 0x260);
 
 extern "C" {
 
+extern FadeWork* fadedrvWp2;
+
 bool fadeIsFinish();
+void setTransition(s32 in, s32 out);
 
 }
 

@@ -13,6 +13,7 @@
 #include <spm/evt_npc.h>
 #include <spm/evt_seq.h>
 #include <spm/evt_sub.h>
+#include <spm/fadedrv.h>
 #include <spm/mapdata.h>
 #include <spm/seqdrv.h>
 #include <spm/spmario.h>
@@ -335,6 +336,9 @@ void MapSelectMenu::_doMapChange()
         wii::string::strcpy(sDoorStr, "");
     else
         wii::string::strcpy(sDoorStr, groups[mGroup].entranceNames[mMap - 1]->names[mEntrance - 1]);
+    
+    // Set Normal Transition
+    spm::fadedrv::setTransition(2, 1);
 
     if (gSettings->mapChangeEffect)
     {
@@ -451,7 +455,8 @@ static EntranceNameList * scanScript(const int * script)
     int elvCount = 0;
 
     // Initialize 15 entrances for cutscenes and other stuff
-    char ** others = new char*[15];
+    #define OTHERS_MAX 15
+    char ** others = new char*[OTHERS_MAX];
     int othersCount = 0;
     
     // Find entrances
@@ -489,9 +494,47 @@ static EntranceNameList * scanScript(const int * script)
 
                 if (next_cmd == 0xc) // if_str_equal
                 {
-                    if (othersCount < 15) {
-                        others[othersCount] = reinterpret_cast<char *>(next_script[2]);
-                        othersCount++;
+                    if (othersCount < OTHERS_MAX)
+                    {
+                        char* str = reinterpret_cast<char *>(next_script[2]);
+
+                        // Prevent duplicates
+                        bool exists = false;
+
+                        // Without severe refactoring this is how we're gonna do it
+                        for (int i = 0; i < othersCount; i++)
+                            if (wii::string::strcmp(others[i], str) == 0)
+                            {
+                                exists = true;
+                                break;
+                            }
+                        
+                        for (int i = 0; i < dokanCount; i++)
+                            if (wii::string::strcmp(dokans[i].name, str) == 0)
+                            {
+                                exists = true;
+                                break;
+                            }
+                        
+                        for (int i = 0; i < mapDoorCount; i++)
+                            if (wii::string::strcmp(mapDoors[i].name, str) == 0)
+                            {
+                                exists = true;
+                                break;
+                            }
+                        
+                        for (int i = 0; i < elvCount; i++)
+                            if (wii::string::strcmp(elvs[i].name, str) == 0)
+                            {
+                                exists = true;
+                                break;
+                            }
+
+                        if (!exists)
+                        {
+                            others[othersCount] = str;
+                            othersCount++;
+                        }
                     }
                 }
             }
