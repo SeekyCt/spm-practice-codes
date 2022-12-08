@@ -75,7 +75,7 @@
 
 // fadedrv.c
 800677f8:fadeIsFinish
-800678e8:setTransition
+800678e8:fadeSetMapChangeTransition
 // more
 805ae828:fadedrvWp2
 
@@ -258,6 +258,7 @@
 // more
 
 // mario_motion.c
+801433dc:marioChgMot
 80146f0c:func_80146f0c
 // more
 

@@ -15,15 +15,15 @@
 #include <spm/evt_sub.h>
 #include <spm/fadedrv.h>
 #include <spm/mapdata.h>
+#include <spm/memory.h>
 #include <spm/seqdrv.h>
 #include <spm/spmario.h>
+#include <spm/system.h>
 #include <spm/wpadmgr.h>
 #include <spm/rel/machi.h>
 #include <wii/string.h>
 #include <wii/stdio.h>
 #include <wii/wpad.h>
-
-#include <spm/memory.h>
 
 namespace mod {
 
@@ -338,7 +338,7 @@ void MapSelectMenu::_doMapChange()
         wii::string::strcpy(sDoorStr, groups[mGroup].entranceNames[mMap - 1]->names[mEntrance - 1]);
     
     // Set Normal Transition
-    spm::fadedrv::setTransition(2, 1);
+    spm::fadedrv::fadeSetMapChangeTransition(2, 1);
 
     if (gSettings->mapChangeEffect)
     {
@@ -494,48 +494,48 @@ static EntranceNameList * scanScript(const int * script)
 
                 if (next_cmd == 0xc) // if_str_equal
                 {
-                    if (othersCount < OTHERS_MAX)
-                    {
-                        char* str = reinterpret_cast<char *>(next_script[2]);
+                    assert(othersCount < OTHERS_MAX, "Other entrances table too small");
+                    
+                    char* entrance = reinterpret_cast<char *>(next_script[2]);
 
-                        // Prevent duplicates
-                        bool exists = false;
+                    // Prevent duplicates
+                    bool exists = false;
 
-                        // Without severe refactoring this is how we're gonna do it
-                        for (int i = 0; i < othersCount; i++)
-                            if (wii::string::strcmp(others[i], str) == 0)
-                            {
-                                exists = true;
-                                break;
-                            }
-                        
-                        for (int i = 0; i < dokanCount; i++)
-                            if (wii::string::strcmp(dokans[i].name, str) == 0)
-                            {
-                                exists = true;
-                                break;
-                            }
-                        
-                        for (int i = 0; i < mapDoorCount; i++)
-                            if (wii::string::strcmp(mapDoors[i].name, str) == 0)
-                            {
-                                exists = true;
-                                break;
-                            }
-                        
-                        for (int i = 0; i < elvCount; i++)
-                            if (wii::string::strcmp(elvs[i].name, str) == 0)
-                            {
-                                exists = true;
-                                break;
-                            }
-
-                        if (!exists)
+                    // Without severe refactoring this is how we're gonna do it
+                    for (int i = 0; i < othersCount; i++)
+                        if (wii::string::strcmp(others[i], entrance) == 0)
                         {
-                            others[othersCount] = str;
-                            othersCount++;
+                            exists = true;
+                            break;
                         }
+                    
+                    for (int i = 0; i < dokanCount; i++)
+                        if (wii::string::strcmp(dokans[i].name, entrance) == 0)
+                        {
+                            exists = true;
+                            break;
+                        }
+                    
+                    for (int i = 0; i < mapDoorCount; i++)
+                        if (wii::string::strcmp(mapDoors[i].name, entrance) == 0)
+                        {
+                            exists = true;
+                            break;
+                        }
+                    
+                    for (int i = 0; i < elvCount; i++)
+                        if (wii::string::strcmp(elvs[i].name, entrance) == 0)
+                        {
+                            exists = true;
+                            break;
+                        }
+
+                    if (!exists)
+                    {
+                        others[othersCount] = entrance;
+                        othersCount++;
                     }
+                    
                 }
             }
         }

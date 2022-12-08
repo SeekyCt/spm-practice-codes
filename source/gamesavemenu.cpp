@@ -8,9 +8,10 @@
 #include <spm/evtmgr.h>
 #include <spm/evtmgr_cmd.h>
 #include <spm/evt_mobj.h>
+#include <spm/fadedrv.h>
 #include <spm/nandmgr.h>
 #include <spm/hud.h>
-#include <spm/mario.h>
+#include <spm/mario_motion.h>
 #include <spm/seq_mapchange.h>
 #include <spm/seqdrv.h>
 #include <spm/spmario.h>
@@ -49,7 +50,11 @@ static bool reloadSave(MenuButton * button, void * param)
     // Close menu
     MenuWindow::sCurMenu->fullClose();
 
-    spm::mario::marioGetPtr()->motionId = 0;
+    // Fix crash when reloading while using Slim
+    spm::mario_motion::marioChgMot(0);
+
+    // Set fade transition
+    spm::fadedrv::fadeSetMapChangeTransition(2, 1);
     
     // Unload current map
     spm::seq_mapchange::_unload(spm::spmario::gp->mapName, nullptr, nullptr);
