@@ -12,9 +12,13 @@
 #include <spm/evt_mario.h>
 #include <spm/evt_npc.h>
 #include <spm/evt_seq.h>
+#include <spm/evt_sub.h>
+#include <spm/fadedrv.h>
 #include <spm/mapdata.h>
+#include <spm/memory.h>
 #include <spm/seqdrv.h>
 #include <spm/spmario.h>
+#include <spm/system.h>
 #include <spm/wpadmgr.h>
 #include <spm/rel/machi.h>
 #include <wii/string.h>
@@ -332,6 +336,9 @@ void MapSelectMenu::_doMapChange()
         wii::string::strcpy(sDoorStr, "");
     else
         wii::string::strcpy(sDoorStr, groups[mGroup].entranceNames[mMap - 1]->names[mEntrance - 1]);
+    
+    // Set Normal Transition
+    spm::fadedrv::fadeSetMapChangeTransition(2, 1);
 
     if (gSettings->mapChangeEffect)
     {
@@ -446,6 +453,11 @@ static EntranceNameList * scanScript(const int * script)
     int mapDoorCount = 0;
     spm::machi::ElvDesc * elvs = nullptr;
     int elvCount = 0;
+
+    // Initialize 15 entrances for cutscenes and other stuff
+    #define OTHERS_MAX 15
+    char ** others = new char*[OTHERS_MAX];
+    int othersCount = 0;
     
     // Find entrances
     int cmdn;
@@ -474,13 +486,65 @@ static EntranceNameList * scanScript(const int * script)
                 elvs = reinterpret_cast<spm::machi::ElvDesc *>(script[2]);
                 elvCount = script[3];
             }
+            else if (func == (u32) spm::evt_sub::evt_sub_get_entername)
+            {
+                const int * next_script = script + cmdn + 1;
+                const short * next_p = reinterpret_cast<const short *>(next_script);
+                int next_cmd = next_p[1];
+
+                if (next_cmd == 0xc) // if_str_equal
+                {
+                    assert(othersCount < OTHERS_MAX, "Other entrances table too small");
+                    
+                    char* entrance = reinterpret_cast<char *>(next_script[2]);
+
+                    // Prevent duplicates
+                    bool exists = false;
+
+                    // Without severe refactoring this is how we're gonna do it
+                    for (int i = 0; i < othersCount; i++)
+                        if (wii::string::strcmp(others[i], entrance) == 0)
+                        {
+                            exists = true;
+                            break;
+                        }
+                    
+                    for (int i = 0; i < dokanCount; i++)
+                        if (wii::string::strcmp(dokans[i].name, entrance) == 0)
+                        {
+                            exists = true;
+                            break;
+                        }
+                    
+                    for (int i = 0; i < mapDoorCount; i++)
+                        if (wii::string::strcmp(mapDoors[i].name, entrance) == 0)
+                        {
+                            exists = true;
+                            break;
+                        }
+                    
+                    for (int i = 0; i < elvCount; i++)
+                        if (wii::string::strcmp(elvs[i].name, entrance) == 0)
+                        {
+                            exists = true;
+                            break;
+                        }
+
+                    if (!exists)
+                    {
+                        others[othersCount] = entrance;
+                        othersCount++;
+                    }
+                    
+                }
+            }
         }
 
         script += cmdn + 1;
     }
 
     // Create list
-    int entranceCount = dokanCount + mapDoorCount + elvCount;
+    int entranceCount = dokanCount + mapDoorCount + elvCount + othersCount;
     
     EntranceNameList * list = reinterpret_cast<EntranceNameList *>(new int[entranceCount + 1]);
     list->count = entranceCount;
@@ -492,6 +556,10 @@ static EntranceNameList * scanScript(const int * script)
         list->names[n++] = mapDoors[i].name;
     for (int i = 0; i < elvCount; i++)
         list->names[n++] = elvs[i].name;
+    for (int i = 0; i < othersCount; i++)
+         list->names[n++] = others[i];
+
+    delete[] others;
 
     return list;
 }
