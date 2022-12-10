@@ -43,6 +43,7 @@ enum InputTplPos
     INP_TPL_UP_RIGHT,
     INP_TPL_DOWN_LEFT,
     INP_TPL_DOWN_RIGHT,
+    INP_TPL_DPAD_NONE,
 
     // Placeholder
     INP_TPL_DPAD = 0xff
@@ -66,7 +67,8 @@ InputWindow::DpadDef InputWindow::sDpadDefs[] = {
     {WPAD_BTN_RIGHT | WPAD_BTN_UP, INP_TPL_UP_LEFT},
     {WPAD_BTN_RIGHT | WPAD_BTN_DOWN, INP_TPL_UP_RIGHT},
     {WPAD_BTN_LEFT | WPAD_BTN_UP, INP_TPL_DOWN_LEFT},
-    {WPAD_BTN_LEFT | WPAD_BTN_DOWN, INP_TPL_DOWN_RIGHT}
+    {WPAD_BTN_LEFT | WPAD_BTN_DOWN, INP_TPL_DOWN_RIGHT},
+    {WPAD_BTN_NONE, INP_TPL_DPAD_NONE}
 };
 
 InputWindow::InputWindow()
@@ -105,6 +107,7 @@ void InputWindow::disp()
         // Skip if not pressed
         if ((def->mask & held) == 0) {
             Window::drawTexture(&inpTpl, tplIdx, BASE_X + (i * X_DIFF), BASE_Y, SCALE, &colours::grey);
+            continue;
         }        
 
         // Draw
