@@ -89,10 +89,6 @@ void InputWindow::disp()
     {
         ButtonDef * def = sDefs + i;
 
-        // Skip if not pressed
-        if ((def->mask & held) == 0)
-            continue;
-        
         // Get tpl index
         u32 tplIdx = def->tplIdx;
         if (def->tplIdx == INP_TPL_DPAD)
@@ -105,6 +101,11 @@ void InputWindow::disp()
                     tplIdx = ddef->tplIdx;
             }
         }
+
+        // Skip if not pressed
+        if ((def->mask & held) == 0) {
+            Window::drawTexture(&inpTpl, tplIdx, BASE_X + (i * X_DIFF), BASE_Y, SCALE, &colours::grey);
+        }        
 
         // Draw
         Window::drawTexture(&inpTpl, tplIdx, BASE_X + (i * X_DIFF), BASE_Y, SCALE, &colours::white);
