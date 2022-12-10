@@ -1,5 +1,6 @@
 #pragma once
 
+#define WPAD_BTN_NONE 0x0
 #define WPAD_BTN_LEFT 0x1
 #define WPAD_BTN_RIGHT 0x2
 #define WPAD_BTN_DOWN 0x4
