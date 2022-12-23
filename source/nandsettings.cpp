@@ -2,7 +2,7 @@
 #include <spm/evtmgr_cmd.h>
 #include <spm/relmgr.h>
 #include <spm/system.h>
-#include <wii/NAND.h>
+#include <wii/nand.h>
 #include <wii/os.h>
 #include <msl/stdio.h>
 #include <msl/string.h>

@@ -2,7 +2,7 @@
 #include <spm/evtmgr.h>
 #include <spm/evtmgr_cmd.h>
 #include <spm/system.h>
-#include <wii/NAND.h>
+#include <wii/nand.h>
 #include <wii/os.h>
 
 #include "mod.h"
