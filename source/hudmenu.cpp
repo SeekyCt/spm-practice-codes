@@ -1,20 +1,20 @@
+#include <common.h>
+#include <msl/stdio.h>
+
 #include "hudmenu.h"
 #include "nandsettings.h"
 #include "util.h"
-
-#include <types.h>
-#include <wii/stdio.h>
 
 namespace mod {
 
 void HudMenu::updateDelayStr()
 {
-    wii::stdio::sprintf(mDelayStr, "%d", gSettings->xyzInterval);
+    msl::stdio::sprintf(mDelayStr, "%d", gSettings->xyzInterval);
 }
 
 void HudMenu::updateDecimalPlaceStr()
 {
-    wii::stdio::sprintf(mDecimalPlaceStr, "%d", gSettings->xyzDP);
+    msl::stdio::sprintf(mDecimalPlaceStr, "%d", gSettings->xyzDP);
 }
 
 void HudMenu::optionToggle(MenuButton * button, bool &setting)

@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <common.h>
+
 #include "mod_ui_base/window.h"
 
 namespace mod {
@@ -13,7 +15,7 @@ class TitleTextWindow final : public Window
 {
 protected:
     const char * mMsg;
-    wii::RGBA mColour;
+    wii::gx::GXColor mColour;
     f32 mScale;
 
     virtual void disp() override;

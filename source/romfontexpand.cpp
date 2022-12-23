@@ -1,11 +1,10 @@
-#include "util.h"
-
-#include <types.h>
+#include <common.h>
 #include <spm/memory.h>
 #include <spm/romfont.h>
-#include <wii/OSCache.h>
-#include <wii/OSFont.h>
-#include <wii/string.h>
+#include <wii/os.h>
+#include <msl/string.h>
+
+#include "util.h"
 
 namespace mod {
 
@@ -30,31 +29,31 @@ void romfontExpand()
     // Allocate memory to load font, there's not enough space in heap 0 for the jp allocations
     u8 * fontHeader;
     u8 * temp;
-    if (wii::OSFont::OSGetFontEncode() == 1)
+    if (wii::os::OSGetFontEncode() == 1)
     {
-        fontHeader = new (spm::memory::Heap::MAP) u8[0x90ee4];
-        temp = new (spm::memory::Heap::MAP) u8[0x4d000];
+        fontHeader = new (spm::memory::Heap::HEAP_MAP) u8[0x90ee4];
+        temp = new (spm::memory::Heap::HEAP_MAP) u8[0x4d000];
     }
     else
     {
-        fontHeader = new (spm::memory::Heap::MAP) u8[0x10120];
-        temp = new (spm::memory::Heap::MAP) u8[0x3000];
+        fontHeader = new (spm::memory::Heap::HEAP_MAP) u8[0x10120];
+        temp = new (spm::memory::Heap::HEAP_MAP) u8[0x3000];
     }
 
     // Load font
-    wii::OSFont::OSLoadFont(fontHeader, temp);
+    wii::os::OSLoadFont(fontHeader, temp);
 
     // Create new entry array
-    int originalCount = romfontWp->entryCount;
-    romfontWp->entryCount += NEW_CHAR_COUNT;
-    RomfontEntry * newEntries = new RomfontEntry[romfontWp->entryCount];
-    wii::string::memcpy(newEntries, romfontWp->entries, sizeof(RomfontEntry) * romfontWp->entryCount);
+    int originalCount = romfont_wp->entryCount;
+    romfont_wp->entryCount += NEW_CHAR_COUNT;
+    RomfontEntry * newEntries = new RomfontEntry[romfont_wp->entryCount];
+    msl::string::memcpy(newEntries, romfont_wp->entries, sizeof(RomfontEntry) * romfont_wp->entryCount);
 
     // Add new characters
     for (u32 i = 0; i < NEW_CHAR_COUNT; i++)
     {
-        int width;
-        wii::OSFont::OSGetFontTexel(newChars[i], newEntries[originalCount + i].image, 0, 6, &width);
+        s32 width;
+        wii::os::OSGetFontTexel(newChars[i], newEntries[originalCount + i].image, 0, 6, &width);
         newEntries[originalCount + i].character = newChars[i][0];
         newEntries[originalCount + i].width = width;
     }
@@ -64,11 +63,11 @@ void romfontExpand()
     delete temp;
 
     // Replace old entry array
-    delete[] romfontWp->entries;
-    romfontWp->entries = newEntries;
+    delete[] romfont_wp->entries;
+    romfont_wp->entries = newEntries;
 
     // Flush cache
-    wii::OSCache::DCFlushRange(romfontWp->entries, sizeof(RomfontEntry) * romfontWp->entryCount);
+    wii::os::DCFlushRange(romfont_wp->entries, sizeof(RomfontEntry) * romfont_wp->entryCount);
 }
 #else
 void romfontExpand()

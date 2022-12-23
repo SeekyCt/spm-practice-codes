@@ -1,10 +1,4 @@
-#include "evt_cmd.h"
-#include "pitselectmenu.h"
-#include "nandsettings.h"
-#include "scriptvarlog.h"
-#include "util.h"
-
-#include <types.h>
+#include <common.h>
 #include <spm/evtmgr.h>
 #include <spm/evtmgr_cmd.h>
 #include <spm/evt_fairy.h>
@@ -15,9 +9,15 @@
 #include <spm/seqdrv.h>
 #include <spm/spmario.h>
 #include <spm/wpadmgr.h>
-#include <wii/string.h>
-#include <wii/stdio.h>
 #include <wii/wpad.h>
+#include <msl/string.h>
+#include <msl/stdio.h>
+
+#include "evt_cmd.h"
+#include "pitselectmenu.h"
+#include "nandsettings.h"
+#include "scriptvarlog.h"
+#include "util.h"
 
 namespace mod {
 
@@ -289,7 +289,7 @@ PitSelectMenu::PitSelectMenu()
     scriptVarLogOnOff(false);
 
     // Try set to current floor, default to flipside 1 if not in pit
-    if (wii::string::strncmp(spm::spmario::gp->mapName, "dan", 3) == 0)
+    if (msl::string::strncmp(spm::spmario::gp->mapName, "dan", 3) == 0)
     {
         int gsw1 = spm::evtmgr_cmd::evtGetValue(nullptr, GSW(1));
         if (gsw1 > 100)

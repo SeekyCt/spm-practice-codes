@@ -1,3 +1,13 @@
+#include <common.h>
+#include <spm/gxsub.h>
+#include <spm/icondrv.h>
+#include <spm/mario.h>
+#include <spm/seqdrv.h>
+#include <spm/wpadmgr.h>
+#include <wii/wpad.h>
+#include <msl/stdio.h>
+#include <msl/string.h>
+
 #include "mod_ui_base/colours.h"
 #include "mod_ui_base/menuwindow.h"
 #include "assets.h"
@@ -5,16 +15,6 @@
 #include "mod.h"
 #include "nandsettings.h"
 #include "util.h"
-
-#include <types.h>
-#include <spm/gxsub.h>
-#include <spm/icondrv.h>
-#include <spm/mario.h>
-#include <spm/seqdrv.h>
-#include <spm/wpadmgr.h>
-#include <wii/stdio.h>
-#include <wii/string.h>
-#include <wii/wpad.h>
 
 namespace mod {
 

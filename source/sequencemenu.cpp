@@ -1,12 +1,12 @@
-#include "sequencemenu.h"
-#include "scriptvarlog.h"
-#include "util.h"
-
-#include <types.h>
+#include <common.h>
 #include <spm/evtmgr_cmd.h>
 #include <spm/swdrv.h>
 #include <spm/system.h>
-#include <wii/stdio.h>
+#include <msl/stdio.h>
+
+#include "sequencemenu.h"
+#include "scriptvarlog.h"
+#include "util.h"
 
 namespace mod {
 

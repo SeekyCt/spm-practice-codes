@@ -1,5 +1,7 @@
 #pragma once
 
+#include <common.h>
+
 namespace mod {
 
 #define MOD_VERSION "SPM Practice Codes v9 DEV"

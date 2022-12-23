@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <common.h>
+
 #include "mod_ui_base/centredbutton.h"
 #include "mod_ui_base/menuscrollgroup.h"
 #include "childmenu.h"

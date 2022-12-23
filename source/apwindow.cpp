@@ -1,15 +1,15 @@
+#include <common.h>
+#include <spm/animdrv.h>
+#include <spm/camdrv.h>
+#include <wii/mtx.h>
+#include <msl/stdio.h>
+#include <msl/string.h>
+
 #include "apwindow.h"
 #include "consolewindow.h"
 #include "patch.h"
 #include "pyconsole.h"
 #include "util.h"
-
-#include <types.h>
-#include <spm/animdrv.h>
-#include <spm/camdrv.h>
-#include <wii/mtx.h>
-#include <wii/string.h>
-#include <wii/stdio.h>
 
 #ifdef PYCONSOLE_PROTOTYPE
 
@@ -39,11 +39,11 @@ PyConsoleErr APWindow::cmd_start(s32 argc, const char ** argv)
     
     const char * name = argv[0];
 
-    if (wii::string::strlen(name) >= 32)
+    if (msl::string::strlen(name) >= 32)
         return PyConsoleErr::BAD_ARGS;
     
     char path[32 + 3];
-    wii::stdio::sprintf(path, "a/%s", name);
+    msl::stdio::sprintf(path, "a/%s", name);
     if (!fileExists(path))
         return PyConsoleErr::BAD_ARGS;
     
@@ -75,7 +75,7 @@ PyConsoleErr APWindow::cmd_pos(s32 argc, const char ** argv)
     f32 coords[3];
     for (s32 i = 0; i < 3; i++)
     {
-        if (wii::stdio::sscanf(argv[i], "%f", &coords[i]) != 1)
+        if (msl::stdio::sscanf(argv[i], "%f", &coords[i]) != 1)
             return PyConsoleErr::BAD_ARGS;
     }
     
@@ -92,7 +92,7 @@ PyConsoleErr APWindow::cmd_scale(s32 argc, const char ** argv)
     f32 scale[3];
     for (s32 i = 0; i < 3; i++)
     {
-        if (wii::stdio::sscanf(argv[i], "%f", &scale[i]) != 1)
+        if (msl::stdio::sscanf(argv[i], "%f", &scale[i]) != 1)
             return PyConsoleErr::BAD_ARGS;
     }
     
@@ -114,7 +114,7 @@ PyConsoleErr APWindow::cmd_anim(s32 argc, const char ** argv)
     for (i = 0; i < header->animCount; i++)
     {
         spm::animdrv::AnimationModelFileAnimTableEntry * anim = header->anims + i;
-        if (wii::string::strcmp(anim->name, name) == 0)
+        if (msl::string::strcmp(anim->name, name) == 0)
         {
             found = true;
             break;
@@ -123,7 +123,7 @@ PyConsoleErr APWindow::cmd_anim(s32 argc, const char ** argv)
     if (!found)
         return PyConsoleErr::BAD_ARGS;
     
-    if (mApAnimName != nullptr && wii::string::strcmp(mApAnimName, name) == 0)
+    if (mApAnimName != nullptr && msl::string::strcmp(mApAnimName, name) == 0)
         mApRestartAnim = true;
     mApAnimName = header->anims[i].name;
 
@@ -140,11 +140,11 @@ PyConsoleErr APWindow::cmd_anim_idx(s32 argc, const char ** argv)
     spm::animdrv::AnimationModelFileHeader * header = spm::animdrv::animPoseGetAnimBaseDataPtr(mApId);    
 
     u32 idx;
-    if (wii::stdio::sscanf(argv[0], "%u", &idx) != 1 || idx >= header->animCount)
+    if (msl::stdio::sscanf(argv[0], "%u", &idx) != 1 || idx >= header->animCount)
         return PyConsoleErr::BAD_ARGS;
     
     const char * name = header->anims[idx].name;
-    if (mApAnimName != nullptr && wii::string::strcmp(mApAnimName, name) == 0)
+    if (mApAnimName != nullptr && msl::string::strcmp(mApAnimName, name) == 0)
         mApRestartAnim = true;
     mApAnimName = name;
 
@@ -169,7 +169,7 @@ void APWindow::disp()
     if (mApId == -1)
         return;
 
-    wii::Mtx34 mtx;
+    wii::mtx::Mtx34 mtx;
     wii::mtx::PSMTXScale(&mtx, mApScale.x, mApScale.y, mApScale.z);
     wii::mtx::PSMTXTransApply(&mtx, &mtx, mApPos.x, mApPos.y, mApPos.z);
 
@@ -180,7 +180,7 @@ void APWindow::disp()
 
 APWindow::APWindow()
 {
-    mCamera = spm::camdrv::CAM_3D;
+    mCamera = spm::camdrv::CAM_ID_3D;
     mApPos = {0.0f, 0.0f, 0.0f};
     mApScale = {1.0f, 1.0f, 1.0f};
     mApId = -1;

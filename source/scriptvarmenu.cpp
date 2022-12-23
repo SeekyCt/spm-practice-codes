@@ -1,11 +1,23 @@
+#include <common.h>
+#include <spm/swdrv.h>
+#include <spm/system.h>
+#include <msl/stdio.h>
+
 #include "scriptvarmenu.h"
 #include "scriptvarlog.h"
 #include "util.h"
 
-#include <types.h>
-#include <spm/swdrv.h>
-#include <spm/system.h>
-#include <wii/stdio.h>
+// TODO: use evtGetValue
+#define EVT_GET_GW(id) \
+    (spm::evtmgr::evtGetWork()->gw[(id)])
+#define EVT_SET_GW(id, val) \
+    spm::evtmgr::evtGetWork()->gw[(id)] = (val)
+#define EVT_GET_GF(id) \
+    ((spm::evtmgr::evtGetWork()->gf[(id) / 32] >> ((id) % 32)) & 1)
+#define EVT_SET_GF(id) \
+    spm::evtmgr::evtGetWork()->gf[(id) / 32] |= 1 << ((id) % 32)
+#define EVT_CLEAR_GF(id) \
+    spm::evtmgr::evtGetWork()->gf[(id) / 32] &= ~(1 << ((id) % 32))
 
 namespace mod {
 
@@ -139,7 +151,7 @@ void ScriptVarMenu::groupDown(MenuScroller * scroller, void * param)
     instance->mId = 0;
 
     // Loop around if the end of the group list is reached
-    if (instance->mGroup >= (int) ARRAY_SIZEOF(groups))
+    if (instance->mGroup >= (s32) ARRAY_SIZEOF(groups))
         instance->mGroup = 0;
     
     // Process new value

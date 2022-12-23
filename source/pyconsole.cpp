@@ -1,12 +1,12 @@
+#include <common.h>
+#include <wii/os.h>
+#include <msl/string.h>
+
 #include "mod_ui_base/colours.h"
 #include "consolewindow.h"
 #include "pyconsole.h"
 #include "util.h"
 #include "ug.h"
-
-#include <types.h>
-#include <wii/OSError.h>
-#include <wii/string.h>
 
 #ifdef PYCONSOLE_PROTOTYPE
 
@@ -18,10 +18,10 @@ PyConsoleParams PyConsole::sParams;
 PyConsoleErr PyCommand::runCommand(const char * command, s32 argc, const char ** argv)
 {
     // Find command
-    size_t len = wii::string::strlen(command);
+    size_t len = msl::string::strlen(command);
     for (PyCommand * p = sCommandList; p; p = p->mNext)
     {
-        if (len == p->mNameLen && wii::string::strncmp(command, p->mName, p->mNameLen) == 0)
+        if (len == p->mNameLen && msl::string::strncmp(command, p->mName, p->mNameLen) == 0)
         {
             // Run command and return its output
             return p->mCb(argc, argv);
@@ -43,7 +43,7 @@ PyCommand::PyCommand(const char * name, PyCommandCb * cb)
     mCb = cb;
 
     // Pre-calculate length
-    mNameLen = wii::string::strlen(name);
+    mNameLen = msl::string::strlen(name);
 }
 
 void PyCommand::add(const char * name, PyCommandCb * cb)

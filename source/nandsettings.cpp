@@ -1,17 +1,17 @@
-#include "evt_cmd.h"
-#include "evtnandapi.h"
-#include "nandsettings.h"
-#include "patch.h"
-#include "util.h"
-
 #include <spm/evtmgr.h>
 #include <spm/evtmgr_cmd.h>
 #include <spm/relmgr.h>
 #include <spm/system.h>
 #include <wii/NAND.h>
-#include <wii/OSError.h>
-#include <wii/stdio.h>
-#include <wii/string.h>
+#include <wii/os.h>
+#include <msl/stdio.h>
+#include <msl/string.h>
+
+#include "evt_cmd.h"
+#include "evtnandapi.h"
+#include "nandsettings.h"
+#include "patch.h"
+#include "util.h"
 
 #ifndef __INTELLISENSE__ 
     #define NAND_ALIGN __attribute__((aligned(32)))
@@ -24,8 +24,8 @@ namespace mod {
 // Data to be passed into NAND lib
 static u8 _settings[ROUND_UP_32(sizeof(NandSettings))] NAND_ALIGN;
 static u8 openBuf[0x4000] NAND_ALIGN;
-static wii::NAND::NANDFileInfo fileInfo;
-static wii::NAND::NANDCommandBlock commandBlock;
+static wii::nand::NANDFileInfo fileInfo;
+static wii::nand::NANDCommandBlock commandBlock;
 
 // Actual settings struct
 NandSettings * gSettings = reinterpret_cast<NandSettings *>(&_settings);
@@ -85,7 +85,7 @@ EVT_BEGIN(nand_settings_write)
 
         // Try to create if that succeeded
         IF_EQUAL(LW(0), 0)
-            USER_FUNC(evt_nand_create, PTR(SETTINGS_FILE_NAME), NAND_PERM_READ_WRITE,
+            USER_FUNC(evt_nand_create, PTR(SETTINGS_FILE_NAME), NAND_PERMISSION_READ_WRITE,
                       0, PTR(&commandBlock), LW(0))
         END_IF()
 
@@ -156,18 +156,18 @@ s32 evt_nandsettings_handle_read_output(spm::evtmgr::EvtEntry * entry, bool firs
     (void) firstRun;
 
     // Dump contents for debugging
-    wii::OSError::OSReport("nandsettings: read at %x, contents:\n", (u32) &_settings);
+    wii::os::OSReport("nandsettings: read at %x, contents:\n", (u32) &_settings);
     u32 * d = reinterpret_cast<u32 *>(gSettings);
     for (u32 i = 0; i < (sizeof(*gSettings) / sizeof(u32)); i += 4)
-        wii::OSError::OSReport("%08x %08x %08x %08x\n", d[i], d[i+1], d[i+2], d[i+3]);
+        wii::os::OSReport("%08x %08x %08x %08x\n", d[i], d[i+1], d[i+2], d[i+3]);
 
     // Handle settings version
     switch (gSettings->version)
     {
         case 1:
             NandSettingsV1 v1;
-            wii::string::memcpy(&v1, gSettings, sizeof(v1));
-            wii::OSError::OSReport("nandsettings: updating settings v1->2.\n");
+            msl::string::memcpy(&v1, gSettings, sizeof(v1));
+            wii::os::OSReport("nandsettings: updating settings v1->2.\n");
 
             // Move relocated settings
             // hudMapDoor and hudXYZ are already in place
@@ -184,7 +184,7 @@ s32 evt_nandsettings_handle_read_output(spm::evtmgr::EvtEntry * entry, bool firs
             [[fallthrough]];
 
         case 2:
-            wii::OSError::OSReport("nandsettings: updating settings v2->3.\n");
+            wii::os::OSReport("nandsettings: updating settings v2->3.\n");
 
             // Existing settings are already in place
 
@@ -198,7 +198,7 @@ s32 evt_nandsettings_handle_read_output(spm::evtmgr::EvtEntry * entry, bool firs
             [[fallthrough]];
 
         case 3:
-            wii::OSError::OSReport("nandsettings: updating settings v3->4\n");
+            wii::os::OSReport("nandsettings: updating settings v3->4\n");
 
             // Existing settings are already in place
 
@@ -217,11 +217,11 @@ s32 evt_nandsettings_handle_read_output(spm::evtmgr::EvtEntry * entry, bool firs
             break;
 
         case SETTINGS_VER:
-            wii::OSError::OSReport("nandsettings: settings version ok.\n");
+            wii::os::OSReport("nandsettings: settings version ok.\n");
             break;
 
         default:
-            wii::OSError::OSReport("nandsettings: settings file too new, using defaults\n");
+            wii::os::OSReport("nandsettings: settings file too new, using defaults\n");
             nandSettingsDefaults();
             break;
     }
@@ -272,20 +272,20 @@ bool loadOnBoot()
     {
         // Start settings load evt script if this is the first run
         evtId = spm::evtmgr::evtEntryType(nand_settings_load, 0, 0, 0)->id;
-        wii::OSError::OSReport("nandsettings: starting evt script\n");
+        wii::os::OSReport("nandsettings: starting evt script\n");
     }
-    else if ((evtId != -2) && (spm::evtmgr::evtCheckId(evtId) == false))
+    else if ((evtId != -2) && (spm::evtmgr::evtCheckID(evtId) == false))
     {
         // If it didn't succeed, use defaults
         if (!gNandSettingsSuccess)
         {
-            wii::OSError::OSReport("nandsettings: using defaults\n");
+            wii::os::OSReport("nandsettings: using defaults\n");
             nandSettingsDefaults();
         }
 
         // Signal finishing
         evtId = -2;
-        wii::OSError::OSReport("nandsettings: evt script done\n");
+        wii::os::OSReport("nandsettings: evt script done\n");
     }
 
     // Check if it's done

@@ -4,9 +4,10 @@
 */
 #pragma once
 
-#include "mod_ui_base/window.h"
-
+#include <common.h>
 #include <spm/npcdrv.h>
+
+#include "mod_ui_base/window.h"
 
 namespace mod {
 

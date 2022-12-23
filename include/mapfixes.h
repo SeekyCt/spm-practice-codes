@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <types.h>
+#include <common.h>
 #include <spm/seqdrv.h>
 
 namespace mod {

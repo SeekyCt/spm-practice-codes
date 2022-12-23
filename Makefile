@@ -57,7 +57,8 @@ TARGET		:=	$(notdir $(CURDIR)).$(VERSION)
 BUILD		:=	build.$(VERSION)
 SOURCES		:=	source $(wildcard source/*)
 DATA		:=	data  
-INCLUDES	:=	include
+SPM_HEADERS :=  spm-headers
+INCLUDES	:=	include $(SPM_HEADERS)/mod $(SPM_HEADERS)/include
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -156,7 +157,8 @@ export HFILES := $(addsuffix .h,$(subst .,_,$(BINFILES)))
 
 # For REL linking
 export LDFILES		:= $(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.ld)))
-export MAPFILE		:= $(CURDIR)/include/spm.$(LST).lst
+# TODO: use SPM_HEADERS
+export MAPFILE		:= $(CURDIR)/spm-headers/linker/spm.$(LST).lst
 
 #---------------------------------------------------------------------------------
 # build a list of include paths

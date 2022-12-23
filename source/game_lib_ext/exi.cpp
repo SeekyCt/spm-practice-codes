@@ -1,4 +1,4 @@
-#include <types.h>
+#include <common.h>
 #include <wii/exi.h>
 
 namespace wii::EXI {

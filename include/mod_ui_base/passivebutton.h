@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <common.h>
+
 #include "mod_ui_base/menubutton.h"
 
 namespace mod {
@@ -21,7 +23,7 @@ public:
     PassiveButton(class MenuWindow * parent, const char * msg, f32 x, f32 y,
                   u32 passiveBtnMask, MenuAction * action = nullptr,
                   void * actionParam = nullptr, f32 scale = 1.0f,
-                  wii::RGBA * colour = nullptr, bool drawAsMessage = false);
+                  wii::gx::GXColor * colour = nullptr, bool drawAsMessage = false);
 };
 
 }

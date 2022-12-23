@@ -1,6 +1,7 @@
-#include "ug.h"
-
+#include <common.h>
 #include <wii/exi.h>
+
+#include "ug.h"
 
 namespace mod {
 

@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <common.h>
+
 #include "menubutton.h"
 
 namespace mod {
@@ -20,7 +22,7 @@ public:
     MenuIcon(class MenuWindow * parent, int iconId, f32 x, f32 y,
              MenuAction * action = nullptr, void * actionParam = nullptr,
              bool autoPress = false, f32 scale = 1.0f,
-             wii::RGBA * selColour = nullptr);
+             wii::gx::GXColor * selColour = nullptr);
 };
 
 }
