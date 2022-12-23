@@ -3,7 +3,7 @@
         ".balign 32\n" \
         ".global "#name"\n" \
     #name":\n" \
-        ".incbin \"../assets/"#filename"\"\n" \
+        ".incbin \"assets/"#filename"\"\n" \
         ".balign 4\n" \
     #name"_end:\n" \
         ".global "#name"_size\n" \

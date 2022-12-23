@@ -25,11 +25,19 @@ The dev branch contains in-development features and usually isn't ported to or t
 ## Building
 To compile this yourself, you'll need the following:
 * devkitPPC
+* ninja
+* Python 3
+    - 3.8 is known to work, earlier versions may too
+* The ninja_syntax python module
 * The fork of PistonMiner's elf2rel from the [SPM Rel Loader repo](https://github.com/SeekyCt/spm-rel-loader/releases/tag/elf2rel-24-6-2021)
-    * For v8 and above, the 21-12-2021 build is required. v5-7 require the 24-6-2021 build. Older versions are compatible with any build.
-* The TTYDTOOLS environment variable set to the folder outside of the `bin` folder with your compiled `elf2rel` in (so `$(TTYDTOOLS)/bin/elf2rel` will point to it)
+    * For v8 and above, the 21-12-2021 build is required. v5-7 require the 24-6-2021 build. Older versions are compatible with any build
+* The ELF2REL environment variable set to the path to your compiled `elf2rel` executable
 
-Once that's set up you can use `make rgX` to build region `rg` ('eu', 'us', 'jp' or 'kr') revision `X` (0-1 for eu & jp, 0-2 for us, 0 for kr) or just `make` to build for all regions and revisions.
+Once that's set up:
+* Run `configure.py`
+    * Versions can be listed as arguments to enable them, by default all will be enabled
+* Run `ninja`
+    * Versions can be listed as arguments to build them (must be enabled in `configure.py`), by default all will be built
 
 ## Credits
 * This mod was made using the [SPM Rel Loader](https://github.com/SeekyCt/spm-rel-loader), which is based on the TTYD rel loader by PistonMiner and Zephiles.
