@@ -3,9 +3,10 @@
 from io import StringIO
 import os
 import sys
-from typing import List
+from typing import Dict, List
 
 from ninja_syntax import Writer
+import yaml
 
 #########
 # Paths #
@@ -17,6 +18,11 @@ INCDIR = "include"
 LINKDIR = "linker"
 BUILDDIR = "build"
 OUTDIR = "out"
+TOOLSDIR = "tools"
+
+# Project files
+ASSETS_YML = "assets.yml"
+INCBIN = "$toolsdir/incbin.S"
 
 # Libraries
 SPM_HEADERS = "spm-headers"
@@ -130,6 +136,9 @@ def emit_vars(n: Writer):
     n.variable("linkdir", LINKDIR)
     n.variable("builddir", BUILDDIR)
     n.variable("outdir", OUTDIR)
+    n.variable("toolsdir", TOOLSDIR)
+
+    n.variable("incbin", INCBIN)
 
     # Libraries
     n.variable("spm_headers", SPM_HEADERS)
@@ -183,6 +192,22 @@ def emit_rules(n: Writer):
         depfile = "$out.d",
         deps = "gcc",
         description = "AS $out"
+    )
+
+    # binary -> .o compilation
+    # Variables to pass in:
+    #     symbol: symbol name to give the asset (size will be <symbol>_size)
+    #     align: alignment to give the asset
+    #     section: section to place the asset in
+    n.rule(
+        "incbin",
+        command = (
+            "$cc -MD -MT $out -MF $out.d $asflags -c $incbin -o $out -I . "
+            "-DPATH=$in -DNAME=$symbol -DALIGN=$align -DSECTION=$section"       
+        ),
+        depfile = "$out.d",
+        deps = "gcc",
+        description = "INCBIN $out"
     )
 
     # .o & .ld -> .elf linking
@@ -259,6 +284,34 @@ def emit_build(n: Writer, ver: str):
             )
         else:
             assert False, f"Unknown file type {ext} for {path}"
+
+    # Emit asset builds
+    with open(ASSETS_YML) as f:
+        assets: Dict = yaml.load(f, yaml.Loader)
+    if assets is None:
+        assets = {}
+    assert isinstance(assets, Dict), "Invalid format assets.yml"
+    for path, cfg in assets.items():
+        # Convert path
+        path = path.replace('\\', '/')
+
+        # Get output name
+        ofile = os.path.join("$builddir", ver, path + ".o")
+        ofiles.append(ofile)
+
+        # Build
+        assert "symbol" in cfg, f"assets.yml missing field 'symbol' missing for asset {path}"
+        n.build(
+            ofile,
+            rule = "incbin",
+            inputs = path,
+            implicit = INCBIN,
+            variables = {
+                "symbol" : cfg["symbol"],
+                "align" : cfg.get("align", 0x4),
+                "section" : cfg.get("section", ".rodata") 
+            }
+        )
     
     # Find ld scripts
     ldfiles = find_files(LINKDIR)

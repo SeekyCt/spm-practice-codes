@@ -28,7 +28,7 @@ To compile this yourself, you'll need the following:
 * ninja
 * Python 3
     - 3.8 is known to work, earlier versions may too
-* The ninja_syntax python module
+* The python modules from `requirements.txt` (`pip install -r requirements.txt`)
 * The fork of PistonMiner's elf2rel from the [SPM Rel Loader repo](https://github.com/SeekyCt/spm-rel-loader/releases/tag/elf2rel-24-6-2021)
     * For v8 and above, the 21-12-2021 build is required. v5-7 require the 24-6-2021 build. Older versions are compatible with any build
 * The ELF2REL environment variable set to the path to your compiled `elf2rel` executable
@@ -43,3 +43,4 @@ Once that's set up:
 * This mod was made using the [SPM Rel Loader](https://github.com/SeekyCt/spm-rel-loader), which is based on the TTYD rel loader by PistonMiner and Zephiles.
 * JohnP55 for help and suggestions creating the map change teleport effect.
 * TheLordScruffy for the Dolphin & Riivolution detection methods.
+* stebler for `tools/incbin.S`.
