@@ -7,3 +7,4 @@ build.ninja
 .vscode
 porting
 *.bat
+compile_commands.json
