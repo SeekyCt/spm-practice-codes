@@ -454,3 +454,8 @@
 1,5,15ef30:dan_start_shadoo_evt
 1,5,d1958:sammerDefsCh6
 1,5,d1e08:sammerDefsEndgame
+
+// new to v9
+80142D40:marioChgMot
+80067770:fadeSetMapChangeTransition
+8023B5CC:spsndCheckBgmPlaying
