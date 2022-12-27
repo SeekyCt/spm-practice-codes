@@ -4,6 +4,8 @@
 */
 #pragma once
 
+#include <common.h>
+
 #include "mod_ui_base/window.h"
 #include "pyconsole.h"
 

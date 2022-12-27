@@ -1,11 +1,11 @@
+#include <common.h>
+#include <msl/stdio.h>
+
 #include "mod_ui_base/colours.h"
 #include "miscmenu.h"
 #include "mod.h"
 #include "nandsettings.h"
 #include "util.h"
-
-#include <types.h>
-#include <wii/stdio.h>
 
 namespace mod {
 

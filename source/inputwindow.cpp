@@ -1,3 +1,13 @@
+#include <common.h>
+#include <spm/gxsub.h>
+#include <spm/icondrv.h>
+#include <spm/mario.h>
+#include <spm/seqdrv.h>
+#include <spm/wpadmgr.h>
+#include <wii/wpad.h>
+#include <msl/stdio.h>
+#include <msl/string.h>
+
 #include "mod_ui_base/colours.h"
 #include "mod_ui_base/menuwindow.h"
 #include "assets.h"
@@ -5,16 +15,6 @@
 #include "mod.h"
 #include "nandsettings.h"
 #include "util.h"
-
-#include <types.h>
-#include <spm/gxsub.h>
-#include <spm/icondrv.h>
-#include <spm/mario.h>
-#include <spm/seqdrv.h>
-#include <spm/wpadmgr.h>
-#include <wii/stdio.h>
-#include <wii/string.h>
-#include <wii/wpad.h>
 
 namespace mod {
 
@@ -43,6 +43,7 @@ enum InputTplPos
     INP_TPL_UP_RIGHT,
     INP_TPL_DOWN_LEFT,
     INP_TPL_DOWN_RIGHT,
+    INP_TPL_DPAD_NONE,
 
     // Placeholder
     INP_TPL_DPAD = 0xff
@@ -66,7 +67,8 @@ InputWindow::DpadDef InputWindow::sDpadDefs[] = {
     {WPAD_BTN_RIGHT | WPAD_BTN_UP, INP_TPL_UP_LEFT},
     {WPAD_BTN_RIGHT | WPAD_BTN_DOWN, INP_TPL_UP_RIGHT},
     {WPAD_BTN_LEFT | WPAD_BTN_UP, INP_TPL_DOWN_LEFT},
-    {WPAD_BTN_LEFT | WPAD_BTN_DOWN, INP_TPL_DOWN_RIGHT}
+    {WPAD_BTN_LEFT | WPAD_BTN_DOWN, INP_TPL_DOWN_RIGHT},
+    {WPAD_BTN_NONE, INP_TPL_DPAD_NONE}
 };
 
 InputWindow::InputWindow()
@@ -89,10 +91,6 @@ void InputWindow::disp()
     {
         ButtonDef * def = sDefs + i;
 
-        // Skip if not pressed
-        if ((def->mask & held) == 0)
-            continue;
-        
         // Get tpl index
         u32 tplIdx = def->tplIdx;
         if (def->tplIdx == INP_TPL_DPAD)
@@ -106,15 +104,21 @@ void InputWindow::disp()
             }
         }
 
+        // Skip if not pressed
+        if ((def->mask & held) == 0) {
+            Window::drawTexture(&inpTpl, tplIdx, BASE_X + (i * X_DIFF), BASE_Y, SCALE, &colours::grey);
+            continue;
+        }        
+
         // Draw
-        Window::drawTexture(inpTpl, tplIdx, BASE_X + (i * X_DIFF), BASE_Y, SCALE, &colours::white);
+        Window::drawTexture(&inpTpl, tplIdx, BASE_X + (i * X_DIFF), BASE_Y, SCALE, &colours::white);
     }
 }
 
 void InputWindow::init()
 {
     sInstance = new InputWindow();
-    wii::tpl::TPLBind(inpTpl);
+    wii::tpl::TPLBind(&inpTpl);
 }
 
 }

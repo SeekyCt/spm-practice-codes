@@ -1,8 +1,13 @@
 #pragma once
 
-#include <types.h>
+#include <common.h>
+#include <evt_cmd.h>
 #include <spm/evtmgr.h>
+#include <spm/memory.h>
 #include <spm/nandmgr.h>
+
+void * operator new(size_t size, spm::memory::Heap heap);
+void * operator new[](size_t size, spm::memory::Heap heap);
 
 namespace mod {
 

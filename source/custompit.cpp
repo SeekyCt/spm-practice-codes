@@ -1,3 +1,22 @@
+#include <common.h>
+#include <spm/evtmgr.h>
+#include <spm/evtmgr_cmd.h>
+#include <spm/filemgr.h>
+#include <spm/item_data.h>
+#include <spm/lz_embedded.h>
+#include <spm/mario_pouch.h>
+#include <spm/memory.h>
+#include <spm/npcdrv.h>
+#include <spm/npcmisc.h>
+#include <spm/itemdrv.h>
+#include <spm/item_data.h>
+#include <spm/parse.h>
+#include <spm/system.h>
+#include <spm/rel/dan.h>
+#include <wii/cx.h>
+#include <wii/dvd.h>
+#include <msl/string.h>
+
 #include "mod_ui_base/colours.h"
 #include "consolewindow.h"
 #include "custompit.h"
@@ -5,29 +24,12 @@
 #include "patch.h"
 #include "util.h"
 
-#include <types.h>
-#include <spm/evtmgr.h>
-#include <spm/evtmgr_cmd.h>
-#include <spm/filemgr.h>
-#include <spm/lzss10.h>
-#include <spm/item_data.h>
-#include <spm/lz_embedded.h>
-#include <spm/mario_pouch.h>
-#include <spm/memory.h>
-#include <spm/npcdrv.h>
-#include <spm/itemdrv.h>
-#include <spm/parse.h>
-#include <spm/system.h>
-#include <spm/rel/dan.h>
-#include <wii/DVDFS.h>
-#include <wii/string.h>
-
 namespace mod {
 
 using spm::evtmgr::EvtEntry;
 using spm::dan::DanWork;
 using spm::dan::DanDungeon;
-using spm::dan::danWp;
+using spm::dan::dan_wp;
 using spm::lz_embedded::pitText;
 
 // Re-implementation of decompiled function for custom text support
@@ -44,17 +46,17 @@ static int custom_evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
         useCustomText = false;
         if (gSettings->customPitText)
         {
-            if (wii::DVDFS::DVDConvertPathToEntrynum(CUSTOM_PIT_FILENAME) != -1)
+            if (wii::dvd::DVDConvertPathToEntrynum(CUSTOM_PIT_FILENAME) != -1)
                 useCustomText = true;
             else
                 ConsoleWindow::push("ERROR: " CUSTOM_PIT_FILENAME " not found.", &colours::red);
         }
 
         // Allocate work
-        danWp = new (spm::memory::Heap::MAP) DanWork;
-        wii::string::memset(danWp, 0, sizeof(*danWp));
-        danWp->dungeons = new (spm::memory::Heap::MAP) DanDungeon[DUNGEON_MAX];
-        wii::string::memset(danWp->dungeons, 0, sizeof(DanDungeon[DUNGEON_MAX]));
+        dan_wp = new (spm::memory::Heap::HEAP_MAP) DanWork;
+        msl::string::memset(dan_wp, 0, sizeof(*dan_wp));
+        dan_wp->dungeons = new (spm::memory::Heap::HEAP_MAP) DanDungeon[DUNGEON_MAX];
+        msl::string::memset(dan_wp->dungeons, 0, sizeof(DanDungeon[DUNGEON_MAX]));
     }
 
     // Prepare pit text to be read
@@ -70,9 +72,9 @@ static int custom_evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
     }
     else
     {
-        u32 size = spm::lzss10::lzss10GetDecompSize(pitText); // GCC can't handle lzss10ParseHeader
+        u32 size = wii::cx::CXGetUncompressedSize(pitText); // GCC can't handle CXGetCompressionHeader
         decompPitText = new char[size];
-        spm::lzss10::lzss10Decompress(pitText, decompPitText);
+        wii::cx::CXUncompressLZ(pitText, decompPitText);
         spm::parse::parseInit(decompPitText, size);
     }
 
@@ -90,12 +92,12 @@ static int custom_evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
         char itemName[64];
         spm::parse::parseTagGet1("<item>", spm::parse::PARSE_VALUE_TYPE_STRING, itemName);
         s32 itemId = spm::itemdrv::itemTypeNameToId(itemName);
-        if (wii::string::strcmp(itemName, "ITEM_ID_NULL") != 0 && wii::string::strcmp(itemName, "NULL") != 0)
+        if (msl::string::strcmp(itemName, "ITEM_ID_NULL") != 0 && msl::string::strcmp(itemName, "NULL") != 0)
             assertf(itemId != 0, "Invalid item name [%s]", itemName);
-        danWp->dungeons[no].item = itemId;
+        dan_wp->dungeons[no].item = itemId;
 
         // Read map (bitflags for parts of the map to enable and disable in enemy rooms, 0 & unused elsewhere)
-        spm::parse::parseTagGet1("<map>", spm::parse::PARSE_VALUE_TYPE_INT, &danWp->dungeons[no].map);
+        spm::parse::parseTagGet1("<map>", spm::parse::PARSE_VALUE_TYPE_INT, &dan_wp->dungeons[no].map);
 
         // Read doors
         while (spm::parse::parsePush("<door>"))
@@ -103,26 +105,26 @@ static int custom_evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
             s32 enter, exit;
             spm::parse::parseTagGet1("<enter>", spm::parse::PARSE_VALUE_TYPE_INT, &enter);
             assertf(1 <= enter && enter <= 32, "Invalid enter door id %d", enter);
-            danWp->dungeons[no].doors[i].enter = enter;
+            dan_wp->dungeons[no].doors[i].enter = enter;
             spm::parse::parseTagGet1("<exit>", spm::parse::PARSE_VALUE_TYPE_INT, &exit);
             assertf(1 <= exit && exit <= 32, "Invalid exit door id %d", exit);
-            danWp->dungeons[no].doors[i].exit = exit;
+            dan_wp->dungeons[no].doors[i].exit = exit;
             spm::parse::parsePopNext();
             i++;
         }
-        danWp->dungeons[no].doorCount = i;
+        dan_wp->dungeons[no].doorCount = i;
 
         // Read enemies
         i = 0;
         while (spm::parse::parsePush("<enemy>"))
         {
-            spm::parse::parseTagGet1("<name>", spm::parse::PARSE_VALUE_TYPE_INT, &danWp->dungeons[no].enemies[i].name);
-            spm::parse::parseTagGet1("<num>", spm::parse::PARSE_VALUE_TYPE_INT, &danWp->dungeons[no].enemies[i].num);
-            spm::parse::parseTagGet1("<pos>", spm::parse::PARSE_VALUE_TYPE_INT, &danWp->dungeons[no].enemies[i].pos);
+            spm::parse::parseTagGet1("<name>", spm::parse::PARSE_VALUE_TYPE_INT, &dan_wp->dungeons[no].enemies[i].name);
+            spm::parse::parseTagGet1("<num>", spm::parse::PARSE_VALUE_TYPE_INT, &dan_wp->dungeons[no].enemies[i].num);
+            spm::parse::parseTagGet1("<pos>", spm::parse::PARSE_VALUE_TYPE_INT, &dan_wp->dungeons[no].enemies[i].pos);
             spm::parse::parsePopNext();
             i++;
         }
-        danWp->dungeons[no].enemyCount = i;
+        dan_wp->dungeons[no].enemyCount = i;
 
         // Move to next dungeon
         spm::parse::parsePopNext();
@@ -150,7 +152,7 @@ static bool isLastEnemy(spm::npcdrv::NPCEntry * npc)
                 continue;
             
             // False if any other alive
-            if (otherNpc->flags_8 & 1)
+            if (otherNpc->flag8 & 1)
                 return false;
         }
 
@@ -161,9 +163,9 @@ static bool isLastEnemy(spm::npcdrv::NPCEntry * npc)
 static s32 getKeyItemId()
 {
     if (spm::evtmgr_cmd::evtGetValue(nullptr, GSW(1)) >= 100)
-        return spm::item_data::URA_DAN_KEY;
+        return spm::item_data::ITEM_ID_KEY_URA_DAN_KEY;
     else
-        return spm::item_data::DAN_KEY;
+        return spm::item_data::ITEM_ID_KEY_DAN_KEY;
 }
 
 static bool isKeyDropped()
@@ -174,7 +176,7 @@ static bool isKeyDropped()
 }
 
 static void (*npcDropItemReal)(spm::npcdrv::NPCEntry *, s32, s32);
-static int (*evt_dan_decide_key_enemy_real)(EvtEntry *, bool);
+static s32 (*evt_dan_decide_key_enemy_real)(EvtEntry *, bool);
 
 static void handleKeyDrop(spm::npcdrv::NPCEntry * npc, s32 itemType, s32 coinCount)
 {
@@ -184,7 +186,7 @@ static void handleKeyDrop(spm::npcdrv::NPCEntry * npc, s32 itemType, s32 coinCou
     npcDropItemReal(npc, itemType, coinCount);
 }
 
-static int handleKeyAssign(EvtEntry * entry, bool isFirstCall)
+static s32 handleKeyAssign(EvtEntry * entry, bool isFirstCall)
 {
     // Key is manually dropped later in lastKey mode
     if (gSettings->lastKey)
@@ -197,7 +199,7 @@ void customPitPatch()
 {
     writeBranch(spm::dan::evt_dan_read_data, 0, custom_evt_dan_read_data);
     evt_dan_decide_key_enemy_real = patch::hookFunction(spm::dan::evt_dan_decide_key_enemy, handleKeyAssign);
-    npcDropItemReal = patch::hookFunction(spm::npcdrv::npcDropItem, handleKeyDrop);
+    npcDropItemReal = patch::hookFunction(spm::npcmisc::npcDropItem, handleKeyDrop);
 }
 
 }

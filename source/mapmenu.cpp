@@ -1,7 +1,8 @@
-#include "mapmenu.h"
-
+#include <common.h>
 #include <spm/wpadmgr.h>
 #include <wii/wpad.h>
+
+#include "mapmenu.h"
 
 namespace mod {
 

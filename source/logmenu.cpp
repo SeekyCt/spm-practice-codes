@@ -1,8 +1,8 @@
+#include <common.h>
+
 #include "logmenu.h"
 #include "nandsettings.h"
 #include "scriptlog.h"
-
-#include <types.h>
 
 namespace mod {
 

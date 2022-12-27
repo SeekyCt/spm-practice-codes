@@ -1,23 +1,23 @@
-#include "mod.h"
-
-#include <types.h>
+#include <common.h>
 #include <spm/evtmgr.h>
 #include <spm/evtmgr_cmd.h>
 #include <spm/system.h>
-#include <wii/NAND.h>
-#include <wii/OSError.h>
+#include <wii/nand.h>
+#include <wii/os.h>
+
+#include "mod.h"
 
 namespace mod {
 
-using wii::NAND::NANDCommandBlock;
-using wii::NAND::NANDFileInfo;
-using wii::NAND::NANDCreateAsync;
-using wii::NAND::NANDDeleteAsync;
-using wii::NAND::NANDReadAsync;
-using wii::NAND::NANDWriteAsync;
-using wii::NAND::NANDSafeOpenAsync;
-using wii::NAND::NANDSafeCloseAsync;
-using wii::NAND::NANDCheckAsync;
+using wii::nand::NANDCommandBlock;
+using wii::nand::NANDFileInfo;
+using wii::nand::NANDCreateAsync;
+using wii::nand::NANDDeleteAsync;
+using wii::nand::NANDReadAsync;
+using wii::nand::NANDWriteAsync;
+using wii::nand::NANDSafeOpenAsync;
+using wii::nand::NANDSafeCloseAsync;
+using wii::nand::NANDCheckAsync;
 using spm::evtmgr::EvtScriptCode;
 using spm::evtmgr::EvtEntry;
 using spm::evtmgr_cmd::evtGetValue;
@@ -27,7 +27,7 @@ using spm::evtmgr_cmd::evtSetValue;
     assertf((ret) >= 0, MOD_VERSION " Unhandled NAND error %d\n(please report this)", (ret))
 
 #define NAND_LOG_RESULT(ret) \
-    wii::OSError::OSReport("%s: result %d\n", __FUNCTION__, (ret))
+    wii::os::OSReport("%s: result %d\n", __FUNCTION__, (ret))
 
 struct AsyncResult
 {
@@ -37,7 +37,7 @@ struct AsyncResult
 static AsyncResult asyncResult;
 static u32 checkAnswer;
 
-static void cb(s32 result, wii::NAND::NANDCommandBlock * cmd)
+static void cb(s32 result, wii::nand::NANDCommandBlock * cmd)
 {
     (void) cmd;
     asyncResult.val = result;
@@ -223,7 +223,7 @@ s32 evt_nand_close(EvtEntry * entry, bool firstRun)
     }
 }
 
-static void checkCb(s32 result, wii::NAND::NANDCommandBlock * cmd)
+static void checkCb(s32 result, wii::nand::NANDCommandBlock * cmd)
 {
     (void) cmd;
 

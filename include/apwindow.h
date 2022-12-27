@@ -5,11 +5,13 @@
 
 #pragma once
 
-#ifdef PYCONSOLE_PROTOTYPE
+#include <common.h>
+#include <wii/mtx.h>
+
 #include "mod_ui_base/window.h"
 #include "pyconsole.h"
 
-#include <wii/types.h>
+#ifdef PYCONSOLE_PROTOTYPE
 
 namespace mod {
 
@@ -18,8 +20,8 @@ class APWindow final : public Window
 protected:
     s32 mApId;
     const char * mApAnimName;
-    wii::Vec3 mApPos;
-    wii::Vec3 mApScale;
+    wii::mtx::Vec3 mApPos;
+    wii::mtx::Vec3 mApScale;
     bool mApRestartAnim;
 
     static APWindow * sInstance;

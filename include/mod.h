@@ -1,8 +1,10 @@
 #pragma once
 
+#include <common.h>
+
 namespace mod {
 
-#define MOD_VERSION "SPM Practice Codes v8"
+#define MOD_VERSION "SPM Practice Codes v9"
 
 extern bool gIsDolphin;
 extern bool gIsRiivolution;

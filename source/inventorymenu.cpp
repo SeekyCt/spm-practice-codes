@@ -1,11 +1,11 @@
-#include "inventorymenu.h"
-#include "util.h"
-
-#include <types.h>
+#include <common.h>
 #include <spm/item_data.h>
 #include <spm/mario_pouch.h>
 #include <spm/msgdrv.h>
-#include <wii/stdio.h>
+#include <msl/stdio.h>
+
+#include "inventorymenu.h"
+#include "util.h"
 
 namespace mod {
 

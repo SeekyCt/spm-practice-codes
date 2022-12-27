@@ -1,10 +1,10 @@
-#include "statmenu.h"
-
-#include <types.h>
+#include <common.h>
 #include <spm/mario_pouch.h>
 #include <spm/wpadmgr.h>
-#include <wii/stdio.h>
 #include <wii/wpad.h>
+#include <msl/stdio.h>
+
+#include "statmenu.h"
 
 namespace mod {
 
@@ -92,7 +92,7 @@ void StatMenu::setValue(int stat, int value)
 void StatMenu::updateStatDisps()
 {
     for (int i = 0; i < STAT_COUNT; i++)
-        wii::stdio::sprintf(mStatStrs[i], "%d", getValue(i));
+        msl::stdio::sprintf(mStatStrs[i], "%d", getValue(i));
 }
 
 void StatMenu::valueUp(MenuScrollerH * scroller, void * param)
@@ -147,7 +147,7 @@ void StatMenu::disp()
         if (mIncrement > 1)
             mIncrement /= 10;
     }
-    wii::stdio::sprintf(mIncrementStr, "Increment (<icon PAD_MINUS 0.8 0 35 0> <icon PAD_PLUS 0.8 0 35 0><col ffffffff>): %d", mIncrement);
+    msl::stdio::sprintf(mIncrementStr, "Increment (<icon PAD_MINUS 0.8 0 35 0> <icon PAD_PLUS 0.8 0 35 0><col ffffffff>): %d", mIncrement);
     drawMessage(mIncrementStr, -330, -80);
 }
 

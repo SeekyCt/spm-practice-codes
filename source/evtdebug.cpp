@@ -1,13 +1,13 @@
+#include <common.h>
+#include <spm/evtmgr_cmd.h>
+#include <wii/os.h>
+#include <msl/string.h>
+
 #include "consolewindow.h"
 #include "evtdebug.h"
 #include "nandsettings.h"
 #include "patch.h"
 #include "util.h"
-
-#include <types.h>
-#include <spm/evtmgr_cmd.h>
-#include <wii/OSError.h>
-#include <wii/string.h>
 
 namespace mod {
 
@@ -22,7 +22,7 @@ static s32 debugPutMsg(spm::evtmgr::EvtEntry * entry)
 
         case LogType::OSREPORT:
             // Write to OSReport
-            wii::OSError::OSReport("%s\n", str);
+            wii::os::OSReport("%s\n", str);
             break;
 
         case LogType::SCREEN:
@@ -43,7 +43,7 @@ static s32 debugPutReg(s32 ret)
 
         case LogType::OSREPORT:
             // Write to OSReport
-            wii::OSError::OSReport("%s\n", spm::evtmgr_cmd::evt_debug_put_reg_str);
+            wii::os::OSReport("%s\n", spm::evtmgr_cmd::evt_debug_put_reg_str);
             break;
 
         case LogType::SCREEN:

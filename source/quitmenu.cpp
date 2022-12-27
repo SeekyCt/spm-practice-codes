@@ -1,8 +1,8 @@
+#include <common.h>
+#include <spm/seqdrv.h>
+
 #include "mod_ui_base/centredbutton.h"
 #include "quitmenu.h"
-
-#include <types.h>
-#include <spm/seqdrv.h>
 
 namespace mod {
 

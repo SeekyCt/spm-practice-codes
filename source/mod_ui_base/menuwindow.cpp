@@ -1,12 +1,12 @@
-#include "mod_ui_base/colours.h"
-#include "mod_ui_base/menuwindow.h"
-
-#include <types.h>
+#include <common.h>
 #include <spm/fontmgr.h>
 #include <spm/hud.h>
 #include <spm/pausewin.h>
 #include <spm/homebuttondrv.h>
 #include <spm/wpadmgr.h>
+
+#include "mod_ui_base/colours.h"
+#include "mod_ui_base/menuwindow.h"
 
 namespace mod {
 
@@ -34,7 +34,7 @@ MenuWindow::MenuWindow()
     // Pause game, hide hud and disable home menu
     spm::pausewin::pausewinPauseGame();
     spm::hud::hudHide();
-    spm::homebuttondrv::homebuttonWp->flags |= HOMEBUTTON_FLAG_FORBIDDEN;
+    spm::homebuttondrv::homebuttondrv_wp->flags |= HOMEBUTTON_FLAG_FORBIDDEN;
 }
 
 MenuWindow::~MenuWindow()
@@ -53,7 +53,7 @@ MenuWindow::~MenuWindow()
 
     // Set game back to original pause state and re-enable home menu
     spm::pausewin::pausewinUnpauseGame();
-    spm::homebuttondrv::homebuttonWp->flags &= ~HOMEBUTTON_FLAG_FORBIDDEN;
+    spm::homebuttondrv::homebuttondrv_wp->flags &= ~HOMEBUTTON_FLAG_FORBIDDEN;
 }
 
 f32 MenuWindow::getCentreAlignX(const char * str, f32 scale)
@@ -64,7 +64,7 @@ f32 MenuWindow::getCentreAlignX(const char * str, f32 scale)
     return centreX - (width / 2);
 }
 
-void MenuWindow::drawStringCentre(const char * str, f32 y, const wii::RGBA * colour,
+void MenuWindow::drawStringCentre(const char * str, f32 y, const wii::gx::GXColor * colour,
                                   f32 scale, bool edge, bool noise, bool rainbow)
 {
     f32 x = getCentreAlignX(str, scale);

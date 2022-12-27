@@ -1,11 +1,4 @@
-#include "mod_ui_base/colours.h"
-#include "mod_ui_base/menuwindow.h"
-#include "nandsettings.h"
-#include "hpwindow.h"
-#include "patch.h"
-#include "util.h"
-
-#include <types.h>
+#include <common.h>
 #include <spm/camdrv.h>
 #include <spm/casedrv.h>
 #include <spm/dispdrv.h>
@@ -21,10 +14,16 @@
 #include <spm/system.h>
 #include <spm/rel/wa1_02.h>
 #include <wii/mtx.h>
-#include <wii/stdio.h>
-#include <wii/string.h>
-#include <wii/types.h>
+#include <msl/stdio.h>
+#include <msl/string.h>
 #include <ogc/gx.h>
+
+#include "mod_ui_base/colours.h"
+#include "mod_ui_base/menuwindow.h"
+#include "nandsettings.h"
+#include "hpwindow.h"
+#include "patch.h"
+#include "util.h"
 
 namespace mod {
 
@@ -49,7 +48,7 @@ HPWindow * HPWindow::sInstance = nullptr;
 
 HPWindow::HPWindow()
 {
-    mCamera = spm::camdrv::CAM_2D;
+    mCamera = spm::camdrv::CAM_ID_2D;
 }
 
 const s32 HPWindow::bossTribes[] = {
@@ -130,7 +129,7 @@ bool HPWindow::npcBossTribeCheck(spm::npcdrv::NPCEntry * npc)
 
 bool HPWindow::npcEnemyTribeCheck(spm::npcdrv::NPCEntry * npc)
 {
-    if (npc->tribeId == 0 && wii::string::strcmp(npc->m_Anim.animPoseName, "e_kuribo") != 0)
+    if (npc->tribeId == 0 && msl::string::strcmp(npc->m_Anim.animPoseName, "e_kuribo") != 0)
         return false;
     
     if (npcBossTribeCheck(npc))
@@ -151,7 +150,7 @@ bool HPWindow::npcDoorCheck(const char * name)
     spm::evt_door::DoorDesc * door = spm::evt_door::evtDoorGetActiveDoorDesc();
 
     // Never display while a door is open
-    if (spm::evt_door::evtDoorWp->flags & EVT_DOOR_FLAG_DOOR_OPEN)
+    if (spm::evt_door::evt_door_wp->flags & EVT_DOOR_FLAG_DOOR_OPEN)
         return false;
 
     // Always display if not in a room
@@ -165,7 +164,7 @@ bool HPWindow::npcDoorCheck(const char * name)
     // Display if belonging to room
     for (const char ** pName = door->npcNameList; *pName; pName++)
     {
-        if (wii::string::strcmp(name, *pName) == 0)
+        if (msl::string::strcmp(name, *pName) == 0)
             return true;
     }
 
@@ -179,7 +178,7 @@ bool HPWindow::npcPosCheck(spm::npcdrv::NPCEntry * npc)
     if (!check3d())
         return true;
 
-    spm::camdrv::CamEntry * cam = spm::camdrv::camGetPtr(spm::camdrv::CAM_3D);
+    spm::camdrv::CamEntry * cam = spm::camdrv::camGetPtr(spm::camdrv::CAM_ID_3D);
     return cam->pos.x < npc->position.x;
 }
 
@@ -193,7 +192,7 @@ s32 HPWindow::bossGetHp(spm::npcdrv::NPCEntry * npc)
         case 284:
             // Mimi only stores the number of times she's been hit,
             // and doesn't update this to 6 on the final hit
-            if (npc->flags_10 & 0x10000)
+            if (npc->flag10 & 0x10000)
                 return 0;
             else
                 return 6 - npc->unitWork[3];
@@ -268,7 +267,7 @@ bool HPWindow::npcBossSammerCheck(spm::npcdrv::NPCEntry * npc)
     if (gsw0 < 421)
     {
         // First room works differently
-        if (wii::string::strcmp(map, "wa1_02") == 0)
+        if (msl::string::strcmp(map, "wa1_02") == 0)
         {
             // Check not before battle / already beaten
             if (gsw0 != 227)
@@ -276,11 +275,11 @@ bool HPWindow::npcBossSammerCheck(spm::npcdrv::NPCEntry * npc)
 
             // Check not in after battle cutscene
             spm::npcdrv::NPCEntry * sammer = spm::npcdrv::npcNameToPtr("npc_1000007b");
-            return (sammer->flags_8 & 0x40000000) != 0;
+            return (sammer->flag8 & 0x40000000) != 0;
         }
 
         spm::wa1_02::SammerDef * def = spm::wa1_02::sammerDefsCh6;
-        while (wii::string::strcmp(def->mapName, map) != 0)
+        while (msl::string::strcmp(def->mapName, map) != 0)
             def++;
 
         return gsw0 < def->alreadyBeatenGsw0;
@@ -288,7 +287,7 @@ bool HPWindow::npcBossSammerCheck(spm::npcdrv::NPCEntry * npc)
     else
     {
         spm::wa1_02::SammerDef * def = spm::wa1_02::sammerDefsEndgame;
-        while (wii::string::strcmp(def->mapName, spm::spmario::gp->mapName) != 0)
+        while (msl::string::strcmp(def->mapName, spm::spmario::gp->mapName) != 0)
             def++;
 
         s32 lsw1 = spm::evtmgr_cmd::evtGetValue(nullptr, LSW(1));
@@ -304,8 +303,8 @@ void HPWindow::bossDisp()
     for (s32 i = 0; i < wp->num; i++, npc++)
     {
         // Check NPC is visible and a boss
-        if ((npc->flags_8 & 1) && (npc->flags_8 & 0x40000000) == 0
-            && (npc->flags_c & 0x20) == 0 && (npc->flag46C & 0x20000) == 0 
+        if ((npc->flag8 & 1) && (npc->flag8 & 0x40000000) == 0
+            && (npc->flagC & 0x20) == 0 && (npc->flag46C & 0x20000) == 0 
             && npcBossTribeCheck(npc) && npcBossBlooperCheck(npc) && npcBossSammerCheck(npc))
         {
             spm::npcdrv::NPCTribe * tribe = spm::npcdrv::npcTribes + npc->tribeId;
@@ -314,14 +313,14 @@ void HPWindow::bossDisp()
             
             char name[64];
             const char * nameMsg = spm::msgdrv::msgSearch(card->nameMsg);
-            if (wii::string::strcmp(card->nameMsg, "ename_256") == 0)// Bowser has "(1)" appended
+            if (msl::string::strcmp(card->nameMsg, "ename_256") == 0)// Bowser has "(1)" appended
             {
                 // Remove (1)
-                const char * end = wii::string::strstr(nameMsg, "(1)");
+                const char * end = msl::string::strstr(nameMsg, "(1)");
                 if (end == nullptr)
-                    end = wii::string::strstr(nameMsg, "\x81\x69\x82\x50\x81\x6a"); // Shift-JIS（１）
+                    end = msl::string::strstr(nameMsg, "\x81\x69\x82\x50\x81\x6a"); // Shift-JIS（１）
                 size_t n = end - nameMsg;
-                wii::string::strncpy(name, nameMsg, n);
+                msl::string::strncpy(name, nameMsg, n);
 
                 // Null terminate
                 // Some languages exlcude the space
@@ -332,12 +331,12 @@ void HPWindow::bossDisp()
             }
             else
             {
-                wii::string::strcpy(name, nameMsg); 
+                msl::string::strcpy(name, nameMsg); 
             }
             f32 x = BOSS_NAME_X - ((spm::fontmgr::FontGetMessageWidth(name) * BOSS_NAME_SCALE) / 2);
             Window::drawString(name, x, BOSS_NAME_Y, &colours::red, BOSS_NAME_SCALE, true);
 
-            wii::Vec2 pos = {BOSS_BAR_X, BOSS_BAR_Y};
+            wii::mtx::Vec2 pos = {BOSS_BAR_X, BOSS_BAR_Y};
             Window::drawBoxGX(&colours::black, BOSS_BAR_X, BOSS_BAR_Y, BOSS_BAR_WIDTH, BOSS_BAR_HEIGHT);
 
             pos.x += OUTLINE_SIZE;
@@ -359,12 +358,12 @@ void HPWindow::enemyDisp()
     for (s32 i = 0; i < wp->num; i++, npc++)
     {
         // Check NPC is visible and an enemy
-        if ((npc->flags_8 & 1) && (npc->flags_8 & 0x40000000) == 0
-            && (npc->flags_c & 0x20) == 0 && (npc->flag46C & 0x20000) == 0 
+        if ((npc->flag8 & 1) && (npc->flag8 & 0x40000000) == 0
+            && (npc->flagC & 0x20) == 0 && (npc->flag46C & 0x20000) == 0 
             && npcPosCheck(npc) && npcDoorCheck(npc->name) && npcEnemyTribeCheck(npc))
         {
             // Get screen position
-            wii::Vec3 pos;
+            wii::mtx::Vec3 pos;
             spm::camdrv::getScreenPoint(&npc->position, &pos);
 
             // Adjust x for the left of the bar
@@ -387,7 +386,7 @@ void HPWindow::enemyDisp()
 
             // Draw hp
             char str[16];
-            wii::stdio::sprintf(str, "%d", npc->hp);
+            msl::stdio::sprintf(str, "%d", npc->hp);
             Window::drawString(str, pos.x + 50.0f, pos.y, &colours::yellow, 1.0f, true);
         }
     }
