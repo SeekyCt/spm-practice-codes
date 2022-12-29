@@ -35,7 +35,6 @@ SPM_HEADERS = "spm-headers"
 DEVKITPPC = os.environ.get("DEVKITPPC")
 assert DEVKITPPC is not None, "Error: DEVKITPPC environment variable not set"
 CC = os.path.join("$devkitppc", "bin", "powerpc-eabi-gcc")
-LD = os.path.join("$devkitppc", "bin", "powerpc-eabi-ld")
 
 # Elf2rel
 ELF2REL = os.environ.get("ELF2REL")
@@ -62,7 +61,7 @@ INCLUDES = ' '.join(
 # Machine-dependant flags
 # Passed to C, C++ and asm compilation, and the linker
 MACHDEP = ' '.join([
-    "-mno-sdata", # Disable SDA sections since in rel
+    "-mno-sdata", # Disable SDA sections since not main binary
     "-mgcn", # Use ogc linker
     "-DGEKKO", # CPU preprocessor define
     "-mcpu=750", # Set CPU to 750cl
@@ -146,7 +145,6 @@ def emit_vars(n: Writer):
     # Devkitppc
     n.variable("devkitppc", DEVKITPPC)
     n.variable("cc", CC)
-    n.variable("ld", LD)
 
     # Elf2rel
     n.variable("elf2rel", ELF2REL)
