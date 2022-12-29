@@ -1,32 +1,32 @@
 .global OSPanicForwarder
 .type OSPanicForwarder, @function
 OSPanicForwarder:
-    li 0, 1
-    lis 4, inOSPanic@ha
-    stw 0, inOSPanic@l (4)
-    addi 3, 1, 0x78
+    li r0, 1
+    lis r4, inOSPanic@ha
+    stw 0, inOSPanic@l (r4)
+    addi r3, r1, 0x78
     b exceptionMessageHandler
 
 .global exceptionOSReportForwarder
 .type OSPanicForwarder, @function
 exceptionOSReportForwarder:
-    mflr 0
-    stw 0, 4 (1)
-    stwu 1, -32 (1)
-    mr 10, 9
-    mr 9, 8
-    mr 8, 7
-    mr 7, 6
-    mr 6, 5
-    mr 5, 4
-    mr 4, 3
-    lis 3, exceptionWorkingText@h
-    ori 3, 3, exceptionWorkingText@l
+    mflr r0
+    stw r0, 4 (r1)
+    stwu r1, -32 (r1)
+    mr r10, 9
+    mr r9, 8
+    mr r8, 7
+    mr r7, 6
+    mr r6, 5
+    mr r5, 4
+    mr r4, 3
+    lis r3, exceptionWorkingText@h
+    ori r3, r3, exceptionWorkingText@l
     bl sprintf
 
-    lis 3, exceptionWorkingText@h
-    ori 3, 3, exceptionWorkingText@l    
-    addi 1, 1, 32
-    lwz 0, 4 (1)
-    mtlr 0
+    lis r3, exceptionWorkingText@h
+    ori r3, r3, exceptionWorkingText@l    
+    addi r1, r1, 32
+    lwz r0, 4 (r1)
+    mtlr r0
     b exceptionOSReport
