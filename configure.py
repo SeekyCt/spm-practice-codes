@@ -68,6 +68,7 @@ MACHDEP = ' '.join([
     "-meabi", # Set ppc abi to eabi
     "-mhard-float", # Enable hardware floats
     "-nostdlib", # Don't link std lib
+    "-mregnames", # Enable r prefix for registers in asm
 ])
 
 # Base C flags
