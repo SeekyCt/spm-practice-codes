@@ -359,7 +359,7 @@ versions = [
     "kr0",
 ]
 
-def main(versions: str):
+def main(versions: List[str]):
     # Setup ninja
     outbuf = StringIO()
     n = Writer(outbuf)
