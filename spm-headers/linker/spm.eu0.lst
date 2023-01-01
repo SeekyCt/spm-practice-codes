@@ -16,7 +16,7 @@
 // text
 800294e0:mapDataPtr
 // data
-804031b8:mapDataList
+804031b8:mapData
 
 // mobjdrv.c
 8002c834:mobjNameToPtr
