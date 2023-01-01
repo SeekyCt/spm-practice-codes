@@ -7,7 +7,7 @@
 80004000:memcpy
 80004104:memset
 800293E4:mapDataPtr
-803C4EF8:mapDataList
+803C4EF8:mapData
 8002C7EC:mobjNameToPtrNoAssert
 80032610:msgSearch
 80037DB0:swInit
