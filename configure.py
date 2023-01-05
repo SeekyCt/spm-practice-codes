@@ -291,7 +291,7 @@ def emit_build(n: Writer, ver: str):
         assets = {}
     assert isinstance(assets, Dict), "Invalid format assets.yml"
     for path, cfg in assets.items():
-        # Convert path
+        # Convert path if needed (AS only supports / separator)
         path = path.replace('\\', '/')
 
         # Get output name
