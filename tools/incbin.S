@@ -22,7 +22,7 @@ END_SYMBOL:
     .size NAME, . - NAME
 
 // Asset size
-    .section SECTION.SIZE_SYMBOL
+    .section .rodata.SIZE_SYMBOL
     .balign 0x4
     .global SIZE_SYMBOL
 SIZE_SYMBOL:
