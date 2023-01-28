@@ -22,7 +22,7 @@ typedef struct
     s32 enter; // index of the door to enter the room with
     s32 exit; // index of the door to exit the room with
 } DanDoor;
-SIZE_ASSERT(DanDoor, 0x8);
+SIZE_ASSERT(DanDoor, 0x8)
 
 // A definition of enemies to spawn in the room, read from pitText
 typedef struct
@@ -31,7 +31,7 @@ typedef struct
     s32 num; // how many of the enemy to spawn
     s32 pos; // where to spawn the enemy, 0 for random
 } DanEnemy;
-SIZE_ASSERT(DanEnemy, 0xc);
+SIZE_ASSERT(DanEnemy, 0xc)
 
 // A definition of one pit room, read from pitText
 typedef struct
@@ -45,7 +45,7 @@ typedef struct
     DanDoor doors[20]; // possible door setups in this room
     DanEnemy enemies[16]; // enemies to spawn in this room
 } DanDungeon;
-SIZE_ASSERT(DanDungeon, 0x170);
+SIZE_ASSERT(DanDungeon, 0x170)
 
 typedef struct
 {
@@ -70,7 +70,7 @@ typedef struct
     char enterDoorName[64];
     char exitDoorName[64];
 } DanWork;
-SIZE_ASSERT(DanWork, 0x590);
+SIZE_ASSERT(DanWork, 0x590)
 
 DECOMP_STATIC(DanWork * dan_wp)
 
@@ -206,9 +206,9 @@ EVT_DECLARE_USER_FUNC(evt_dan_start_countdown, 0)
 bool danCheckKeyInMapBbox();
 
 /*
-    Returns whether an enemy holding the key exists within the map boundaries
+    Returns whether any enemy exists within the map boundaries
 */
-bool danCheckKeyEnemyInMapBbox();
+bool danCheckEnemyInMapBbox();
 
 /*
     user_func that runs endlessly in a parallel script to spawn the key at the door

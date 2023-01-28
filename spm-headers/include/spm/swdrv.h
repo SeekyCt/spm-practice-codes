@@ -17,18 +17,26 @@ CPP_WRAPPER(spm::swdrv)
 
 typedef struct
 {
+/* 0x00 */ char mapName[8];
+/* 0x08 */ u32 coinFlags[16];
+} SwCoinEntry;
+SIZE_ASSERT(SwCoinEntry, 0x48)
+
+typedef struct
+{
 /* 0x0 */ const char * mapName;
 /* 0x4 */ s32 num;
 } AssignTblEntry;
-SIZE_ASSERT(AssignTblEntry, 0x8);
+SIZE_ASSERT(AssignTblEntry, 0x8)
 
 typedef struct
 {
 /* 0x0 */ s32 coinId;
 /* 0x4 */ s32 gameCoinId;
 } SwWork;
-SIZE_ASSERT(SwWork, 0x8);
+SIZE_ASSERT(SwWork, 0x8)
 
+DECOMP_STATIC(s32 swdrv_gameCoinGswMap[])
 DECOMP_STATIC(AssignTblEntry swdrv_assign_tbl[])
 DECOMP_STATIC(SwWork swdrv_work)
 DECOMP_STATIC(SwWork * swdrv_wp)
@@ -101,15 +109,14 @@ void _swByteSet(s32 id, u8 num);
 */
 s32 _swByteGet(s32 id);
 
-// New to SPM so no symbols:
-s32 func_80038204();
-UNKNOWN_FUNCTION(func_800383a0);
-UNKNOWN_FUNCTION(func_80038478);
-UNKNOWN_FUNCTION(func_80038550);
-UNKNOWN_FUNCTION(func_8003863c);
-UNKNOWN_FUNCTION(func_8003864c);
-s32 func_8003865c();
-UNKNOWN_FUNCTION(func_8003875c);
-UNKNOWN_FUNCTION(func_800387d8);
+s32 swGetCoinId();
+void swCoinSet(s32 id);
+void swCoinClear(s32 id);
+bool swCoinGet(s32 id);
+void swResetCoinId();
+void swResetGameCoinId();
+s32 swGetGameCoinId();
+bool swGameCoinGet(s32 id);
+void swGameCoinSet(s32 id);
 
 CPP_WRAPPER_END()

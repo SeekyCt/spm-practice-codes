@@ -71,9 +71,15 @@ typedef u8 unk8;
 #endif
 
 // Macro for quick size static assert
-#define SIZE_ASSERT(type, size) static_assert(sizeof(type) == size, "Size wrong for "#type)
-#define OFFSET_ASSERT(type, member, offset) \
-    static_assert(offsetof(type, member) == offset, "Offset wrong for "#member" in "#type)
+#ifndef M2C
+    #define SIZE_ASSERT(type, size) static_assert(sizeof(type) == size, "Size wrong for "#type);
+    #define OFFSET_ASSERT(type, member, offset) \
+        static_assert(offsetof(type, member) == offset, "Offset wrong for "#member" in "#type);
+#else
+    // Pycparser workaround
+    #define SIZE_ASSERT(type, size)
+    #define OFFSET_ASSERT(type, member, offset)
+#endif
 
 // Macro for something that should only be exposed outside of decomp
 #ifdef DECOMP
@@ -102,10 +108,22 @@ typedef u8 unk8;
 #endif
 
 // For GCC these have to be defined in the linker script
-#ifdef DECOMP
+#if (defined DECOMP) && !(defined M2C)
     #define FIXED_ADDR(type, name, addr) \
         type name : addr
 #else
     #define FIXED_ADDR(type, name, addr) \
         extern type name
+#endif
+
+#ifndef __INTELLISENSE__
+    #define NORETURN __attribute__((noreturn))
+#else
+    #define NORETURN
+#endif
+
+#ifndef __INTELLISENSE__
+    #define ALIGNED(x) __attribute__((aligned(x)))
+#else
+    #define ALIGNED(x)
 #endif
