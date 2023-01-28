@@ -7,7 +7,7 @@ namespace mod {
 
 bool ugProbe(s32 chan)
 {
-	using namespace wii::EXI;
+	using namespace wii::exi;
 
 	if (!EXIProbe(chan))
 		return false;
@@ -45,7 +45,7 @@ bool ugProbe(s32 chan)
 
 static s32 ugTransfer(s32 chan, void * data, s32 len, bool write)
 {
-	using namespace wii::EXI;
+	using namespace wii::exi;
 
 	// Lock device
 	if (!EXILock(chan, 0, nullptr))
