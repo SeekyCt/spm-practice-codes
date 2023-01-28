@@ -13,17 +13,11 @@
 #include "patch.h"
 #include "util.h"
 
-#ifndef __INTELLISENSE__ 
-    #define NAND_ALIGN __attribute__((aligned(32)))
-#else
-    #define NAND_ALIGN ;
-#endif
-
 namespace mod {
 
 // Data to be passed into NAND lib
-static u8 _settings[ROUND_UP_32(sizeof(NandSettings))] NAND_ALIGN;
-static u8 openBuf[0x4000] NAND_ALIGN;
+static u8 _settings[ROUND_UP_32(sizeof(NandSettings))] ALIGNED(NAND_ALIGN);
+static u8 openBuf[0x4000] ALIGNED(NAND_ALIGN);
 static wii::nand::NANDFileInfo fileInfo;
 static wii::nand::NANDCommandBlock commandBlock;
 
