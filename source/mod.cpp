@@ -146,16 +146,16 @@ void spmarioMainPatch()
 static void checkForDolphin()
 {
     // Thanks to TheLordScruffy for telling me about this
-    gIsDolphin = wii::IPC::IOS_Open("/sys", 1) == -106;
+    gIsDolphin = wii::ipc::IOS_Open("/sys", 1) == -106;
 
     // If they ever fix that, it'll be in a version that's definitely new enough to have /dev/dolphin
     if (!gIsDolphin)
     {
-        int ret = wii::IPC::IOS_Open("/dev/dolphin", 0);
+        int ret = wii::ipc::IOS_Open("/dev/dolphin", 0);
         if (ret >= 0)
         {
             gIsDolphin = true;
-            wii::IPC::IOS_Close(ret);
+            wii::ipc::IOS_Close(ret);
         }
     }
 }
