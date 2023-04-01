@@ -469,3 +469,11 @@
 8026F338:Run
 8056d570:SaveStart
 8056d574:SaveEnd
+
+// new to msgrand v1
+8056C918:msgdrv_msgw
+80032668:msgSearchNoFallback
+8056CAA8:seq_mapchange_wp
+80179C38:seq_mapChangeMain
+800D4398:evt_sub_get_dist
+800EF654:evt_mario_get_flags

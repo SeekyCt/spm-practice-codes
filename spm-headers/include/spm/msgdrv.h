@@ -15,6 +15,8 @@ USING(spm::memory::SmartAllocation)
 USING(spm::windowdrv::WindowEntry)
 USING(wii::dvd::DVDFileInfo)
 
+#define MSG_FILE_MAX 9
+
 typedef void (MsgSpeakerFunc)(s32 state, SmartAllocation * speakerSp);
 
 typedef struct
@@ -49,16 +51,23 @@ SIZE_ASSERT(MsgSpeaker, 0xf258)
 
 typedef struct
 {
+/* 0x0 */ u32 nameOffset;
+/* 0x8 */ u32 contentsOffset;
+} MsgEntry;
+SIZE_ASSERT(MsgEntry, 0x8)
+
+typedef struct
+{
 /* 0x0 */ u32 size;
 /* 0x4 */ const char * contents;
 /* 0x8 */ s32 messageCount;
-/* 0xC */ u8 unknown_0xc[0x10 - 0xc];
+/* 0xC */ SmartAllocation * messages; // MsgEntry array
 } MsgFile;
 SIZE_ASSERT(MsgFile, 0x10)
 
 typedef struct
 {
-/* 0x00 */ MsgFile files[9]; // 0 is global.txt
+/* 0x00 */ MsgFile files[MSG_FILE_MAX]; // 0 is global.txt
 /* 0x90 */ s32 hoshi_2AnimPoseId;
 /* 0x94 */ bool discReadFinished;
 /* 0x95 */ bool parseFinished;

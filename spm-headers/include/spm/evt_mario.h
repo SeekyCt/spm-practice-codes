@@ -11,7 +11,9 @@ UNKNOWN_FUNCTION(evt_mario_flag4_onoff);
 // evt_mario_flag8_onoff(bool onOff, u32 mask)
 EVT_DECLARE_USER_FUNC(evt_mario_flag8_onoff, 2)
 
-UNKNOWN_FUNCTION(func_800ef53c);
+// evt_mario_get_flags(s32 type, u32& ret)
+EVT_DECLARE_USER_FUNC(evt_mario_get_flags, 2);
+
 UNKNOWN_FUNCTION(evt_mario_cont_onoff);
 
 // evt_mario_key_on()

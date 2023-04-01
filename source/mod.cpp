@@ -36,6 +36,7 @@
 #include "mapfixes.h"
 #include "mapselectmenu.h"
 #include "mod.h"
+#include "msgrand.h"
 #include "nandsettings.h"
 #include "patch.h"
 #include "pyconsole.h"
@@ -221,6 +222,8 @@ void main()
 #endif
     InputWindow::init();
     HitboxMenu::hitboxPatch();
+
+    msgRandPatch();
 
     /*
         Uncomment this if you'd like to load another mod alongside practice codes
