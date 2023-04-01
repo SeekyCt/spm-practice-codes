@@ -110,6 +110,7 @@ ASFLAGS = ' '.join([
 LDFLAGS = ' '.join([
     "$machdep",
 
+    "-lgcc",
     "-r", # Partially link (elf2rel finishes)
     "-e _prolog", # Set entry to _prolog
     "-u _prolog", # Require _prolog to be defined
@@ -215,7 +216,7 @@ def emit_rules(n: Writer):
     #     map: map file output path
     n.rule(
         "ld",
-        command = "$cc $ldflags $in -o $out -Wl,-Map,$map",
+        command = "$cc $in $ldflags -o $out -Wl,-Map,$map",
         description = "LD $out"
     )
 
