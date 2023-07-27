@@ -36,7 +36,7 @@ void ConsoleWindow::pushClone(const char * text, const wii::gx::GXColor * colour
 void ConsoleWindow::_push(const char * text, const wii::gx::GXColor * colour, ConsoleFreeCallback * cb)
 {
     // Print to OSReport
-    wii::os::OSReport("(Console %x) %s\n", this, text);
+    wii::os::OSReport("(Console %p) %s\n", this, text);
 
 #ifdef PYCONSOLE_PROTOTYPE
     // Print to USB Gecko
