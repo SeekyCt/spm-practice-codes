@@ -30,21 +30,23 @@ typedef void (NPCPartUpdateFunc)(struct _NPCPart * part, Unk);
 
 typedef struct
 {
-/* 0x00 */ u16 id;
-/* 0x02 */ u8 unknown_0x2[0x28 - 0x2];
-/* 0x28 */ NPCDefense * defenses;
-/* 0x2C */ u8 unknown_0x2c[0x30 - 0x2c];
-/* 0x30 */ NPCPartUpdateFunc * updateFunc;
-/* 0x34 */ u8 unknown_0x34[0x48 - 0x34];
-} NPCPartDef;
-SIZE_ASSERT(NPCPartDef, 0x48)
-
-typedef struct
-{
 /* 0x0 */ s32 id;
 /* 0x4 */ const char * animName;
 } NPCTribeAnimDef;
 SIZE_ASSERT(NPCTribeAnimDef, 0x8)
+
+typedef struct
+{
+/* 0x00 */ u16 id;
+/* 0x02 */ u8 unknown_0x2[0x28 - 0x2];
+/* 0x28 */ NPCDefense * defenses;
+/* 0x2C */ Unk * unknown_0x2c;
+/* 0x30 */ NPCPartUpdateFunc * updateFunc;
+/* 0x34 */ Unk * unknown_0x34;
+/* 0x38 */ NPCTribeAnimDef * animDefs;
+/* 0x3C */ u8 unknown_0x3c[0x48 - 0x3c];
+} NPCPartDef;
+SIZE_ASSERT(NPCPartDef, 0x48)
 
 typedef struct
 {
@@ -58,7 +60,8 @@ typedef struct
 /* 0x00 */ const char * animPoseName;
 /* 0x04 */ NPCTribeAnimDef * animDefs; // list terminated by one with id -1
 /* 0x08 */ s32 catchCardItemId;
-/* 0x0C */ u8 unknown_0xc[0x18 - 0xc];
+/* 0x0C */ s16 catchCardDefense;
+/* 0x0E */ u8 unknown_0xe[0x18 - 0xe];
 /* 0x18 */ u8 maxHp;
 /* 0x19 */ u8 partsCount;
 /* 0x1A */ // padding 0x1a-1b
