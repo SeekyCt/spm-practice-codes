@@ -426,6 +426,13 @@
 // data
 80512360:seqWork
 
+//seq_load.c
+// text
+8017d1ac:seq_load_sub_loadMain
+// data
+805ae0d0:seqLoadWp
+
+
 // pausewin.c
 // text
 80184c18:pausewinEntry
@@ -618,6 +625,8 @@
 8023edcc:nandUpdateSave
 8023efe0:nandLoadSave
 // more
+// data
+805ae1b0:nandmgr_wp
 
 // homebuttondrv.c
 // text
