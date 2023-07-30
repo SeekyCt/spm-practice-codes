@@ -44,12 +44,14 @@ public:
     void * mActionParam;
     bool mAutoPress;
     bool mDrawAsMessage;
+    MenuAction * mOnSelectAction;
+    void * mOnSelectActionParam;
 
     MenuButton(class MenuWindow * parent, const char * msg, f32 x, f32 y,
                MenuAction * action = nullptr, void * actionParam = nullptr,
                bool autoPress = false, f32 scale = 1.0f,
-               wii::gx::GXColor * colour = nullptr, wii::gx::GXColor * selColour = nullptr,
-               bool drawAsMessage = false);
+               const wii::gx::GXColor * colour = nullptr, const wii::gx::GXColor * selColour = nullptr,
+               bool drawAsMessage = false, MenuAction * onSelectAction = nullptr, void * onSelectActionParam = nullptr);
     virtual ~MenuButton();
 };
 

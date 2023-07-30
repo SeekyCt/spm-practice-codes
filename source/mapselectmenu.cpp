@@ -492,7 +492,7 @@ static EntranceNameList * scanScript(const int * script)
                 const short * next_p = reinterpret_cast<const short *>(next_script);
                 int next_cmd = next_p[1];
 
-                if (next_cmd == 0xc) // if_str_equal
+                if (next_cmd == 0xc || next_cmd == 0xd) // if_str_equal, if_str_not_equal
                 {
                     assert(othersCount < OTHERS_MAX, "Other entrances table too small");
                     

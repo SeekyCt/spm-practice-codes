@@ -88,9 +88,16 @@ void MenuWindow::disp()
     u32 btn = spm::wpadmgr::wpadGetButtonsPressed(0);
     u32 btnRpt = spm::wpadmgr::wpadGetButtonsHeldRepeat(0);
 
+    MenuButton * prevButton = mCurButton;
     // Handle inputs on current button
     if (mCurButton != nullptr)
         mCurButton->handleInputs(btn, btnRpt);
+    
+    if (prevButton != mCurButton && mCurButton != nullptr)
+    {
+        if (mCurButton->mOnSelectAction != nullptr)
+            mCurButton->mOnSelectAction(mCurButton, mCurButton->mOnSelectActionParam);
+    }
 
     // Handle other buttons listening for inputs
     for (MenuButton * p = mButtons; p != nullptr; p = p->mNext)

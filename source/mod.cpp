@@ -2,13 +2,16 @@
 #include <spm/camdrv.h>
 #include <spm/charpixlitemwin.h>
 #include <spm/effdrv.h>
+#include <spm/evt_msg.h>
 #include <spm/fadedrv.h>
 #include <spm/homebuttondrv.h>
 #include <spm/mario.h>
 #include <spm/mario_motion.h>
+#include <spm/nandmgr.h>
 #include <spm/relmgr.h>
 #include <spm/seqdef.h>
 #include <spm/seqdrv.h>
+#include <spm/seq_load.h>
 #include <spm/spmario.h>
 #include <spm/spmario_snd.h>
 #include <spm/system.h>
@@ -139,6 +142,41 @@ void spmarioMainPatch()
     );
 }
 
+#define SEQ_LOAD_STATE_REL_LOADER_TWICE 0x200
+EVT_BEGIN(evt_rel_loader_twice)
+    SET(GF(0), 0)
+    USER_FUNC(spm::evt_msg::evt_msg_print, 1, PTR("<system><p>You have already executed\nthe REL Loader.\n<k>\n<o>"), 0, 0)
+    USER_FUNC(spm::evt_msg::evt_msg_continue)
+    SET(GF(0), 1)
+    RETURN()
+EVT_END()
+s32 relLoaderTwiceEvtId = 0;
+static s32 (*seqLoadSubLoadMainReal)();
+void seqLoadSubLoadMainPatch()
+{
+    seqLoadSubLoadMainReal = patch::hookFunction(spm::seq_load::seq_load_sub_loadMain,
+        []()
+        {
+            if (!spm::evtmgr::evtCheckID(relLoaderTwiceEvtId) && spm::seq_load::seqLoadWp->state == SEQ_LOAD_STATE_REL_LOADER_TWICE) {
+                spm::evtmgr_cmd::evtSetValue(nullptr, GF(0), 0);
+                spm::seq_load::seqLoadWp->state = 0xa;
+            }
+            if (spm::seq_load::seqLoadWp->state == 0xa && spm::wpadmgr::wpadGetButtonsPressed(0) & WPAD_BTN_2)
+            {
+                if (msl::string::strcmp(spm::nandmgr::nandmgr_wp->saves[spm::seq_load::seqLoadWp->selectedSave].spmarioGlobals.saveName, "REL Loader") == 0)
+                {
+                    spm::spmario_snd::spsndSFXOn("SFX_SYS_SELECT_NG1");
+
+                    spm::seq_load::seqLoadWp->state = SEQ_LOAD_STATE_REL_LOADER_TWICE;
+                    relLoaderTwiceEvtId = spm::evtmgr::evtEntry(evt_rel_loader_twice, 0, 0)->id;
+                }
+                
+            }
+            return seqLoadSubLoadMainReal();
+        }
+    );
+}
+
 /*
     Platform detection to adjust certain settings
 */
@@ -221,6 +259,8 @@ void main()
 #endif
     InputWindow::init();
     HitboxMenu::hitboxPatch();
+
+    seqLoadSubLoadMainPatch();
 
     /*
         Uncomment this if you'd like to load another mod alongside practice codes
