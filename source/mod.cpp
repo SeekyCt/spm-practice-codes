@@ -144,10 +144,8 @@ void spmarioMainPatch()
 
 #define SEQ_LOAD_STATE_REL_LOADER_TWICE 0x200
 EVT_BEGIN(evt_rel_loader_twice)
-    SET(GF(0), 0)
     USER_FUNC(spm::evt_msg::evt_msg_print, 1, PTR("<system><p>You have already executed\nthe REL Loader.\n<k>\n<o>"), 0, 0)
     USER_FUNC(spm::evt_msg::evt_msg_continue)
-    SET(GF(0), 1)
     RETURN()
 EVT_END()
 s32 relLoaderTwiceEvtId = 0;
@@ -158,7 +156,6 @@ void seqLoadSubLoadMainPatch()
         []()
         {
             if (!spm::evtmgr::evtCheckID(relLoaderTwiceEvtId) && spm::seq_load::seqLoadWp->state == SEQ_LOAD_STATE_REL_LOADER_TWICE) {
-                spm::evtmgr_cmd::evtSetValue(nullptr, GF(0), 0);
                 spm::seq_load::seqLoadWp->state = 0xa;
             }
             if (spm::seq_load::seqLoadWp->state == 0xa && spm::wpadmgr::wpadGetButtonsPressed(0) & WPAD_BTN_2)
