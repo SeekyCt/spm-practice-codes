@@ -48,7 +48,7 @@ void MenuButton::disp(f32 centreX, f32 centreY, bool selected)
 }
 
 MenuButton::MenuButton(MenuWindow * parent, const char * msg, f32 x, f32 y, MenuAction * action, void * actionParam,
-                       bool autoPress, f32 scale, wii::gx::GXColor * colour, wii::gx::GXColor * selColour, bool drawAsMessage)
+                       bool autoPress, f32 scale, const wii::gx::GXColor * colour, const wii::gx::GXColor * selColour, bool drawAsMessage, MenuAction * onSelectAction, void * onSelectActionParam)
 {
     // Record parent and insert into linked list
     mWindow = parent;
@@ -72,6 +72,8 @@ MenuButton::MenuButton(MenuWindow * parent, const char * msg, f32 x, f32 y, Menu
     mActionParam = actionParam;
     mAutoPress = autoPress;
     mDrawAsMessage = drawAsMessage;
+    mOnSelectAction = onSelectAction;
+    mOnSelectActionParam = onSelectActionParam;
     
     // Neighbours may not exist yet so they're left to be set externally
     for (int i = 0; i < 4; i++)

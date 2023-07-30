@@ -24,7 +24,7 @@ private:
     int getId(int slot);
     
     // Slot selection screen
-    MenuButton * mModeButtons[5];
+    MenuButton * mModeButtons[6];
     MenuIcon * mItemButtons[32];
     int getCount();
     int getMax();
@@ -57,9 +57,12 @@ private:
     void updateIdDisp();
     void initIdScreen();
     void exitIdScreen();
+    static bool getAllCharsPixls(MenuButton * button, void * param);
+    const char * mAllCharsPixlsMsg;
 
 protected:
     virtual void close() override;
+    virtual void disp() override;
 
 public:
     InventoryMenu();
