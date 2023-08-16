@@ -460,6 +460,7 @@
 // more
 
 // wpadmgr.c
+80236af8:wpadMain
 80237688:wpadGetButtonsHeld
 802376b0:wpadGetButtonsPressed
 802376c4:wpadGetButtonsHeldRepeat
@@ -548,6 +549,9 @@
 804ea600:exceptionMsg1
 804ea6ac:exceptionMsg2
 804ea710:exceptionMsg3
+// OSRtc.c
+80276b74:OSSetWirelessID
+// more
 // OSFont.c
 80273494:OSGetFontEncode
 80273868:OSLoadFont
@@ -591,6 +595,7 @@
 802837a8:VIWaitForRetrace
 8028472c:VIFlush
 802848ac:VISetBlack
+80284eb0:__VIResetSIIdle
 // more
 
 // gx.a
@@ -651,6 +656,28 @@
 // bss
 80537ed8:Ecb
 
+// si.c
+// text
+802b2438:SIDisablePolling
+8026d384:SITransfer
+8026d7a0:SIGetType
+8026d1d4:SIGetResponse
+8026d954:SIGetTypeAsync
+// more
+// data (TODO)
+804e9b80:Si
+80537f98:Packet
+804e9b98:Type
+// more
+
+// wpad.c
+802d0940:WPADProbe
+// more
+
+// kpad.c
+802e15a0:KPADRead
+// more
+
 // lzss10.c
 802e2598:lzss10GetDecompSize
 802e25d8:lzss10Decompress
@@ -658,6 +685,24 @@
 
 // tpl.c
 802e30ec:TPLBind
+// more
+
+// pad.c
+// text
+802e3300:UpdateOrigin
+802e3958:PADReset
+// more
+// data (TODO)
+805ae678:CmdReadOrigin
+805a8f30:Origin
+805af12c:EnabledBits
+805af120:WaitingBits
+805af11c:CheckingBits
+805af118:PendingBits
+805af114:BarrelBits
+805af128:ResettingBits
+805ae664:ResettingChan
+805ae674:MakeStatus
 // more
 
 /* Rel */

@@ -6,6 +6,7 @@
 #include "evtdebug.h"
 #include "exception.h"
 #include "gamesavemenu.h"
+#include "gcpad.h"
 #include "hitboxmenu.h"
 #include "hpwindow.h"
 #include "inputwindow.h"
@@ -202,6 +203,7 @@ void main()
 #endif
     InputWindow::init();
     HitboxMenu::hitboxPatch();
+    gcpadPatch();
 
     /*
         Uncomment this if you'd like to load another mod alongside practice codes

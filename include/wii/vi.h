@@ -9,8 +9,7 @@ extern "C" {
 void VISetBlack(bool enabled);
 void VIFlush();
 void VIWaitForRetrace();
-void VIWaitForRetrace();
-void VIWaitForRetrace();
+void __VIResetSIIdle();
 
 }
 

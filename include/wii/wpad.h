@@ -1,5 +1,9 @@
 #pragma once
 
+#include <types.h>
+
+namespace wii::WPAD {
+
 #define WPAD_BTN_LEFT 0x1
 #define WPAD_BTN_RIGHT 0x2
 #define WPAD_BTN_DOWN 0x4
@@ -12,3 +16,11 @@
 #define WPAD_BTN_MINUS 0x1000
 #define WPAD_BTN_HOME 0x8000
 #define WPAD_BTN_REPEAT 0x80000000
+
+extern "C" {
+
+s32 WPADProbe(s32 chan, void * p2);
+
+}
+
+}
