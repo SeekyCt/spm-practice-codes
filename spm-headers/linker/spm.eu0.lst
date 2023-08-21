@@ -353,10 +353,13 @@
 // more
 
 // filemgr.c
+    // text
 8019f724:fileAllocf
 8019fa8c:fileFree
 8019fc5c:fileAsyncf
 // more
+    // sdata
+805ae130:filemgr_afp
 
 // fontmgr.c
 801a0070:FontDrawStart
