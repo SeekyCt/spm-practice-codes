@@ -29,7 +29,7 @@ To compile this yourself, you'll need the following:
 * Python 3
     - 3.8 is known to work, earlier versions may too
 * The python modules from `requirements.txt` (`pip install -r requirements.txt`)
-* The fork of PistonMiner's elf2rel from the [SPM Rel Loader repo](https://github.com/SeekyCt/spm-rel-loader/releases/tag/elf2rel-24-6-2021)
+* The fork of PistonMiner's elf2rel from the [SPM Rel Loader repo](https://github.com/SeekyCt/spm-rel-loader/releases/)
     * For v8 and above, the 21-12-2021 build is required. v5-7 require the 24-6-2021 build. Older versions are compatible with any build
 * The ELF2REL environment variable set to the path to your compiled `elf2rel` executable
 
