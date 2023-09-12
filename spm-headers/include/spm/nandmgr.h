@@ -34,6 +34,7 @@ enum NandTask
 /* 0x6 */ NANDMGR_TASK_DELETE_SAVE
 };
 
+#define SAVE_FLAG_1 1
 #define SAVE_FLAG_CORRUPT 2
 
 typedef struct
@@ -49,10 +50,15 @@ typedef struct
 } SaveFile;
 SIZE_ASSERT(SaveFile, 0x25b8)
 
+#define SAVE_FILE_COUNT 4
+
 #define NAND_FLAG_Exec 1
 #define NAND_FLAG_Waiting 2
-// 4 is had an error?
+#define NAND_FLAG_Error 4
 #define NAND_FLAG_NoSave 0x1000
+
+// 32-byte alignment?
+#define NAND_TEMP_SAVE_SIZE (sizeof(SaveFile) + 0x8)
 
 typedef struct
 {
@@ -61,7 +67,7 @@ typedef struct
 /* 0x008 */ size_t openingBufferSize; // 0x4000
 /* 0x00C */ u8 unknown_0xc[0x10 - 0xc];
 /* 0x010 */ SaveFile * saves; // array of 4
-/* 0x014 */ void * tempSaveFile; // 0x25c0 allocation
+/* 0x014 */ void * tempSaveFile; // NAND_TEMP_SAVE_FILE_SIZE bytes
 /* 0x018 */ char homedir[64];
 /* 0x058 */ NANDFileInfo fileInfo;
 /* 0x0E4 */ NANDCommandBlock commandBlock;
@@ -70,7 +76,7 @@ typedef struct
 /* 0x1A4 */ void * tempBanner;
 /* 0x1A8 */ u32 answer;
 /* 0x1AC */ u32 task; // used by task main functions to track progress
-/* 0x1B0 */ u32 stage;
+/* 0x1B0 */ s32 stage;
 /* 0x1B4 */ s32 code;
 /* 0x1B8 */ s32 saveId; // slot of save file to work on
 } NandWork;
@@ -135,8 +141,8 @@ void nandWriteSave(s32 saveId);
 void nandWriteBannerLoadAllSaves();
 
 /*
-    Starts a save file being deleted from NAND asynchronously
-    Bugged to always delete the first save file
+    Starts all save files being deleted from NAND asynchronously
+    Parameter value is ignored
 */
 void nandDeleteSave(s32 saveId);
 

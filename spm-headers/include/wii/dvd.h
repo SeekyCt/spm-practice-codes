@@ -1,27 +1,95 @@
 #pragma once
 
 #include <common.h>
+#include <wii/os.h>
 
 CPP_WRAPPER(wii::dvd)
 
+USING(wii::os::OSThreadQueue)
+
 #define DVD_ALIGN 32
+
+struct _DVDCommandBlock;
+typedef void (DVDCBCallback)(s32 code, struct _DVDCommandBlock * block);
+
+typedef struct _DVDCommandBlock
+{
+/* 0x00 */ u8 unknown_0x0[0x8 - 0x0];
+/* 0x08 */ s32 command;
+/* 0x0C */ s32 state;
+/* 0x10 */ u32 offset;
+/* 0x14 */ u8 unknown_0x14[0x28 - 0x14];
+/* 0x28 */ DVDCBCallback * callback;
+/* 0x2C */ void * userData;
+} DVDCommandBlock;
+SIZE_ASSERT(DVDCommandBlock, 0x30)
+
+typedef struct _DVDFileInfo
+{
+/* 0x00 */ DVDCommandBlock commandBlock;
+/* 0x30 */ u32 startAddr;
+/* 0x34 */ u32 length;
+/* 0x38 */ u8 unknown_0x38[0x3c - 0x38];
+} DVDFileInfo;
+SIZE_ASSERT(DVDFileInfo, 0x3c)
+
+typedef void (DVDFICallback)(s32 code, struct _DVDFileInfo * fileInfo);
 
 typedef struct
 {
-/* 0x00 */ u8 unknown_0x0[0x3c - 0x0];
-} DVDFileInfo;
-SIZE_ASSERT(DVDFileInfo, 0x3c)
+    u8 isDir : 8;
+    u32 stringOffset : 24;
+    union
+    {
+        struct
+        {
+            u32 unknown_0x4;
+            u32 next;
+        } dir;
+        struct
+        {
+            u32 startAddr;
+            u32 length;
+        } file;
+    };
+} FstEntry;
+SIZE_ASSERT(FstEntry, 0xc)
+
+typedef struct
+{
+    u32 entrynum;
+    u32 location;
+    u32 next;
+} DVDDir;
+SIZE_ASSERT(DVDDir, 0xc)
+
+typedef struct
+{
+    u32 entrynum;
+    BOOL isDir;
+    const char * name;
+} DVDDirEntry;
+SIZE_ASSERT(DVDDirEntry, 0xc)
 
 // Just a normal string literal, but useful for riivo detection
 extern char devDiStr[]; // "/dev/di"
 
+DECOMP_STATIC(OSThreadQueue __DVDThreadQueue)
+DECOMP_STATIC(u32 MaxEntryNum)
+DECOMP_STATIC(char * FstStringStart)
+DECOMP_STATIC(FstEntry * FstStart)
+DECOMP_STATIC(u32 PauseFlag)
+DECOMP_STATIC(u32 executing)
+
+
 UNKNOWN_FUNCTION(__DVDFSInit);
 s32 DVDConvertPathToEntrynum(const char * path);
-UNKNOWN_FUNCTION(DVDFastOpen);
-UNKNOWN_FUNCTION(DVDClose);
-UNKNOWN_FUNCTION(DVDReadAsyncPrio);
+s32 DVDFastOpen(s32 entrynum, DVDFileInfo * fileInfo);
+s32 DVDClose(DVDFileInfo * fileInfo);
+s32 DVDReadAsyncPrio(DVDFileInfo * fileInfo, void * addr, s32 length, s32 offset,
+                     DVDFICallback * callback, s32 priority);
 UNKNOWN_FUNCTION(cbForReadAsync);
-UNKNOWN_FUNCTION(DVDReadPrio);
+s32 DVDReadPrio(DVDFileInfo * fileInfo, void * dest, s32 length, s32 offset, s32 priority);
 UNKNOWN_FUNCTION(cbForReadSync);
 UNKNOWN_FUNCTION(StampCommand);
 UNKNOWN_FUNCTION(defaultOptionalCommandChecker);
@@ -75,7 +143,7 @@ UNKNOWN_FUNCTION(__DVDTestAlarm);
 UNKNOWN_FUNCTION(__DVDStopMotorAsync);
 UNKNOWN_FUNCTION(__DVDRestartMotor);
 UNKNOWN_FUNCTION(__DVDClearWaitingQueue);
-UNKNOWN_FUNCTION(__DVDPushWaitingQueue);
+s32 __DVDPushWaitingQueue(s32 priority, DVDCommandBlock * commandBlock);
 UNKNOWN_FUNCTION(__DVDPopWaitingQueue);
 UNKNOWN_FUNCTION(__DVDCheckWaitingQueue);
 UNKNOWN_FUNCTION(__DVDGetNextWaitingQueue);
