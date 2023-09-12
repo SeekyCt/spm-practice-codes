@@ -34,7 +34,7 @@ USING(wii::os::OSTime)
 // Entry's script is temporarily stopped until its child script finishes
 #define EVT_FLAG_WAIT_CHILD 0x10
 
-// Entry should still execute this frame if created while evtmgrMain is running 
+// Entry should still execute this frame if created while evtmgrMain is running
 #define EVT_FLAG_START_IMMEDIATE 0x20
 
 // Same effect as EVT_FLAG_PAUSED?
@@ -61,7 +61,7 @@ typedef struct _EvtEntry
 /* 0x010 */ EvtScriptCode * pCurInstruction; // Current instruction being executed
 /* 0x014 */ EvtScriptCode * pCurData; // Args for the current instruction being executed
 /* 0x018 */ s8 labelIds[MAX_EVT_JMPTBL]; // Each correspond to an address in the jump table
-/* 0x028 */ void * jumptable[MAX_EVT_JMPTBL]; // Addresses for each label
+/* 0x028 */ EvtScriptCode * jumptable[MAX_EVT_JMPTBL]; // Addresses for each label
 /* 0x068 */ struct _EvtEntry * parent; // Script that started this one as a child
 /* 0x06C */ struct _EvtEntry * childEntry; // Script started by this one, pausing this until it's
                                            // finished
@@ -76,7 +76,7 @@ typedef struct _EvtEntry
 /* 0x094 */ UserFunc * userFunc; // Function set & called by the user_func opcode
 /* 0x098 */ s32 lw[16]; // Local Work variables
 /* 0x0D8 */ u32 lf[3]; // Local Flag variables
-/* 0x0E4 */ void * doWhileStartPtrs[8]; // Pointer to do opcodes for active while loops
+/* 0x0E4 */ EvtScriptCode * doWhileStartPtrs[8]; // Pointer to do opcodes for active while loops
 /* 0x104 */ s32 doWhileCounters[8]; // Counters for active while loops
 /* 0x124 */ s8 switchStates[8]; // Sates of active switch statements
 /* 0x12C */ s32 switchValues[8]; // Values passed into active switch statements
@@ -135,7 +135,7 @@ DECOMP_STATIC(s32 evtmgr_priTblNum)
 DECOMP_STATIC(s32 evtmgr_runMainF)
 
 /*
-    Returns pointer to the EvtWork struct 
+    Returns pointer to the EvtWork struct
 */
 EvtWork * evtGetWork();
 
