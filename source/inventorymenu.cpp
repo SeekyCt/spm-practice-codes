@@ -27,8 +27,7 @@ enum
     MODE_USE_ITEM = 1,
     MODE_STORED = 2,
     MODE_CHARS = 3,
-    MODE_PIXLS = 4,
-    MODE_ALL_CHARS_PIXLS = 5
+    MODE_PIXLS = 4
 };
 
 struct ModeDef
@@ -136,15 +135,18 @@ bool InventoryMenu::modeChange(MenuButton * button, void * param)
 bool InventoryMenu::getAllCharsPixls(MenuButton * button, void * param)
 {
     (void) button;
+    
     InventoryMenu * instance = reinterpret_cast<InventoryMenu *>(param);
     spm::mario_pouch::MarioPouchWork * pp = spm::mario_pouch::pouchGetPtr();
-    ModeDef& chars = modes[3];
+    
+    const ModeDef& chars = modes[3];
     for (int i = 0; i < chars.max - chars.min; i++)
     {
         pp->characters[i].selectable = true;
         pp->characters[i].itemType = chars.min + i;
     }
-    ModeDef& pixls = modes[4];
+    
+    const ModeDef& pixls = modes[4];
     for (int i = 0; i < pixls.max - pixls.min - 1; i++) // 99% of players won't need Tippi
     {
         pp->pixls[i].selectable = true;
