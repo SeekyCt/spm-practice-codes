@@ -34,6 +34,8 @@ private:
     void updateItemDisps();
     void initSelectScreen();
     void exitSelectScreen();
+    static bool getAllCharsPixls(MenuButton * button, void * param);
+    const char * mAllCharsPixlsMsg;
 
     // Edit mode selection screen
     bool mShowSelectable;
@@ -57,8 +59,6 @@ private:
     void updateIdDisp();
     void initIdScreen();
     void exitIdScreen();
-    static bool getAllCharsPixls(MenuButton * button, void * param);
-    const char * mAllCharsPixlsMsg;
 
 protected:
     virtual void close() override;

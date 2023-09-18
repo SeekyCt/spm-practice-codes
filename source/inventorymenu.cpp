@@ -27,7 +27,8 @@ enum
     MODE_USE_ITEM = 1,
     MODE_STORED = 2,
     MODE_CHARS = 3,
-    MODE_PIXLS = 4
+    MODE_PIXLS = 4,
+    MODE_ALL_CHARS_PIXLS = 5
 };
 
 struct ModeDef
@@ -137,13 +138,13 @@ bool InventoryMenu::getAllCharsPixls(MenuButton * button, void * param)
     (void) button;
     InventoryMenu * instance = reinterpret_cast<InventoryMenu *>(param);
     spm::mario_pouch::MarioPouchWork * pp = spm::mario_pouch::pouchGetPtr();
-    ModeDef chars = modes[3];
+    ModeDef& chars = modes[3];
     for (int i = 0; i < chars.max - chars.min; i++)
     {
         pp->characters[i].selectable = true;
         pp->characters[i].itemType = chars.min + i;
     }
-    ModeDef pixls = modes[4];
+    ModeDef& pixls = modes[4];
     for (int i = 0; i < pixls.max - pixls.min - 1; i++) // 99% of players won't need Tippi
     {
         pp->pixls[i].selectable = true;
@@ -256,7 +257,7 @@ void InventoryMenu::initSelectScreen()
     for (int i = 0; i < 5; i++)
         mModeButtons[i] = new MenuButton(this, modes[i].name, modeX, firstModeY - (i * (FONT_HEIGHT + 5)), modeChange, this, true);
     
-    mModeButtons[5] = new MenuButton(this, "Get all characters and pixls", modeX, firstModeY - (ARRAY_SIZEOF(mModeButtons) * (FONT_HEIGHT + 5)), getAllCharsPixls, this, false, 1.0f, nullptr, &colours::red, false, modeChange, this); // optional parameters but can't actually skip them :thumbsup:
+    mModeButtons[5] = new MenuButton(this, "Get all characters and pixls", modeX, firstModeY - (ARRAY_SIZEOF(mModeButtons) * (FONT_HEIGHT + 5)), getAllCharsPixls, this);
     
     for (int i = 0; i < 5; i++)
         buttonLinkVertical(mModeButtons[i], mModeButtons[i + 1]);
