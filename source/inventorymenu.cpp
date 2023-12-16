@@ -1,5 +1,6 @@
 #include <common.h>
 #include <spm/item_data.h>
+#include "spm/item_data_ids.h"
 #include <spm/mario_pouch.h>
 #include <spm/msgdrv.h>
 #include <msl/stdio.h>
@@ -464,8 +465,8 @@ void InventoryMenu::idChange(MenuScrollGroup * scroller, s32 delta, void * param
         if (id < modes[instance->mMode].min)
             id = modes[instance->mMode].min;
     } else {
-        if (id >= ID_ITEM_MAX)
-            id = ID_ITEM_MAX - 1;
+        if (id >= ITEM_ID_MAX)
+            id = ITEM_ID_MAX - 1;
         if (id < 0)
             id = 0;
     }

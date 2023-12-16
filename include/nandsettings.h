@@ -12,7 +12,7 @@
 
 namespace mod {
 
-#define SETTINGS_VER 4
+#define SETTINGS_VER 5
 #define SETTINGS_FILE_NAME "pcset.bin"
 
 enum class LogType : u8

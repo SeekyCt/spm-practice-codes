@@ -14,8 +14,6 @@
 
 namespace mod {
 
-#define ID_ITEM_MAX 0x21a
-
 class InventoryMenu final : public ChildMenu
 {
 private:
