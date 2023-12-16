@@ -7,6 +7,7 @@
 #include "inventorymenu.h"
 #include "util.h"
 #include "mod_ui_base/colours.h"
+#include "nandsettings.h"
 
 namespace mod {
 
@@ -457,10 +458,17 @@ void InventoryMenu::idChange(MenuScrollGroup * scroller, s32 delta, void * param
     // Set value
     int id = instance->getId(instance->mSlot) + delta;
 
-    if (id >= modes[instance->mMode].max)
-        id = modes[instance->mMode].max - 1;
-    if (id < modes[instance->mMode].min)
-        id = modes[instance->mMode].min;
+    if (!gSettings->noInventoryBounds) {
+        if (id >= modes[instance->mMode].max)
+            id = modes[instance->mMode].max - 1;
+        if (id < modes[instance->mMode].min)
+            id = modes[instance->mMode].min;
+    } else {
+        if (id >= ID_ITEM_MAX)
+            id = ID_ITEM_MAX - 1;
+        if (id < 0)
+            id = 0;
+    }
 
     instance->setId(id);
 

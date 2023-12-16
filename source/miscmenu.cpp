@@ -34,7 +34,8 @@ void MiscMenu::optionToggle(MenuButton * button, bool &setting)
 enum OptionIdxs
 {
     OPTION_PIT_TEXT = 0,
-    OPTION_LAST_KEY = 1
+    OPTION_LAST_KEY = 1,
+    OPTION_INVENTORY_NOBOUNDS = 2
 };
 
 void MiscMenu::disp()
@@ -65,7 +66,7 @@ void MiscMenu::disp()
 MiscMenu::MiscMenu()
 {
     const f32 labelX = -330.0f;
-    const f32 valueX = labelX + 315.0f;
+    const f32 valueX = labelX + 415.0f;
     const f32 scale = 0.8f;
     const f32 yDiff = (FONT_HEIGHT * scale) + 5.0f;
 
@@ -74,6 +75,7 @@ MiscMenu::MiscMenu()
 
     OPTION("Load Pit Text From File", gSettings->customPitText);
     OPTION("Force Last Key in Pit", gSettings->lastKey);
+    OPTION("Remove Bounds in Inventory Menu", gSettings->noInventoryBounds);
 
     for (int i = 1; i < MISC_SETTING_COUNT; i++)
         buttonLinkVertical(mOptions[i - 1], mOptions[i]);
