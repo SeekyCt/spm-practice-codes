@@ -268,8 +268,8 @@ void nandSettingsDefaults()
     gSettings->hitboxNpc = false;
     gSettings->hitboxNpcDisabled = false;
     gSettings->lastKey = false;
-    gSettings->noInventoryBounds = false;
     gSettings->inputDisplay = false;
+    gSettings->noInventoryBounds = false;
 }
 
 static bool (*isRelLoadedReal)() = nullptr;
