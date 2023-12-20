@@ -1,13 +1,15 @@
+#include "gcpadpatches.h"
 #include "mod.h"
 #include "patch.h"
 #include "mod_ui_base/colours.h"
 #include "mod_ui_base/window.h"
 
 #include <spm/homebuttondrv.h>
+#include <spm/mario_sbr.h>
 #include <spm/wpadmgr.h>
 #include <wii/kpad.h>
 #include <wii/pad.h>
-#include <wii/stdio.h>
+#include <msl/stdio.h>
 #include <wii/string.h>
 #include <wii/wpad.h>
 
@@ -92,6 +94,8 @@ void gcpadPatch()
 
     writeBranchLink(spm::homebuttondrv::homebuttonMain, 0x5f0, dcOverride);
     writeBranchLink(spm::homebuttondrv::homebuttonMain, 0x63c, dcOverride);
+
+    writeBranchLink(spm::mario_sbr::marioUpdateKeyData, 0, marioUpdateKeyDataPatch);
 }
 
 }
