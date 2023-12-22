@@ -469,3 +469,9 @@
 8026F1F8:Run
 80542470:SaveStart
 80542474:SaveEnd
+
+// new to v10
+805419D0:seq_load_sub_wp
+80541AB0:nandmgr_wp
+80239148:spsndSFXOn
+8017C538:loadMain
