@@ -469,3 +469,9 @@
 8026F298:Run
 8056d3f0:SaveStart
 8056d3f4:SaveEnd
+
+// new to v10
+8056C950:seq_load_sub_wp
+8056CA30:nandmgr_wp
+802391E0:spsndSFXOn
+8017C55C:loadMain
