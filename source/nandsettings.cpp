@@ -208,6 +208,19 @@ s32 evt_nandsettings_handle_read_output(spm::evtmgr::EvtEntry * entry, bool firs
             // Increment version
             gSettings->version = 4;
 
+            [[fallthrough]]
+
+        case 4:
+            wii::os::OSReport("nandsettings: updating settings v4->5\n");
+
+            // Existing settings are already in place
+
+            // Initialise new settings
+            gSettings->noInventoryBounds = false;
+
+            // Increment version
+            gSettings->version = 5;
+
             break;
 
         case SETTINGS_VER:
@@ -256,6 +269,7 @@ void nandSettingsDefaults()
     gSettings->hitboxNpcDisabled = false;
     gSettings->lastKey = false;
     gSettings->inputDisplay = false;
+    gSettings->noInventoryBounds = false;
 }
 
 static bool (*isRelLoadedReal)() = nullptr;
