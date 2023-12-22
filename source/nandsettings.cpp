@@ -208,7 +208,8 @@ s32 evt_nandsettings_handle_read_output(spm::evtmgr::EvtEntry * entry, bool firs
             // Increment version
             gSettings->version = 4;
 
-            [[fallthrough]]
+            // Fall through into v4->v5
+            [[fallthrough]];
 
         case 4:
             wii::os::OSReport("nandsettings: updating settings v4->5\n");
