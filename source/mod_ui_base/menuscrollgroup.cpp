@@ -1,15 +1,15 @@
+#include <common.h>
+#include <msl/stdio.h>
+#include <wii/wpad.h>
+
 #include "mod_ui_base/menuscrollgroup.h"
 #include "util.h"
-
-#include <types.h>
-#include <wii/stdio.h>
-#include <wii/wpad.h>
 
 namespace mod {
 
 MenuScrollGroup::MenuScrollGroup(MenuWindow * parent, u32 value, f32 x, f32 y, MenuScrollGroupCb * scrollCb,
                                  void * scrollParam, s32 digits, bool hex, MenuAction * action, void * actionParam,
-                                 f32 scale, wii::RGBA * colour, wii::RGBA * selColour)
+                                 f32 scale, wii::gx::GXColor * colour, wii::gx::GXColor * selColour)
                                 : MenuButton(parent, nullptr, x, y, action, actionParam, false, scale, colour, selColour)
 {
     // Store extra parameters
@@ -73,8 +73,8 @@ void MenuScrollGroup::disp(f32 centreX, f32 centreY, bool selected)
         // Draw digit
         char str[2];
         const char * fmt = mBase == 16 ? "%x" : "%d";
-        wii::stdio::sprintf(str, fmt, digit);
-        wii::RGBA * colour = i == mCurDigit && selected ? &mSelColour : &mColour;
+        msl::stdio::sprintf(str, fmt, digit);
+        wii::gx::GXColor * colour = i == mCurDigit && selected ? &mSelColour : &mColour;
         mWindow->drawString(str, x, y, colour, mScale, true);
 
         // Draw arrows

@@ -1,17 +1,18 @@
-#include "util.h"
-
+#include <common.h>
 #include <spm/camdrv.h>
 #include <spm/evtmgr_cmd.h>
 #include <spm/mario.h>
 #include <spm/mario_pouch.h>
 #include <spm/spmario.h>
-#include <wii/DVDFS.h>
-#include <wii/OSModule.h>
-#include <wii/string.h>
+#include <wii/dvd.h>
+#include <wii/os.h>
+#include <msl/string.h>
+
+#include "util.h"
 
 namespace mod {
 
-int evt_get_cur_pixl(spm::evtmgr::EvtEntry * entry, bool firstRun)
+s32 evt_get_cur_pixl(spm::evtmgr::EvtEntry * entry, bool firstRun)
 {
     (void) firstRun;
     
@@ -20,7 +21,7 @@ int evt_get_cur_pixl(spm::evtmgr::EvtEntry * entry, bool firstRun)
     return 2;
 }
 
-int evt_freeze_game(spm::evtmgr::EvtEntry * entry, bool firstRun)
+s32 evt_freeze_game(spm::evtmgr::EvtEntry * entry, bool firstRun)
 {
     (void) entry;
     (void) firstRun;
@@ -33,7 +34,7 @@ int evt_freeze_game(spm::evtmgr::EvtEntry * entry, bool firstRun)
     return 2;
 }
 
-int evt_unfreeze_game(spm::evtmgr::EvtEntry * entry, bool firstRun)
+s32 evt_unfreeze_game(spm::evtmgr::EvtEntry * entry, bool firstRun)
 {
     (void) entry;
     (void) firstRun;
@@ -90,7 +91,7 @@ int getGameRevision()
 void * getModRelLoadAddr()
 {
     // Assume the first rel loaded with a module id other than 1 is this
-    wii::OSModule::RelHeader * curRel = wii::OSModule::firstRel;
+    wii::os::RelHeader * curRel = wii::os::firstRel;
     while (curRel->id == 1)
         curRel = curRel->next;
     
@@ -118,15 +119,15 @@ s32 pow(s32 val, s32 power)
 
 bool check3d()
 {
-    spm::camdrv::CamEntry * cam = spm::camdrv::camGetPtr(spm::camdrv::CAM_3D);
+    spm::camdrv::CamEntry * cam = spm::camdrv::camGetPtr(spm::camdrv::CAM_ID_3D);
     return !cam->isOrtho;
 }
 
 char * cloneString(const char * str)
 {
-    size_t len = wii::string::strlen(str);
+    size_t len = msl::string::strlen(str);
     char * newStr = new char[len + 1]; // include terminating null
-    wii::string::strcpy(newStr, str);
+    msl::string::strcpy(newStr, str);
     return newStr;
 }
 
@@ -143,13 +144,13 @@ s32 strcount(const char * str, char c)
 
 bool fileExists(const char * path)
 {
-    return wii::DVDFS::DVDConvertPathToEntrynum(path) != -1;
+    return wii::dvd::DVDConvertPathToEntrynum(path) != -1;
 }
 
 bool isPitEnemyRoom()
 {
-    return wii::string::strncmp(spm::spmario::gp->mapName, "dan_0", 5) == 0  // Flipside 
-        || wii::string::strncmp(spm::spmario::gp->mapName, "dan_4", 5) == 0; // Flopside
+    return msl::string::strncmp(spm::spmario::gp->mapName, "dan_0", 5) == 0  // Flipside 
+        || msl::string::strncmp(spm::spmario::gp->mapName, "dan_4", 5) == 0; // Flopside
 }
 
 }

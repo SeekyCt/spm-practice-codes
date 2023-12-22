@@ -1,13 +1,13 @@
+#include <common.h>
+#include <wii/os.h>
+#include <msl/string.h>
+
 #include "mod_ui_base/colours.h"
 #include "mod_ui_base/menuwindow.h"
 #include "consolewindow.h"
 #include "patch.h"
 #include "util.h"
 #include "ug.h"
-
-#include <types.h>
-#include <wii/OSError.h>
-#include <wii/string.h>
 
 namespace mod {
 
@@ -23,29 +23,29 @@ ConsoleWindow::ConsoleWindow()
     mLineLifetime = 450;
 }
 
-void ConsoleWindow::push(const char * text, const wii::RGBA * colour, ConsoleFreeCallback * cb)
+void ConsoleWindow::push(const char * text, const wii::gx::GXColor * colour, ConsoleFreeCallback * cb)
 {
     sInstance->_push(text, colour, cb);
 }
 
-void ConsoleWindow::pushClone(const char * text, const wii::RGBA * colour)
+void ConsoleWindow::pushClone(const char * text, const wii::gx::GXColor * colour)
 {
     sInstance->_push(cloneString(text), colour, autoFreeCb);
 }
 
-void ConsoleWindow::_push(const char * text, const wii::RGBA * colour, ConsoleFreeCallback * cb)
+void ConsoleWindow::_push(const char * text, const wii::gx::GXColor * colour, ConsoleFreeCallback * cb)
 {
     // Print to OSReport
-    wii::OSError::OSReport("(Console %x) %s\n", this, text);
+    wii::os::OSReport("(Console %p) %s\n", this, text);
 
-#ifdef PYCONSOLE_PROTOYPE
+#ifdef PYCONSOLE_PROTOTYPE
     // Print to USB Gecko
     if (ugProbe(1))
-        ugSend(1, text, wii::string::strlen(text)), ugSend(1, "\n", 1);
+        ugSend(1, text, msl::string::strlen(text)), ugSend(1, "\n", 1);
 #endif
 
     // Handle colour
-    wii::RGBA _colour;
+    wii::gx::GXColor _colour;
     if (colour != nullptr)
         _colour = *colour, _colour.a = 0xff; // override alpha for timed fade effect
     else

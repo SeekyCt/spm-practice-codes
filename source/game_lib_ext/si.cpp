@@ -1,5 +1,5 @@
-#include <types.h>
-#include <wii/OSInterrupt.h>
+#include <common.h>
+#include <wii/os/OSInterrupt.h>
 #include <wii/si.h>
 
 // Decompiled from TTYD, non-matching
@@ -16,7 +16,7 @@ bool SIIsChanBusy(s32 chan)
 
 u32 SIGetStatus(s32 chan)
 {
-    u32 intr = wii::OSInterrupt::OSDisableInterrupts();
+    u32 intr = wii::os::OSDisableInterrupts();
 
     // Read SI reg
     u32 status = *(u32 *)0xcc006438;
@@ -28,7 +28,7 @@ u32 SIGetStatus(s32 chan)
     if ((status & 8) && (wii::SI::Type[chan] & 0x80) == 0)
         wii::SI::Type[chan] = 8;
 
-    wii::OSInterrupt::OSRestoreInterrupts(intr);
+    wii::os::OSRestoreInterrupts(intr);
 
     return status;
 }

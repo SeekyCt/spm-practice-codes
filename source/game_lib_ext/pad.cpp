@@ -1,10 +1,10 @@
-#include <types.h>
-#include <wii/OSInterrupt.h>
+#include <common.h>
+#include <wii/os/OSInterrupt.h>
 #include <wii/OSRtc.h>
 #include <wii/pad.h>
 #include <wii/vi.h>
 #include <wii/si.h>
-#include <wii/string.h>
+#include <msl/string.h>
 
 namespace wii::PAD {
 
@@ -23,7 +23,7 @@ static PADStatus prevStatus[4];
 // Always inlined
 static void disableChannel(s32 chan)
 {
-    u32 intr = wii::OSInterrupt::OSDisableInterrupts();
+    u32 intr = wii::os::OSDisableInterrupts();
 
     u32 chanMask = 0x80000000 >> chan;
 
@@ -37,7 +37,7 @@ static void disableChannel(s32 chan)
 
     wii::OSRtc::OSSetWirelessID(chan, 0);
 
-    wii::OSInterrupt::OSRestoreInterrupts(intr);
+    wii::os::OSRestoreInterrupts(intr);
 }
 
 void PADOriginUpdateCallback(s32 chan, u32 flags)
@@ -75,7 +75,7 @@ void PADReceiveCheckCallback(s32 chan, u32 flags)
 
 u32 PADRead(wii::PAD::PADStatus * pads)
 {
-    u32 intr = wii::OSInterrupt::OSDisableInterrupts();
+    u32 intr = wii::os::OSDisableInterrupts();
 
     wii::SI::SIResponse siResponse;
     u32 readMask = 0;
@@ -87,22 +87,22 @@ u32 PADRead(wii::PAD::PADStatus * pads)
         {
             wii::PAD::PADReset(0);
             pads[i].error = 0xfe;
-            wii::string::memset(pads + i, 0, 10);
+            msl::string::memset(pads + i, 0, 10);
         }
         else if ((wii::PAD::ResettingBits & chanMask) || wii::PAD::ResettingChan == i)
         {
             pads[i].error = 0xfe;
-            wii::string::memset(pads + i, 0, 10);
+            msl::string::memset(pads + i, 0, 10);
         }
         else if ((wii::PAD::EnabledBits & chanMask) == 0)
         {
             pads[i].error = 0xff;
-            wii::string::memset(pads + i, 0, 10);
+            msl::string::memset(pads + i, 0, 10);
         }
         else if (wii::SI::SIIsChanBusy(i))
         {
             pads->error = 0xfd;
-            wii::string::memset(pads,0,10);
+            msl::string::memset(pads,0,10);
         }
         else if ((wii::SI::SIGetStatus(i) & 8) == 0)
         {
@@ -112,12 +112,12 @@ u32 PADRead(wii::PAD::PADStatus * pads)
             if (wii::SI::SIGetResponse(i, &siResponse) == 0)
             {
                 pads[i].error = 0xfd;
-                wii::string::memset(pads,0,10);
+                msl::string::memset(pads,0,10);
             }
             else if ((siResponse.unknown_0x0 & 0x80000000) != 0)
             {
                 pads[i].error = 0xfd;
-                wii::string::memset(pads, 0, 10);
+                msl::string::memset(pads, 0, 10);
             }
             else
             {
@@ -140,11 +140,11 @@ u32 PADRead(wii::PAD::PADStatus * pads)
                     (abs(abs(pads[i].rTrigger) - abs(prevStatus[i].rTrigger))) >= thres ||
                     pads[i].buttonsPressed != prevStatus[i].buttonsPressed
                 )
-                    wii::VI::__VIResetSIIdle();
+                    wii::vi::__VIResetSIIdle();
 
                 #undef abs
 
-                wii::string::memcpy(&prevStatus[i], pads + i, 0xc);
+                msl::string::memcpy(&prevStatus[i], pads + i, 0xc);
 
                 if ((pads[i].buttonsPressed & 0x2000) == 0)
                 {
@@ -154,7 +154,7 @@ u32 PADRead(wii::PAD::PADStatus * pads)
                 else
                 {
                     pads[i].error = 0xfd;
-                    wii::string::memset(pads,0,10);
+                    msl::string::memset(pads,0,10);
                     wii::SI::SITransfer(i,&wii::PAD::CmdReadOrigin, 1, wii::PAD::Origin + i,
                                         10, PADOriginUpdateCallback, 0, 0);
                 }
@@ -167,12 +167,12 @@ u32 PADRead(wii::PAD::PADStatus * pads)
             {
                 disableChannel(i);
                 pads[i].error = 0xff;
-                wii::string::memset(pads, 0, 10);
+                msl::string::memset(pads, 0, 10);
             }
             else
             {
                 pads[i].error = 0;
-                wii::string::memset(pads, 0, 10);
+                msl::string::memset(pads, 0, 10);
                 if ((wii::PAD::CheckingBits & chanMask) == 0)
                 {
                     wii::PAD::CheckingBits |= chanMask;
@@ -182,7 +182,7 @@ u32 PADRead(wii::PAD::PADStatus * pads)
         }
     }
 
-    wii::OSInterrupt::OSRestoreInterrupts(intr);
+    wii::os::OSRestoreInterrupts(intr);
 
     return readMask;
 }

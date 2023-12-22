@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <common.h>
+
 namespace mod {
 
 #define CUSTOM_PIT_FILENAME "./mod/wiidungeon.xml"

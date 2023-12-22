@@ -1,19 +1,21 @@
+#include <common.h>
+#include <spm/evtmgr.h>
+#include <spm/evtmgr_cmd.h>
+#include <spm/evt_mobj.h>
+#include <spm/fadedrv.h>
+#include <spm/nandmgr.h>
+#include <spm/hud.h>
+#include <spm/mario_motion.h>
+#include <spm/seq_mapchange.h>
+#include <spm/seqdrv.h>
+#include <spm/spmario.h>
+#include <msl/string.h>
+
 #include "mod_ui_base/centredbutton.h"
 #include "evt_cmd.h"
 #include "gamesavemenu.h"
 #include "patch.h"
 #include "util.h"
-
-#include <types.h>
-#include <spm/evtmgr.h>
-#include <spm/evtmgr_cmd.h>
-#include <spm/evt_mobj.h>
-#include <spm/nandmgr.h>
-#include <spm/hud.h>
-#include <spm/seq_mapchange.h>
-#include <spm/seqdrv.h>
-#include <spm/spmario.h>
-#include <wii/string.h>
 
 namespace mod {
 
@@ -48,10 +50,16 @@ static bool reloadSave(MenuButton * button, void * param)
     // Close menu
     MenuWindow::sCurMenu->fullClose();
 
+    // Fix crash when reloading while using Slim
+    spm::mario_motion::marioChgMot(0);
+
+    // Set fade transition
+    spm::fadedrv::fadeSetMapChangeTransition(2, 1);
+    
     // Unload current map
     spm::seq_mapchange::_unload(spm::spmario::gp->mapName, nullptr, nullptr);
-    wii::string::strcpy(spm::spmario::gp->mapName, "");
-    wii::string::strcpy(spm::spmario::gp->doorName, "");
+    msl::string::strcpy(spm::spmario::gp->mapName, "");
+    msl::string::strcpy(spm::spmario::gp->doorName, "");
 
     // Backup save slot
     s32 slot = spm::spmario::gp->saveFileId;
@@ -244,7 +252,7 @@ GameSaveMenu::GameSaveMenu()
     initMainScreen();
 }
 
-static void (*nandUpdateSaveReal)(int saveId);
+static void (*nandUpdateSaveReal)(s32 saveId);
 
 void GameSaveMenu::pitSavePatch()
 {
@@ -252,10 +260,10 @@ void GameSaveMenu::pitSavePatch()
     // current room is loaded, so saving & reloading would put you into the next floor.
     // This fixes that by decreasing GSW(1) in the save but not in the live game.
     nandUpdateSaveReal = patch::hookFunction(spm::nandmgr::nandUpdateSave,
-        [](int saveId)
+        [](s32 saveId)
         {
             nandUpdateSaveReal(saveId);
-            if (wii::string::strncmp(spm::spmario::gp->mapName, "dan", 3) == 0)
+            if (msl::string::strncmp(spm::spmario::gp->mapName, "dan", 3) == 0)
             {
                 spm::nandmgr::SaveFile * save = spm::nandmgr::nandGetSaveFiles() + saveId;
                 save->spmarioGlobals.gsw[1] -= 1;

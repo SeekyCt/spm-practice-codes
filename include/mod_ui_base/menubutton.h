@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <common.h>
+
 #include "menuwindow.h"
 
 namespace mod {
@@ -36,18 +38,20 @@ public:
     const char * mMsg;
     f32 mPosX, mPosY;
     f32 mScale;
-    wii::RGBA mColour;
-    wii::RGBA mSelColour;
+    wii::gx::GXColor mColour;
+    wii::gx::GXColor mSelColour;
     MenuAction * mAction;
     void * mActionParam;
     bool mAutoPress;
     bool mDrawAsMessage;
+    MenuAction * mOnSelectAction;
+    void * mOnSelectActionParam;
 
     MenuButton(class MenuWindow * parent, const char * msg, f32 x, f32 y,
                MenuAction * action = nullptr, void * actionParam = nullptr,
                bool autoPress = false, f32 scale = 1.0f,
-               wii::RGBA * colour = nullptr, wii::RGBA * selColour = nullptr,
-               bool drawAsMessage = false);
+               const wii::gx::GXColor * colour = nullptr, const wii::gx::GXColor * selColour = nullptr,
+               bool drawAsMessage = false, MenuAction * onSelectAction = nullptr, void * onSelectActionParam = nullptr);
     virtual ~MenuButton();
 };
 

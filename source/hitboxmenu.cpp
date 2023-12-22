@@ -1,11 +1,11 @@
+#include <common.h>
+#include <spm/npcdrv.h>
+
 #include "hitboxmenu.h"
 #include "hitboxmenu.h"
 #include "nandsettings.h"
 #include "patch.h"
 #include "util.h"
-
-#include <types.h>
-#include <spm/npcdrv.h>
 
 namespace mod {
 
@@ -51,7 +51,7 @@ HitboxMenu::HitboxMenu()
     mTitle = "Hitbox Display Options";
 }
 
-void HitboxMenu::activateCheck(s8 cameraId, u8 renderMode, f32 z, spm::dispdrv::DispCallback * cb, void * cbParam)
+void HitboxMenu::activateCheck(s32 cameraId, u8 renderMode, f32 z, spm::dispdrv::DispCallback * cb, void * cbParam)
 {
     spm::npcdrv::NPCPart * part = reinterpret_cast<spm::npcdrv::NPCPart *>(cbParam);
 

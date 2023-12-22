@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <common.h>
+
 #include "mod_ui_base/menuscroller.h"
 #include "mod_ui_base/menuscrollgroup.h"
 #include "mapmenu.h"

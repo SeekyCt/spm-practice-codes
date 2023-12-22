@@ -1,8 +1,8 @@
+#include <common.h>
+#include <spm/evtmgr.h>
+
 #include "nandmenu.h"
 #include "nandsettings.h"
-
-#include <types.h>
-#include <spm/evtmgr.h>
 
 namespace mod {
 
@@ -78,7 +78,7 @@ void NandMenu::disp()
             drawStringCentre(mMiddleMsg, 0);    
 
         // If a process is running, check if it's done
-        if ((mTask != NandTask::NONE) && !spm::evtmgr::evtCheckId(mEvtId))
+        if ((mTask != NandTask::NONE) && !spm::evtmgr::evtCheckID(mEvtId))
         {
             // Inform user of completion
             switch (mTask)

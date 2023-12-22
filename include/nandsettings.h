@@ -4,9 +4,11 @@
 
 #pragma once
 
-#include "scriptlog.h"
-
+#include <common.h>
+#include <evt_cmd.h>
 #include <spm/evtmgr.h>
+
+#include "scriptlog.h"
 
 namespace mod {
 

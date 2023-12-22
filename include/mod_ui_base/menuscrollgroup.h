@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <common.h>
+
 #include "menubutton.h"
 
 namespace mod {
@@ -27,8 +29,8 @@ public:
 
     MenuScrollGroup(class MenuWindow * parent, u32 value, f32 x, f32 y, MenuScrollGroupCb * scrollCb,
                     void * scrollParam, s32 digits, bool hex, MenuAction * action = nullptr,
-                    void * actionParam = nullptr, f32 scale = 1.0f, wii::RGBA * colour = nullptr,
-                    wii::RGBA * selColour = nullptr);
+                    void * actionParam = nullptr, f32 scale = 1.0f, wii::gx::GXColor * colour = nullptr,
+                    wii::gx::GXColor * selColour = nullptr);
 };
 
 }

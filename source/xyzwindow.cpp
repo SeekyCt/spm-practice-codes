@@ -1,13 +1,13 @@
+#include <common.h>
+#include <spm/mario.h>
+#include <spm/seqdrv.h>
+#include <msl/stdio.h>
+#include <msl/string.h>
+
 #include "mod_ui_base/colours.h"
 #include "mod_ui_base/menuwindow.h"
 #include "nandsettings.h"
 #include "xyzwindow.h"
-
-#include <types.h>
-#include <spm/mario.h>
-#include <spm/seqdrv.h>
-#include <wii/stdio.h>
-#include <wii/string.h>
 
 namespace mod {
 
@@ -37,20 +37,20 @@ void XYZWindow::disp()
 
         // Generate format for desired number of decimal places
         char fmt[9];
-        wii::stdio::sprintf(fmt, "%%c: %%.%df", gSettings->xyzDP);
+        msl::stdio::sprintf(fmt, "%%c: %%.%df", gSettings->xyzDP);
 
         // Create strings
         spm::mario::MarioWork * mp = spm::mario::marioGetPtr();
         f32 * pos = reinterpret_cast<f32 *>(&mp->position);
         for (int i = 0; i < 3; i++)
         {
-            wii::stdio::sprintf(mMsgs[i], fmt, 'x' + i, pos[i]);
+            msl::stdio::sprintf(mMsgs[i], fmt, 'x' + i, pos[i]);
 
             // Don't display negative zero since it'll often flicker between signs
             if (mMsgs[i][3] == '-')
             {
                 bool negativeZero = true;
-                int len = wii::string::strlen(mMsgs[i]);
+                int len = msl::string::strlen(mMsgs[i]);
                 for (int j = 4; j < len; j++)
                 {
                     char c = mMsgs[i][j];
@@ -62,7 +62,7 @@ void XYZWindow::disp()
                     }
                 }
                 if (negativeZero)
-                    wii::string::memmove(mMsgs[i] + 3, mMsgs[i] + 4, len - 4 + 1);
+                    msl::string::memmove(mMsgs[i] + 3, mMsgs[i] + 4, len - 4 + 1);
             }
         }
     }

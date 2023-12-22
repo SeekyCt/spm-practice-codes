@@ -1,7 +1,10 @@
-*.elf
-*.rel
+# Build system outputs
+build
+out
+build.ninja
+
+# Tool / user files
 .vscode
-build.*
-*.bat
 porting
-*.bin
+*.bat
+compile_commands.json

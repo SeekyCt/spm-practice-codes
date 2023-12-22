@@ -1,20 +1,20 @@
+#include <common.h>
+#include <spm/parse.h>
+#include <msl/stdio.h>
+#include <msl/string.h>
+
 #include "parsepatches.h"
 #include "patch.h"
-
-#include <types.h>
-#include <spm/parse.h>
-#include <wii/stdio.h>
-#include <wii/string.h>
 
 namespace mod {
 
 static void readInt(const char * str, const char * fmt, int * ret)
 {
     // If marked as hex, override format to %x
-    if (wii::string::strncmp(str, "0x", 2) == 0)
-        wii::stdio::sscanf(str + 2, "%x", ret);
+    if (msl::string::strncmp(str, "0x", 2) == 0)
+        msl::stdio::sscanf(str + 2, "%x", ret);
     else
-        wii::stdio::sscanf(str, fmt, ret); 
+        msl::stdio::sscanf(str, fmt, ret); 
 }
 
 void parsePatch()

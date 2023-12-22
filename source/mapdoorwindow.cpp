@@ -1,13 +1,12 @@
+#include <common.h>
+#include <spm/seqdrv.h>
+#include <spm/spmario.h>
+#include <msl/stdio.h>
+
 #include "mod_ui_base/colours.h"
 #include "mod_ui_base/menuwindow.h"
 #include "mapdoorwindow.h"
 #include "nandsettings.h"
-
-#include <types.h>
-#include <spm/seqdrv.h>
-#include <spm/spmario.h>
-#include <wii/stdio.h>
-#include <wii/types.h>
 
 namespace mod {
 
@@ -29,8 +28,8 @@ void MapDoorWindow::disp()
         return;
 
     // Create strings
-    wii::stdio::sprintf(mMapMsg, "map: %s", spm::spmario::gp->mapName);
-    wii::stdio::sprintf(mDoorMsg, "door: %s", spm::spmario::gp->doorName);
+    msl::stdio::sprintf(mMapMsg, "map: %s", spm::spmario::gp->mapName);
+    msl::stdio::sprintf(mDoorMsg, "door: %s", spm::spmario::gp->doorName);
 
     // Draw strings
     drawString(mMapMsg, mPosX, mPosY, &mColour, mScale, true);

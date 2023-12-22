@@ -4,6 +4,8 @@
 */
 #pragma once
 
+#include <common.h>
+
 #include "mod_ui_base/window.h"
 
 namespace mod {
@@ -13,7 +15,7 @@ class XYZWindow final : public Window
 protected:
     virtual void disp() override;
     char mMsgs[3][32];
-    wii::RGBA mColour;
+    wii::gx::GXColor mColour;
     f32 mScale;
     int mFrameCount;
 
