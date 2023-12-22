@@ -1,14 +1,15 @@
-#include "nandsettings.h"
-#include "mod_ui_base/passivebutton.h"
-
+#include <common.h>
 #include <spm/wpadmgr.h>
 #include <wii/wpad.h>
+
+#include "nandsettings.h"
+#include "mod_ui_base/passivebutton.h"
 
 namespace mod {
 
 PassiveButton::PassiveButton(class MenuWindow * parent, const char * msg, f32 x, f32 y,
                              u32 passiveBtnMask, MenuAction * action, void * actionParam,
-                             f32 scale, wii::RGBA * colour, bool drawAsMessage)
+                             f32 scale, wii::gx::GXColor * colour, bool drawAsMessage)
                             :MenuButton(parent, msg, x, y, action, actionParam, false,
                                         scale, colour, nullptr, drawAsMessage)
 {

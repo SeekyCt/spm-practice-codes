@@ -4,26 +4,26 @@
 #include "mod_ui_base/colours.h"
 #include "mod_ui_base/window.h"
 
+#include <msl/stdio.h>
+#include <msl/string.h>
 #include <spm/homebuttondrv.h>
 #include <spm/mario_sbr.h>
 #include <spm/wpadmgr.h>
 #include <wii/kpad.h>
 #include <wii/pad.h>
-#include <msl/stdio.h>
-#include <wii/string.h>
 #include <wii/wpad.h>
 
 namespace mod {
 
 void (*wpadMainReal)();
-s32 (*KPADReadReal)(s32 chan, wii::KPAD::KPADStatus * statuses, u32 length);
+s32 (*KPADReadReal)(s32 chan, wii::kpad::KPADStatus * statuses, u32 length);
 
 wii::PAD::PADStatus pads[4];
 wii::PAD::PADStatus prevPads[4];
 
 static void readGcn()
 {
-    wii::string::memcpy(prevPads, pads, sizeof(prevPads));
+    msl::string::memcpy(prevPads, pads, sizeof(prevPads));
 
     wii::PAD::PADRead(pads);
 
@@ -62,7 +62,7 @@ static u32 padToWpad(wii::PAD::PADStatus * pad)
     return ret;
 }
 
-static s32 injectGcn(s32 chan, wii::KPAD::KPADStatus * statuses, u32 length)
+static s32 injectGcn(s32 chan, wii::kpad::KPADStatus * statuses, u32 length)
 {
     s32 ret = KPADReadReal(chan, statuses, length);
 
@@ -77,7 +77,7 @@ static s32 injectGcn(s32 chan, wii::KPAD::KPADStatus * statuses, u32 length)
 
 static s32 dcOverride(s32 chan, void * p2)
 {
-    s32 ret = wii::WPAD::WPADProbe(chan, p2);
+    s32 ret = wii::wpad::WPADProbe(chan, p2);
     if (ret == -1)
     {
         if (pads[0].error == 0 || pads[0].error == -3)
@@ -90,12 +90,12 @@ static s32 dcOverride(s32 chan, void * p2)
 void gcpadPatch()
 {
     wpadMainReal = patch::hookFunction(spm::wpadmgr::wpadMain, readGcn);
-    KPADReadReal = patch::hookFunction(wii::KPAD::KPADRead, injectGcn);
+    KPADReadReal = patch::hookFunction(wii::kpad::KPADRead, injectGcn);
 
     writeBranchLink(spm::homebuttondrv::homebuttonMain, 0x5f0, dcOverride);
     writeBranchLink(spm::homebuttondrv::homebuttonMain, 0x63c, dcOverride);
 
-    writeBranchLink(spm::mario_sbr::marioUpdateKeyData, 0, marioUpdateKeyDataPatch);
+    writeBranch(spm::mario_sbr::marioUpdateKeyData, 0, mod::gcpadpatches::marioUpdateKeyDataPatch);
 }
 
 }

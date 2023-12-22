@@ -25,6 +25,8 @@ Once you've chosen the floor and pit you'd like to warp to, press `2`.
 
 By default a Dimentio teleport animation will play when you do this (thanks to JohnP55 for the idea and documentation of relevant functions), but you can turn that off by pressing `-` in the menu if you'd like.
 
+You can also press + to change your progress through the pit bosses.
+
 ## HUD Displays
 The `Edit HUD Display Options` option in the menu allows you to enable and disable various displays on the screen. The list can be navigated with the D-Pad and `2` can be pressed to switch between Enabled and Disabled.
 
@@ -38,6 +40,25 @@ The `Position Update Delay` option allows you to change the amount of frames bet
 
 The `Position Decimal Places` option allows you to set how many decimal places the coordinates are displayed to.
 
+### HP Bars
+HP bars give a graphical display of each enemy's remaining health underneath them, and at the top of the screen for bosses.
+
+The `Display Enemy HP Bars` option enables the drawing of HP bars under each enemy.
+
+The `Hide Enemy HP Bars in 3D` option will stop HP bars being drawn while you're flipped, as they often look quite messy there.
+
+The `Display Boss HP Bars` option enables the drawing of the boss HP bar at the top of the screen.
+
+### Controller Inputs
+The `Display Controller Inputs` option will show all buttons you press on screen.
+
+## Hitbox Displays
+The hitbox display settings allow you to configure the game's unused NPC hitbox drawing code.
+
+The `Display NPC Hitboxes` option will enable the game's main hitbox drawing code.
+
+The `Show Disabled NPC Hitboxes` option will also enable the game's code to display disabled hitboxes in gray.
+
 ## Logging Options
 The `Edit Logging Options` option in the menu allows you to enable and disable various things being printed to an on-screen console or OSReport (for Dolphin). The list can be navigated with the D-Pad and `2` can be pressed to switch between Enabled and Disabled.
 
@@ -49,6 +70,9 @@ The `Evt Variable Tracking` option will log whenever a saved script variable (LS
 
 ### Script Debug Instruction
 The `Evt Debug Instructions` option will log messages passed into the debug script instructions `debug_put_msg` and `debug_put_reg`.
+
+## Sequence Position Editor
+The `Edit Sequence Position` option in the menu allows you to view and edit the values of the sequence value, GSW(0), in a more user-friendly way than the script variable editor.
 
 ## Script Variable Editor
 The `Edit Script Variables` option in the menu allows you to view and edit the values of any GW, GF, GSW, GSWF, LSW or LSWF. The variable type (first few letters), variable number (first 4 decimal digits) and value (final 8 hex digits) can be scrolled through with the D-Pad.
@@ -62,11 +86,14 @@ The `Edit Stats` option in the menu allows you to change the values of your Leve
 ## Miscellaneous Options
 The `Miscellaneous Options` option in the menu allows you to configure settings that aren't especially related to speedrunning or reverse engineering.
 
-## wiidungeon.xml Replacement
+### wiidungeon.xml Replacement
 The `Load Pit Text From File` option allows you to customise the Pit of 100 Trials definition text with a file either added to your ISO or patched in with Riivolution to create your own Pit, or play someone else's. A clean copy of the file can be obtained [here](https://github.com/SeekyCt/spm-docs/blob/master/misc/wiidungeon.xml)
 * Warning: this option is not supported when loading the mod exclusively through a save exploit on console (either USB Loader with a patched ISO or Riivolution must be used) because the game frequently reloads this file, so loading it from a save file would wear out the Wii's NAND.
 * To use this feature with a patched ISO, follow one of the ISO guides in [INSTALLING.md](https://github.com/SeekyCt/spm-practice-codes/blob/main/INSTALLING.md) and add the custom `wiidungeon.xml` to the `mod` folder that `mod.rel` is placed in.
 * To use this feature with Riivolution, edit / replace `wiidungeon.xml` in the SpmPracticeCodes folder on the root of your SD card.
+
+### Last Key
+The `Force Last Key in Pit` option will make it so that the key in each pit room is guaranteed to drop from the final enemy killed in the room.
 
 ## Saved Settings
 The `Manage Saved Settings` option in the menu allows you to save your settings for the mod to your Wii's NAND (to the file `pcset.bin` in the game's save folder) and they'll automatically load next time you boot the mod. You can also load your saved settings, load the default settings or delete them from your NAND. 

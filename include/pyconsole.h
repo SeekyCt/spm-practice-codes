@@ -5,7 +5,7 @@
 #pragma once
 
 #ifdef PYCONSOLE_PROTOTYPE
-#include <types.h>
+#include <common.h>
 
 namespace mod {
 

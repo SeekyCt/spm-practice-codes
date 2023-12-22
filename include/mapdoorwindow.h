@@ -4,6 +4,9 @@
 */
 #pragma once
 
+#include <common.h>
+#include <wii/gx.h>
+
 #include "mod_ui_base/window.h"
 
 namespace mod {
@@ -14,7 +17,7 @@ protected:
     virtual void disp() override;
     char mMapMsg[40];
     char mDoorMsg[40];
-    wii::RGBA mColour;
+    wii::gx::GXColor mColour;
     f32 mScale;
 
     MapDoorWindow();

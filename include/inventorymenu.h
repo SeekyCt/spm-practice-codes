@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <common.h>
+
 #include "mod_ui_base/centredbutton.h"
 #include "mod_ui_base/menuicon.h"
 #include "mod_ui_base/menuscrollgroup.h"
@@ -22,7 +24,7 @@ private:
     int getId(int slot);
     
     // Slot selection screen
-    MenuButton * mModeButtons[5];
+    MenuButton * mModeButtons[6];
     MenuIcon * mItemButtons[32];
     int getCount();
     int getMax();
@@ -32,6 +34,8 @@ private:
     void updateItemDisps();
     void initSelectScreen();
     void exitSelectScreen();
+    static bool getAllCharsPixls(MenuButton * button, void * param);
+    const char * mAllCharsPixlsMsg;
 
     // Edit mode selection screen
     bool mShowSelectable;
@@ -58,6 +62,7 @@ private:
 
 protected:
     virtual void close() override;
+    virtual void disp() override;
 
 public:
     InventoryMenu();

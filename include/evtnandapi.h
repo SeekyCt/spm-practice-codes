@@ -7,7 +7,7 @@
 */
 #pragma once
 
-#include <types.h>
+#include <common.h>
 #include <spm/evtmgr.h>
 
 namespace mod {

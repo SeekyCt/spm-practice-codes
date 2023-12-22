@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <common.h>
+
 #include "childmenu.h"
 
 namespace mod {

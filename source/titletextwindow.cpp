@@ -1,10 +1,10 @@
+#include <common.h>
+#include <spm/fontmgr.h>
+#include <spm/seqdrv.h>
+
 #include "mod_ui_base/colours.h"
 #include "mod.h"
 #include "titletextwindow.h"
-
-#include <types.h>
-#include <spm/fontmgr.h>
-#include <spm/seqdrv.h>
 
 namespace mod {
 

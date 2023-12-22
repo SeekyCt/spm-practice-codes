@@ -1,11 +1,12 @@
-#include "inventorymenu.h"
-#include "util.h"
-
-#include <types.h>
+#include <common.h>
 #include <spm/item_data.h>
 #include <spm/mario_pouch.h>
 #include <spm/msgdrv.h>
-#include <wii/stdio.h>
+#include <msl/stdio.h>
+
+#include "inventorymenu.h"
+#include "util.h"
+#include "mod_ui_base/colours.h"
 
 namespace mod {
 
@@ -114,8 +115,11 @@ bool InventoryMenu::modeChange(MenuButton * button, void * param)
 
     // Figure out which button is being hovered over
     int i;
-    for (i = 0; i < 5; i++)
+    for (i = 0; i < 6; i++)
         if (button == instance->mModeButtons[i]) break;
+    
+    // If the cursor moved away from the all chars and pixls button, remove the text
+    instance->mAllCharsPixlsMsg = nullptr;
     
     // If the cursor has moved, update for the new mode
     if (instance->mMode != i)
@@ -125,6 +129,32 @@ bool InventoryMenu::modeChange(MenuButton * button, void * param)
         instance->updateItemDisps();
     }
 
+    return true;
+}
+
+bool InventoryMenu::getAllCharsPixls(MenuButton * button, void * param)
+{
+    (void) button;
+    
+    InventoryMenu * instance = reinterpret_cast<InventoryMenu *>(param);
+    spm::mario_pouch::MarioPouchWork * pp = spm::mario_pouch::pouchGetPtr();
+    
+    const ModeDef& chars = modes[3];
+    for (int i = 0; i < chars.max - chars.min; i++)
+    {
+        pp->characters[i].selectable = true;
+        pp->characters[i].itemType = chars.min + i;
+    }
+    
+    const ModeDef& pixls = modes[4];
+    for (int i = 0; i < pixls.max - pixls.min - 1; i++) // 99% of players won't need Tippi
+    {
+        pp->pixls[i].selectable = true;
+        pp->pixls[i].itemType = pixls.min + i + 1;
+    }
+
+    instance->updateItemDisps();
+    instance->mAllCharsPixlsMsg = "Done!";
     return true;
 }
 
@@ -228,8 +258,12 @@ void InventoryMenu::initSelectScreen()
     // Init mode select buttons
     for (int i = 0; i < 5; i++)
         mModeButtons[i] = new MenuButton(this, modes[i].name, modeX, firstModeY - (i * (FONT_HEIGHT + 5)), modeChange, this, true);
-    for (int i = 0; i < 4; i++)
+    
+    mModeButtons[5] = new MenuButton(this, "Get all characters and pixls", modeX, firstModeY - (ARRAY_SIZEOF(mModeButtons) * (FONT_HEIGHT + 5)), getAllCharsPixls, this);
+    
+    for (int i = 0; i < 5; i++)
         buttonLinkVertical(mModeButtons[i], mModeButtons[i + 1]);
+    
 
     updateItemDisps();
     buttonLinkHorizontal(mModeButtons[mMode], mItemButtons[0]);
@@ -241,7 +275,7 @@ void InventoryMenu::initSelectScreen()
 
 void InventoryMenu::exitSelectScreen()
 {
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 6; i++)
     {
         delete mModeButtons[i];
         mModeButtons[i] = nullptr;
@@ -488,6 +522,15 @@ void InventoryMenu::exitIdScreen()
 /*
     Other
 */
+
+void InventoryMenu::disp()
+{
+    // Run main display function
+    MenuWindow::disp();
+
+    if (mAllCharsPixlsMsg != nullptr)
+        drawStringCentre(mAllCharsPixlsMsg, 0); 
+}
 
 void InventoryMenu::close()
 {

@@ -1,14 +1,14 @@
-#include "mod_ui_base/menuscrollerh.h"
-
-#include <types.h>
+#include <common.h>
 #include <spm/fontmgr.h>
 #include <wii/wpad.h>
+
+#include "mod_ui_base/menuscrollerh.h"
 
 namespace mod {
 
 MenuScrollerH::MenuScrollerH(MenuWindow * parent, const char * msg, f32 x, f32 y, f32 arrowXDiff, MenuScrollHCb * scrollLeft,
                              MenuScrollHCb * scrollRight, void * scrollParam, MenuAction * action, void * actionParam,
-                             f32 scale, wii::RGBA * colour, wii::RGBA * selColour)
+                             f32 scale, wii::gx::GXColor * colour, wii::gx::GXColor * selColour)
                             :MenuButton(parent, msg, x, y, action, actionParam, false, scale, colour, selColour)
 {
     // Store extra parameters
@@ -39,7 +39,7 @@ void MenuScrollerH::disp(f32 centreX, f32 centreY, bool selected)
     const f32 x = centreX + mPosX;
     const f32 y = centreY + mPosY;
     const f32 scale = 0.8f * mScale;
-    wii::RGBA * colour = selected ? &mSelColour : &mColour;
+    wii::gx::GXColor * colour = selected ? &mSelColour : &mColour;
     mWindow->drawString("+", x + mArrowXDiff, y, colour, scale, true);
     mWindow->drawString("-", x - mArrowXDiff, y, colour, scale, true);
     mWindow->drawString(mMsg, x - offset, mPosY + centreY, colour, mScale, true);

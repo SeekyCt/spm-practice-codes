@@ -1,30 +1,5 @@
-#include "mod_ui_base/window.h"
-#include "apwindow.h"
-#include "chainloader.h"
-#include "consolewindow.h"
-#include "custompit.h"
-#include "evtdebug.h"
-#include "exception.h"
-#include "gamesavemenu.h"
-#include "gcpad.h"
-#include "hitboxmenu.h"
-#include "hpwindow.h"
-#include "inputwindow.h"
-#include "mainmenu.h"
-#include "mapdoorwindow.h"
-#include "mapselectmenu.h"
-#include "mod.h"
-#include "nandsettings.h"
-#include "patch.h"
-#include "pyconsole.h"
-#include "parsepatches.h"
-#include "romfontexpand.h"
-#include "scriptlog.h"
-#include "scriptvarlog.h"
-#include "titletextwindow.h"
-#include "xyzwindow.h"
+#include <common.h>
 
-#include <types.h>
 #include <spm/camdrv.h>
 #include <spm/charpixlitemwin.h>
 #include <spm/effdrv.h>
@@ -39,12 +14,39 @@
 #include <spm/spmario_snd.h>
 #include <spm/system.h>
 #include <spm/wpadmgr.h>
-#include <wii/DVD_Broadway.h>
-#include <wii/DVDFS.h>
+#include <wii/dvd.h>
 #include <wii/ipc.h>
-#include <wii/OSError.h>
+#include <wii/os.h>
 #include <wii/wpad.h>
-#include <wii/string.h>
+#include <msl/string.h>
+
+#include "mod_ui_base/window.h"
+#include "apwindow.h"
+#include "chainloader.h"
+#include "consolewindow.h"
+#include "custompit.h"
+#include "evtdebug.h"
+#include "exception.h"
+#include "gamesavemenu.h"
+#include "gcpad.h"
+#include "hitboxmenu.h"
+#include "hpwindow.h"
+#include "inputwindow.h"
+#include "mainmenu.h"
+#include "mapdoorwindow.h"
+#include "mapfixes.h"
+#include "mapselectmenu.h"
+#include "mod.h"
+#include "nandsettings.h"
+#include "patch.h"
+#include "pyconsole.h"
+#include "parsepatches.h"
+#include "preventpatchtwice.h"
+#include "romfontexpand.h"
+#include "scriptlog.h"
+#include "scriptvarlog.h"
+#include "titletextwindow.h"
+#include "xyzwindow.h"
 
 namespace mod {
 
@@ -58,6 +60,7 @@ bool gIs4_3;
 */
 
 static spm::seqdef::SeqDef seq_gameReal;
+static spm::seqdef::SeqDef seq_mapChangeReal;
 
 static void seq_gameInitOverride(spm::seqdrv::SeqWork * wp)
 {
@@ -80,8 +83,8 @@ static void seq_gameMainOverride(spm::seqdrv::SeqWork *wp)
                 spm::effdrv::func_80061d78() == 0 &&
                 spm::charpixlitemwin::charPixlItemWinIsClosed() &&
                 spm::spmario::spmarioGetSystemLevel() == 0 &&
-                (spm::homebuttondrv::homebuttonWp->flags & HOMEBUTTON_FLAG_OPEN) == 0 &&
-                (spm::homebuttondrv::homebuttonWp->flags & HOMEBUTTON_FLAG_FORBIDDEN) == 0
+                (spm::homebuttondrv::homebuttondrv_wp->flags & HOMEBUTTON_FLAG_OPEN) == 0 &&
+                (spm::homebuttondrv::homebuttondrv_wp->flags & HOMEBUTTON_FLAG_FORBIDDEN) == 0
                 )
                 MenuWindow::sCurMenu = new MainMenu();
         }
@@ -99,6 +102,22 @@ static void seq_gamePatch()
     seq_gameReal = spm::seqdef::seq_data[spm::seqdrv::SEQ_GAME];
     spm::seqdef::seq_data[spm::seqdrv::SEQ_GAME] = {
         seq_gameInitOverride, seq_gameMainOverride, seq_gameReal.exit
+    };
+}
+
+static void seq_mapChangeInitOverride(spm::seqdrv::SeqWork *wp) {
+    // Fix potential crashes
+    mapLoadCrashFixes(wp);
+    
+    // Call real function
+    seq_mapChangeReal.init(wp);
+}
+
+static void seq_mapChangePatch()
+{
+    seq_mapChangeReal = spm::seqdef::seq_data[spm::seqdrv::SEQ_MAPCHANGE];
+    spm::seqdef::seq_data[spm::seqdrv::SEQ_MAPCHANGE] = {
+        seq_mapChangeInitOverride, seq_mapChangeReal.main, seq_mapChangeReal.exit
     };
 }
 
@@ -129,16 +148,16 @@ void spmarioMainPatch()
 static void checkForDolphin()
 {
     // Thanks to TheLordScruffy for telling me about this
-    gIsDolphin = wii::IPC::IOS_Open("/sys", 1) == -106;
+    gIsDolphin = wii::ipc::IOS_Open("/sys", 1) == -106;
 
     // If they ever fix that, it'll be in a version that's definitely new enough to have /dev/dolphin
     if (!gIsDolphin)
     {
-        int ret = wii::IPC::IOS_Open("/dev/dolphin", 0);
+        int ret = wii::ipc::IOS_Open("/dev/dolphin", 0);
         if (ret >= 0)
         {
             gIsDolphin = true;
-            wii::IPC::IOS_Close(ret);
+            wii::ipc::IOS_Close(ret);
         }
     }
 }
@@ -146,12 +165,12 @@ static void checkForDolphin()
 static void checkForRiivolution()
 {
     // Thanks to TheLordScruffy for telling me about this
-    gIsRiivolution = wii::string::strcmp(wii::DVD_Broadway::devDiStr, "/dev/di") != 0;
+    gIsRiivolution = msl::string::strcmp(wii::dvd::devDiStr, "/dev/di") != 0;
 }
 
 static void checkForPatchedDisc()
 {
-    gIsPatchedDisc = wii::DVDFS::DVDConvertPathToEntrynum("./mod/") != -1;
+    gIsPatchedDisc = wii::dvd::DVDConvertPathToEntrynum("./mod/") != -1;
 }
 
 /*
@@ -160,7 +179,7 @@ static void checkForPatchedDisc()
 
 void main()
 {
-    wii::OSError::OSReport(MOD_VERSION": main running\n");
+    wii::os::OSReport(MOD_VERSION": main running\n");
 
     checkForDolphin();
     checkForRiivolution();
@@ -176,8 +195,8 @@ void main()
     exceptionPatch();
 
     // Handle 4:3
-    spm::camdrv::CamEntry * cam = spm::camdrv::camGetPtr(spm::camdrv::CAM_DEBUG_3D);
-    gIs4_3 = (cam->flag & CAM_FLAG_16_9) == 0;
+    spm::camdrv::CamEntry * cam = spm::camdrv::camGetPtr(spm::camdrv::CAM_ID_DEBUG_3D);
+    gIs4_3 = (cam->flag & CAMFLAG_16_9) == 0;
     if (gIs4_3)
         cam->pos.z = 1350.0f;
 
@@ -189,6 +208,7 @@ void main()
 
     spmarioMainPatch();
     seq_gamePatch();
+    seq_mapChangePatch();
     evtScriptLoggerPatch();
     evtVarLogPatch();
     evtDebugPatch();
@@ -204,6 +224,8 @@ void main()
     InputWindow::init();
     HitboxMenu::hitboxPatch();
     gcpadPatch();
+
+    loadMainPatch();
 
     /*
         Uncomment this if you'd like to load another mod alongside practice codes

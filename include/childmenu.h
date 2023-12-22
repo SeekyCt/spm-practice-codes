@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <common.h>
+
 #include "mod_ui_base/menuwindow.h"
 #include "mod_ui_base/menuscrollerh.h"
 #include "nandsettings.h"

@@ -1,3 +1,5 @@
+#include <common.h>
+
 extern "C" {
 
 typedef void (*PFN_voidfunc)();

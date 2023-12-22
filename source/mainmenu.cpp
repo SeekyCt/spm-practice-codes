@@ -1,3 +1,5 @@
+#include <common.h>
+
 #include "gamesavemenu.h"
 #include "hitboxmenu.h"
 #include "hudmenu.h"
@@ -13,8 +15,6 @@
 #include "scriptvarmenu.h"
 #include "sequencemenu.h"
 #include "statmenu.h"
-
-#include <types.h>
 
 namespace mod {
 

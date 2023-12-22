@@ -1,15 +1,15 @@
-#include "mod_ui_base/menuicon.h"
-
-#include <types.h>
+#include <common.h>
 #include <spm/icondrv.h>
 #include <spm/windowdrv.h>
 #include <wii/mtx.h>
+
+#include "mod_ui_base/menuicon.h"
 
 namespace mod {
 
 
 MenuIcon::MenuIcon(class MenuWindow * parent, int iconId, f32 x, f32 y, MenuAction * action, void * actionParam,
-                   bool autoPress, f32 scale, wii::RGBA * selColour)
+                   bool autoPress, f32 scale, wii::gx::GXColor * selColour)
                   :MenuButton(parent, nullptr, x, y, action, actionParam, autoPress, scale, nullptr, selColour)
 {
     // Store extra parameter
@@ -30,7 +30,7 @@ void MenuIcon::disp(f32 centreX, f32 centreY, bool selected)
     }
 
     // Draw icon
-    wii::Vec3 pos {x + 25.0f, y - 50.0f, 0.0f};
+    wii::mtx::Vec3 pos {x + 25.0f, y - 50.0f, 0.0f};
     spm::icondrv::iconDispGx(mScale, &pos, 0x18, mIconId);
 }
 

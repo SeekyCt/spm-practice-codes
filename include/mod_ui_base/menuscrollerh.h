@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <common.h>
+
 #include "menubutton.h"
 
 namespace mod {
@@ -25,7 +27,7 @@ public:
     MenuScrollerH(class MenuWindow * parent, const char * msg, f32 x, f32 y, f32 arrowXDiff,
                   MenuScrollHCb * scrollLeft, MenuScrollHCb * scrollRight, void * scrollParam,
                   MenuAction * action = nullptr, void * actionParam = nullptr, f32 scale = 1.0f,
-                  wii::RGBA * colour = nullptr, wii::RGBA * selColour = nullptr);
+                  wii::gx::GXColor * colour = nullptr, wii::gx::GXColor * selColour = nullptr);
 };
 
 }

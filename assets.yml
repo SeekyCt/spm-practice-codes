@@ -1,0 +1,10 @@
+# == Format ==
+# assetPathHere:
+#     symbol: symbolHere (<symbol>_end will also be created)
+#     align: alignmentHere (default 4)
+#     section: sectionHere (default .rodata)
+
+assets/inputs.tpl:
+    symbol: inpTpl
+    align: 0x20
+    section: .data

@@ -1,9 +1,4 @@
-#include "evt_cmd.h"
-#include "mapselectmenu.h"
-#include "nandsettings.h"
-#include "util.h"
-
-#include <types.h>
+#include <common.h>
 #include <spm/evtmgr.h>
 #include <spm/evt_door.h>
 #include <spm/evt_fade.h>
@@ -12,14 +7,23 @@
 #include <spm/evt_mario.h>
 #include <spm/evt_npc.h>
 #include <spm/evt_seq.h>
-#include <spm/mapdata.h>
+#include <spm/evt_sub.h>
+#include <spm/fadedrv.h>
+#include <spm/map_data.h>
+#include <spm/memory.h>
 #include <spm/seqdrv.h>
 #include <spm/spmario.h>
+#include <spm/system.h>
 #include <spm/wpadmgr.h>
 #include <spm/rel/machi.h>
-#include <wii/string.h>
-#include <wii/stdio.h>
 #include <wii/wpad.h>
+#include <msl/string.h>
+#include <msl/stdio.h>
+
+#include "evt_cmd.h"
+#include "mapselectmenu.h"
+#include "nandsettings.h"
+#include "util.h"
 
 namespace mod {
 
@@ -66,7 +70,7 @@ void MapSelectMenu::updateGroupDisp()
 void MapSelectMenu::updateMapDisp()
 {
     // Format map number to string and display
-    wii::stdio::sprintf(mMapStr, "%02d", mMap);
+    msl::stdio::sprintf(mMapStr, "%02d", mMap);
 }
 
 void MapSelectMenu::updateEntranceDisp()
@@ -107,7 +111,7 @@ void MapSelectMenu::groupDown(MenuScroller * scroller, void * param)
 
     // Increment group, loop around if the end of the list is reached
     instance->mGroup += 1;
-    if (instance->mGroup >= (int) ARRAY_SIZEOF(groups))
+    if (instance->mGroup >= (s32) ARRAY_SIZEOF(groups))
         instance->mGroup = 0;
 
     // Reset map and entrance
@@ -134,7 +138,7 @@ void MapSelectMenu::mapUp(MenuScroller * button, void * param)
     {
         map = groups[group].firstId;
     }
-    else if (wii::string::strcmp(groups[group].name, "mac") == 0)
+    else if (msl::string::strcmp(groups[group].name, "mac") == 0)
     {
         // mac is missing 10, 13, 20-21, 23-29
         switch (map)
@@ -175,7 +179,7 @@ void MapSelectMenu::mapDown(MenuScroller * scroller, void * param)
     {
         map = groups[group].count;
     }
-    else if (wii::string::strcmp(groups[group].name, "mac") == 0)
+    else if (msl::string::strcmp(groups[group].name, "mac") == 0)
     {
         // mac is missing 10, 13, 20-21, 23-29
         switch (map)
@@ -325,18 +329,21 @@ EVT_END()
 void MapSelectMenu::_doMapChange()
 {
     // Build map string
-    wii::stdio::sprintf(sFullMapStr, "%s_%02d", groups[mGroup].name, mMap);
+    msl::stdio::sprintf(sFullMapStr, "%s_%02d", groups[mGroup].name, mMap);
 
     // Prepare door string
     if (mEntrance == 0)
-        wii::string::strcpy(sDoorStr, "");
+        msl::string::strcpy(sDoorStr, "");
     else
-        wii::string::strcpy(sDoorStr, groups[mGroup].entranceNames[mMap - 1]->names[mEntrance - 1]);
+        msl::string::strcpy(sDoorStr, groups[mGroup].entranceNames[mMap - 1]->names[mEntrance - 1]);
+    
+    // Set Normal Transition
+    spm::fadedrv::fadeSetMapChangeTransition(2, 1);
 
     if (gSettings->mapChangeEffect)
     {
         // Signal to play re-appear animation if enabled and not using a normal entrance
-        spm::mapdata::MapData * md = spm::mapdata::mapDataPtr(sFullMapStr);
+        spm::map_data::MapData * md = spm::map_data::mapDataPtr(sFullMapStr);
         bool hasDefaultEntrance = (md != nullptr) ? (md->fallbackDoorName != nullptr) : false;
         if ((mEntrance == 0) && !hasDefaultEntrance)
             playEffectThisMapChange = true;
@@ -364,10 +371,10 @@ void MapSelectMenu::onMapChanged()
 int getMapGroup(const char * map)
 {
     // Iterate over all known groups
-    for (int i = 0; i < (int) ARRAY_SIZEOF(groups); i++)
+    for (int i = 0; i < (s32) ARRAY_SIZEOF(groups); i++)
     {
         // Return the index if the map matches the group
-        if (wii::string::strncmp(map, groups[i].name, 3) == 0)
+        if (msl::string::strncmp(map, groups[i].name, 3) == 0)
             return i;
     }
 
@@ -382,10 +389,10 @@ MapSelectMenu::MapSelectMenu()
     if (mGroup != -1)
     {
         // Extract current map number if group is valid
-        wii::stdio::sscanf(spm::spmario::gp->mapName + 4, "%d", &mMap);
+        msl::stdio::sscanf(spm::spmario::gp->mapName + 4, "%d", &mMap);
 
         // dan has special handling since only the unused maps are available here
-        if (wii::string::strncmp(spm::spmario::gp->mapName, "dan", 3) == 0)
+        if (msl::string::strncmp(spm::spmario::gp->mapName, "dan", 3) == 0)
         {
             if ((mMap < 11) || (mMap > 14))
                 mMap = 11;
@@ -446,6 +453,11 @@ static EntranceNameList * scanScript(const int * script)
     int mapDoorCount = 0;
     spm::machi::ElvDesc * elvs = nullptr;
     int elvCount = 0;
+
+    // Initialize 15 entrances for cutscenes and other stuff
+    #define OTHERS_MAX 15
+    char ** others = new char*[OTHERS_MAX];
+    int othersCount = 0;
     
     // Find entrances
     int cmdn;
@@ -474,13 +486,65 @@ static EntranceNameList * scanScript(const int * script)
                 elvs = reinterpret_cast<spm::machi::ElvDesc *>(script[2]);
                 elvCount = script[3];
             }
+            else if (func == (u32) spm::evt_sub::evt_sub_get_entername)
+            {
+                const int * next_script = script + cmdn + 1;
+                const short * next_p = reinterpret_cast<const short *>(next_script);
+                int next_cmd = next_p[1];
+
+                if (next_cmd == 0xc || next_cmd == 0xd) // if_str_equal, if_str_not_equal
+                {
+                    assert(othersCount < OTHERS_MAX, "Other entrances table too small");
+                    
+                    char* entrance = reinterpret_cast<char *>(next_script[2]);
+
+                    // Prevent duplicates
+                    bool exists = false;
+
+                    // Without severe refactoring this is how we're gonna do it
+                    for (int i = 0; i < othersCount; i++)
+                        if (msl::string::strcmp(others[i], entrance) == 0)
+                        {
+                            exists = true;
+                            break;
+                        }
+                    
+                    for (int i = 0; i < dokanCount; i++)
+                        if (msl::string::strcmp(dokans[i].name, entrance) == 0)
+                        {
+                            exists = true;
+                            break;
+                        }
+                    
+                    for (int i = 0; i < mapDoorCount; i++)
+                        if (msl::string::strcmp(mapDoors[i].name_l, entrance) == 0)
+                        {
+                            exists = true;
+                            break;
+                        }
+                    
+                    for (int i = 0; i < elvCount; i++)
+                        if (msl::string::strcmp(elvs[i].name, entrance) == 0)
+                        {
+                            exists = true;
+                            break;
+                        }
+
+                    if (!exists)
+                    {
+                        others[othersCount] = entrance;
+                        othersCount++;
+                    }
+                    
+                }
+            }
         }
 
         script += cmdn + 1;
     }
 
     // Create list
-    int entranceCount = dokanCount + mapDoorCount + elvCount;
+    int entranceCount = dokanCount + mapDoorCount + elvCount + othersCount;
     
     EntranceNameList * list = reinterpret_cast<EntranceNameList *>(new int[entranceCount + 1]);
     list->count = entranceCount;
@@ -489,9 +553,13 @@ static EntranceNameList * scanScript(const int * script)
     for (int i = 0; i < dokanCount; i++)
         list->names[n++] = dokans[i].name;
     for (int i = 0; i < mapDoorCount; i++)
-        list->names[n++] = mapDoors[i].name;
+        list->names[n++] = mapDoors[i].name_l;
     for (int i = 0; i < elvCount; i++)
         list->names[n++] = elvs[i].name;
+    for (int i = 0; i < othersCount; i++)
+         list->names[n++] = others[i];
+
+    delete[] others;
 
     return list;
 }
@@ -509,11 +577,11 @@ void MapSelectMenu::scanEntrances()
         {
             // Generate map name string
             char name[32];
-            wii::stdio::sprintf(name, "%s_%02d", groups[i].name, j + 1);
+            msl::stdio::sprintf(name, "%s_%02d", groups[i].name, j + 1);
 
             // Generate list for this map
-            spm::mapdata::MapData * md = spm::mapdata::mapDataPtr(name);
-            int * script = md != nullptr ? (int *) md->script : nullptr;
+            spm::map_data::MapData * md = spm::map_data::mapDataPtr(name);
+            int * script = md != nullptr ? (int *) md->initScript : nullptr;
             groups[i].entranceNames[j] = scanScript(script);
         }
     }

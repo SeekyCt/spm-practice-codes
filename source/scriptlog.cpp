@@ -1,13 +1,13 @@
+#include <common.h>
+#include <spm/evtmgr.h>
+#include <wii/os.h>
+#include <msl/stdio.h>
+
 #include "consolewindow.h"
 #include "mod.h"
 #include "nandsettings.h"
 #include "patch.h"
 #include "util.h"
-
-#include <types.h>
-#include <spm/evtmgr.h>
-#include <wii/OSError.h>
-#include <wii/stdio.h>
 
 using EvtEntry = spm::evtmgr::EvtEntry;
 using EvtScriptCode = spm::evtmgr::EvtScriptCode;
@@ -29,7 +29,7 @@ static void evtEntryLog(const EvtScriptCode * script)
 
         case LogType::OSREPORT:
             // Write to OSReport
-            wii::OSError::OSReport("Evt entry: 0x%x\n", (u32) script);
+            wii::os::OSReport("Evt entry: 0x%x\n", (u32) script);
             break;
 
         case LogType::SCREEN:
@@ -39,22 +39,22 @@ static void evtEntryLog(const EvtScriptCode * script)
     }
 }
 
-static EvtEntry *(*evtEntryOriginal)(const EvtScriptCode*, u8, u8) = nullptr;
-static EvtEntry *(*evtEntryTypeOriginal)(const EvtScriptCode * script, u8 priority, u8 flags, s32 type) = nullptr;
+static EvtEntry *(*evtEntryOriginal)(const EvtScriptCode *, u32 priority, u8 flags) = nullptr;
+static EvtEntry *(*evtEntryTypeOriginal)(const EvtScriptCode * script, u32 priority, u8 flags, u8 type) = nullptr;
 static EvtEntry *(*evtChildEntryOriginal)(EvtEntry * entry, const EvtScriptCode * script, u8 flags) = nullptr;
 static EvtEntry *(*evtBrotherEntryOriginal)(EvtEntry * entry, const EvtScriptCode * script, u8 flags) = nullptr;
 
 void evtScriptLoggerPatch()
 {
     evtEntryOriginal = patch::hookFunction(spm::evtmgr::evtEntry,
-        [](const EvtScriptCode * script, u8 priority, u8 flags)
+        [](const EvtScriptCode * script, u32 priority, u8 flags)
         {
             evtEntryLog(script);
             return evtEntryOriginal(script, priority, flags);
         }
     );
     evtEntryTypeOriginal = patch::hookFunction(spm::evtmgr::evtEntryType, 
-        [](const EvtScriptCode * script, u8 priority, u8 flags, s32 type)
+        [](const EvtScriptCode * script, u32 priority, u8 flags, u8 type)
         {
             evtEntryLog(script);
             return evtEntryTypeOriginal(script, priority, flags, type);

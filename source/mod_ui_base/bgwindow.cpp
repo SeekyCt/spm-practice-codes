@@ -1,8 +1,8 @@
-#include "mod_ui_base/bgwindow.h"
-
-#include <types.h>
+#include <common.h>
 #include <spm/windowdrv.h>
 #include <wii/mtx.h>
+
+#include "mod_ui_base/bgwindow.h"
 
 namespace mod {
 

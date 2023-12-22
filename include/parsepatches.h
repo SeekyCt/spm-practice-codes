@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <common.h>
+
 namespace mod {
 
 // Fixes comment support and adds hex support

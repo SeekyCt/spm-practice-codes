@@ -1,12 +1,12 @@
-#include "sequencemenu.h"
-#include "scriptvarlog.h"
-#include "util.h"
-
-#include <types.h>
+#include <common.h>
 #include <spm/evtmgr_cmd.h>
 #include <spm/swdrv.h>
 #include <spm/system.h>
-#include <wii/stdio.h>
+#include <msl/stdio.h>
+
+#include "sequencemenu.h"
+#include "scriptvarlog.h"
+#include "util.h"
 
 namespace mod {
 
@@ -43,7 +43,7 @@ const char * SequenceMenu::getLevel()
         case 291 ... 291: return "6-4";
         case 292 ... 306: return "7-1";
         case 307 ... 327: return "7-2";
-        case 328 ... 339: return "7-4";
+        case 328 ... 339: return "7-3";
         case 340 ... 358: return "7-4";
         case 359 ... 370: return "8-1";
         case 371 ... 386: return "8-2";
@@ -103,7 +103,7 @@ void SequenceMenu::fullClose()
     scriptVarLogOnOff(true);
 
     // Close as normal
-    MenuWindow::fullClose();
+    ChildMenu::fullClose();
 }
 
 SequenceMenu::SequenceMenu()
