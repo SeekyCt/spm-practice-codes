@@ -74,8 +74,12 @@ The `Evt Debug Instructions` option will log messages passed into the debug scri
 ## Sequence Position Editor
 The `Edit Sequence Position` option in the menu allows you to view and edit the values of the sequence value, GSW(0), in a more user-friendly way than the script variable editor.
 
+A list of all sequence position values can be found [here](https://docs.google.com/document/d/1gxALlevkiz-i18lJG700VJF4_NzesA30X1hj0atk1vg/).
+
 ## Script Variable Editor
 The `Edit Script Variables` option in the menu allows you to view and edit the values of any GW, GF, GSW, GSWF, LSW or LSWF. The variable type (first few letters), variable number (first 4 decimal digits) and value (final 8 hex digits) can be scrolled through with the D-Pad.
+
+A list of important script variables can be found [here](https://github.com/SeekyCt/spm-docs/wiki).
 
 ## Inventory Editor
 The `Edit Inventory` option in the menu allows you add and remove items, characters and pixls from your inventory. The menu can be navigated with the D-Pad, first by selecting an itmem type in the column on the left then pressing right to move into the item list. The buttons in this list can can be pressed with `2`. Pressing `2` on the + button at the end of the list allows you to add a new item and pressing `2` on an item button allows you to change the type of an item or delete it (pixls and characters can also be made selectable or not selectable here). In the screen for selecting an item id, the item ids can be scrolled through using the D-Pad and then `1` or `2` can be pressed to go back to the main inventory editor. 
