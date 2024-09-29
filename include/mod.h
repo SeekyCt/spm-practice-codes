@@ -3,7 +3,7 @@
 #include <common.h>
 namespace mod {
 
-#define MOD_VERSION "SPM Practice Codes v10"
+#define MOD_VERSION "SPM Practice Codes std test"
 
 extern bool gIsDolphin;
 extern bool gIsRiivolution;
