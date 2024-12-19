@@ -1,6 +1,6 @@
 #include <common.h>
 #include <wii/os.h>
-#include <msl/string.h>
+#include <string.h>
 
 #include "mod_ui_base/colours.h"
 #include "mod_ui_base/menuwindow.h"
@@ -41,7 +41,7 @@ void ConsoleWindow::_push(const char * text, const wii::gx::GXColor * colour, Co
 #ifdef PYCONSOLE_PROTOTYPE
     // Print to USB Gecko
     if (ugProbe(1))
-        ugSend(1, text, msl::string::strlen(text)), ugSend(1, "\n", 1);
+        ugSend(1, text, strlen(text)), ugSend(1, "\n", 1);
 #endif
 
     // Handle colour

@@ -14,8 +14,8 @@
 #include <spm/system.h>
 #include <spm/rel/wa1_02.h>
 #include <wii/mtx.h>
-#include <msl/stdio.h>
-#include <msl/string.h>
+#include <stdio.h>
+#include <string.h>
 #include <ogc/gx.h>
 
 #include "mod_ui_base/colours.h"
@@ -129,7 +129,7 @@ bool HPWindow::npcBossTribeCheck(spm::npcdrv::NPCEntry * npc)
 
 bool HPWindow::npcEnemyTribeCheck(spm::npcdrv::NPCEntry * npc)
 {
-    if (npc->tribeId == 0 && msl::string::strcmp(npc->m_Anim.animPoseName, "e_kuribo") != 0)
+    if (npc->tribeId == 0 && strcmp(npc->m_Anim.animPoseName, "e_kuribo") != 0)
         return false;
     
     if (npcBossTribeCheck(npc))
@@ -164,7 +164,7 @@ bool HPWindow::npcDoorCheck(const char * name)
     // Display if belonging to room
     for (const char ** pName = door->npcNameList; *pName; pName++)
     {
-        if (msl::string::strcmp(name, *pName) == 0)
+        if (strcmp(name, *pName) == 0)
             return true;
     }
 
@@ -267,7 +267,7 @@ bool HPWindow::npcBossSammerCheck(spm::npcdrv::NPCEntry * npc)
     if (gsw0 < 421)
     {
         // First room works differently
-        if (msl::string::strcmp(map, "wa1_02") == 0)
+        if (strcmp(map, "wa1_02") == 0)
         {
             // Check not before battle / already beaten
             if (gsw0 != 227)
@@ -279,7 +279,7 @@ bool HPWindow::npcBossSammerCheck(spm::npcdrv::NPCEntry * npc)
         }
 
         spm::wa1_02::SammerDef * def = spm::wa1_02::sammerDefsCh6;
-        while (msl::string::strcmp(def->mapName, map) != 0)
+        while (strcmp(def->mapName, map) != 0)
             def++;
 
         return gsw0 < def->alreadyBeatenGsw0;
@@ -287,7 +287,7 @@ bool HPWindow::npcBossSammerCheck(spm::npcdrv::NPCEntry * npc)
     else
     {
         spm::wa1_02::SammerDef * def = spm::wa1_02::sammerDefsEndgame;
-        while (msl::string::strcmp(def->mapName, spm::spmario::gp->mapName) != 0)
+        while (strcmp(def->mapName, spm::spmario::gp->mapName) != 0)
             def++;
 
         s32 lsw1 = spm::evtmgr_cmd::evtGetValue(nullptr, LSW(1));
@@ -313,14 +313,14 @@ void HPWindow::bossDisp()
             
             char name[64];
             const char * nameMsg = spm::msgdrv::msgSearch(card->nameMsg);
-            if (msl::string::strcmp(card->nameMsg, "ename_256") == 0)// Bowser has "(1)" appended
+            if (strcmp(card->nameMsg, "ename_256") == 0)// Bowser has "(1)" appended
             {
                 // Remove (1)
-                const char * end = msl::string::strstr(nameMsg, "(1)");
+                const char * end = strstr(nameMsg, "(1)");
                 if (end == nullptr)
-                    end = msl::string::strstr(nameMsg, "\x81\x69\x82\x50\x81\x6a"); // Shift-JIS（１）
+                    end = strstr(nameMsg, "\x81\x69\x82\x50\x81\x6a"); // Shift-JIS（１）
                 size_t n = end - nameMsg;
-                msl::string::strncpy(name, nameMsg, n);
+                strncpy(name, nameMsg, n);
 
                 // Null terminate
                 // Some languages exlcude the space
@@ -331,7 +331,7 @@ void HPWindow::bossDisp()
             }
             else
             {
-                msl::string::strcpy(name, nameMsg); 
+                strcpy(name, nameMsg); 
             }
             f32 x = BOSS_NAME_X - ((spm::fontmgr::FontGetMessageWidth(name) * BOSS_NAME_SCALE) / 2);
             Window::drawString(name, x, BOSS_NAME_Y, &colours::red, BOSS_NAME_SCALE, true);
@@ -386,7 +386,7 @@ void HPWindow::enemyDisp()
 
             // Draw hp
             char str[16];
-            msl::stdio::sprintf(str, "%d", npc->hp);
+            sprintf(str, "%d", npc->hp);
             Window::drawString(str, pos.x + 50.0f, pos.y, &colours::yellow, 1.0f, true);
         }
     }

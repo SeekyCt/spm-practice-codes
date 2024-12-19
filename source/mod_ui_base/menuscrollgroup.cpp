@@ -1,5 +1,5 @@
 #include <common.h>
-#include <msl/stdio.h>
+#include <stdio.h>
 #include <wii/wpad.h>
 
 #include "mod_ui_base/menuscrollgroup.h"
@@ -73,7 +73,7 @@ void MenuScrollGroup::disp(f32 centreX, f32 centreY, bool selected)
         // Draw digit
         char str[2];
         const char * fmt = mBase == 16 ? "%x" : "%d";
-        msl::stdio::sprintf(str, fmt, digit);
+        sprintf(str, fmt, digit);
         wii::gx::GXColor * colour = i == mCurDigit && selected ? &mSelColour : &mColour;
         mWindow->drawString(str, x, y, colour, mScale, true);
 

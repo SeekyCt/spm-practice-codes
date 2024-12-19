@@ -4,7 +4,7 @@
 #pragma once
 
 #include <common.h>
-#include <msl/stdarg.h>
+#include <stdarg.h>
 
 CPP_WRAPPER(msl::stdio)
 

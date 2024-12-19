@@ -2,7 +2,7 @@
 #include <spm/evtmgr_cmd.h>
 #include <spm/swdrv.h>
 #include <spm/system.h>
-#include <msl/stdio.h>
+#include <stdio.h>
 
 #include "sequencemenu.h"
 #include "scriptvarlog.h"

@@ -1,6 +1,6 @@
 #include <common.h>
 #include <wii/os.h>
-#include <msl/string.h>
+#include <string.h>
 
 #include "mod_ui_base/colours.h"
 #include "consolewindow.h"
@@ -18,10 +18,10 @@ PyConsoleParams PyConsole::sParams;
 PyConsoleErr PyCommand::runCommand(const char * command, s32 argc, const char ** argv)
 {
     // Find command
-    size_t len = msl::string::strlen(command);
+    size_t len = strlen(command);
     for (PyCommand * p = sCommandList; p; p = p->mNext)
     {
-        if (len == p->mNameLen && msl::string::strncmp(command, p->mName, p->mNameLen) == 0)
+        if (len == p->mNameLen && strncmp(command, p->mName, p->mNameLen) == 0)
         {
             // Run command and return its output
             return p->mCb(argc, argv);
@@ -43,7 +43,7 @@ PyCommand::PyCommand(const char * name, PyCommandCb * cb)
     mCb = cb;
 
     // Pre-calculate length
-    mNameLen = msl::string::strlen(name);
+    mNameLen = strlen(name);
 }
 
 void PyCommand::add(const char * name, PyCommandCb * cb)

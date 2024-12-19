@@ -1,7 +1,7 @@
 #include <common.h>
 #include <spm/seqdrv.h>
 #include <spm/spmario.h>
-#include <msl/stdio.h>
+#include <stdio.h>
 
 #include "mod_ui_base/colours.h"
 #include "mod_ui_base/menuwindow.h"
@@ -28,8 +28,8 @@ void MapDoorWindow::disp()
         return;
 
     // Create strings
-    msl::stdio::sprintf(mMapMsg, "map: %s", spm::spmario::gp->mapName);
-    msl::stdio::sprintf(mDoorMsg, "door: %s", spm::spmario::gp->doorName);
+    sprintf(mMapMsg, "map: %s", spm::spmario::gp->mapName);
+    sprintf(mDoorMsg, "door: %s", spm::spmario::gp->doorName);
 
     // Draw strings
     drawString(mMapMsg, mPosX, mPosY, &mColour, mScale, true);

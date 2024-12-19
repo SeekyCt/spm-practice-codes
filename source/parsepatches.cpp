@@ -1,7 +1,7 @@
 #include <common.h>
 #include <spm/parse.h>
-#include <msl/stdio.h>
-#include <msl/string.h>
+#include <stdio.h>
+#include <string.h>
 
 #include "parsepatches.h"
 #include "patch.h"
@@ -11,10 +11,10 @@ namespace mod {
 static void readInt(const char * str, const char * fmt, int * ret)
 {
     // If marked as hex, override format to %x
-    if (msl::string::strncmp(str, "0x", 2) == 0)
-        msl::stdio::sscanf(str + 2, "%x", ret);
+    if (strncmp(str, "0x", 2) == 0)
+        sscanf(str + 2, "%x", ret);
     else
-        msl::stdio::sscanf(str, fmt, ret); 
+        sscanf(str, fmt, ret); 
 }
 
 void parsePatch()

@@ -2,8 +2,8 @@
 #include <spm/spmario.h>
 #include <spm/swdrv.h>
 #include <wii/os.h>
-#include <msl/string.h>
-#include <msl/stdio.h>
+#include <string.h>
+#include <stdio.h>
 
 #include "consolewindow.h"
 #include "mod.h"
@@ -40,7 +40,7 @@ static void evtVarLog(s32 type, s32 id, s32 value)
         return;
 
     // Only log changes to actual save
-    if (msl::string::strcmp(spm::spmario::gp->saveName, "default") == 0)
+    if (strcmp(spm::spmario::gp->saveName, "default") == 0)
         return;
 
     switch(gSettings->logOptions[OPTION_EVT_VAR_LOG])

@@ -1,4 +1,4 @@
-#include <msl/string.h>
+#include <string.h>
 #include <spm/evt_msg.h>
 #include <spm/nandmgr.h>
 #include <spm/seq_load_sub.h>
@@ -31,7 +31,7 @@ void loadMainPatch()
             }
             if (spm::seq_load_sub::seq_load_sub_wp->state == 0xa && spm::wpadmgr::wpadGetButtonsPressed(0) & WPAD_BTN_2)
             {
-                if (msl::string::strcmp(spm::nandmgr::nandmgr_wp->saves[spm::seq_load_sub::seq_load_sub_wp->selectedSave].spmarioGlobals.saveName, "REL Loader") == 0)
+                if (strcmp(spm::nandmgr::nandmgr_wp->saves[spm::seq_load_sub::seq_load_sub_wp->selectedSave].spmarioGlobals.saveName, "REL Loader") == 0)
                 {
                     spm::spmario_snd::spsndSFXOn("SFX_SYS_SELECT_NG1");
 

@@ -7,13 +7,16 @@
 #include <spm/msgdrv.h>
 #include <spm/windowdrv.h>
 #include <wii/gx.h>
-#include <msl/math.h>
+#include <math.h>
 #include <wii/mtx.h>
 #include <ogc/gx.h>
 
 #include "mod_ui_base/colours.h"
 #include "mod_ui_base/window.h"
 #include "patch.h"
+
+#define PI 3.141592653589793f
+#define PIx2 (PI * 2.0f)
 
 namespace mod {
 
@@ -343,8 +346,8 @@ void Window::circleGX(const wii::gx::GXColor * colour, f32 x, f32 y, f32 z, f32 
     wii::gx::GXBegin(GX_LINESTRIP, GX_VTXFMT0, n + 1);
     for (f32 a = 0.0f; a < PIx2; a += angleStep)
     {
-        f32 _x = msl::math::cos(a) * radius;
-        f32 _z = msl::math::sin(a) * radius;
+        f32 _x = cos(a) * radius;
+        f32 _z = sin(a) * radius;
         ogc::GX::GX_Position3f32(x + _x, y, z + _z);
         ogc::GX::GX_Color1u32(_colour);
     }
@@ -363,8 +366,8 @@ void Window::cylinderBarsGX(const wii::gx::GXColor * colour, f32 x, f32 y, f32 z
     wii::gx::GXBegin(GX_LINES, GX_VTXFMT0, n * 2);
     for (f32 a = 0.0f; a < PIx2; a += angleStep)
     {
-        f32 _x = msl::math::cos(a) * radius;
-        f32 _z = msl::math::sin(a) * radius;
+        f32 _x = cos(a) * radius;
+        f32 _z = sin(a) * radius;
         ogc::GX::GX_Position3f32(x + _x, y, z + _z);
         ogc::GX::GX_Color1u32(_colour);
         ogc::GX::GX_Position3f32(x + _x, y + height, z + _z);

@@ -3,7 +3,7 @@
 #include "spm/item_data_ids.h"
 #include <spm/mario_pouch.h>
 #include <spm/msgdrv.h>
-#include <msl/stdio.h>
+#include <stdio.h>
 
 #include "inventorymenu.h"
 #include "util.h"

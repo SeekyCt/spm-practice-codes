@@ -18,7 +18,7 @@
 #include <wii/ipc.h>
 #include <wii/os.h>
 #include <wii/wpad.h>
-#include <msl/string.h>
+#include <string.h>
 
 #include "mod_ui_base/window.h"
 #include "apwindow.h"
@@ -164,7 +164,7 @@ static void checkForDolphin()
 static void checkForRiivolution()
 {
     // Thanks to TheLordScruffy for telling me about this
-    gIsRiivolution = msl::string::strcmp(wii::dvd::devDiStr, "/dev/di") != 0;
+    gIsRiivolution = strcmp(wii::dvd::devDiStr, "/dev/di") != 0;
 }
 
 static void checkForPatchedDisc()

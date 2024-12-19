@@ -15,7 +15,7 @@
 #include <spm/rel/dan.h>
 #include <wii/cx.h>
 #include <wii/dvd.h>
-#include <msl/string.h>
+#include <string.h>
 
 #include "mod_ui_base/colours.h"
 #include "consolewindow.h"
@@ -54,9 +54,9 @@ static int custom_evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
 
         // Allocate work
         dan_wp = new (spm::memory::Heap::HEAP_MAP) DanWork;
-        msl::string::memset(dan_wp, 0, sizeof(*dan_wp));
+        memset(dan_wp, 0, sizeof(*dan_wp));
         dan_wp->dungeons = new (spm::memory::Heap::HEAP_MAP) DanDungeon[DUNGEON_MAX];
-        msl::string::memset(dan_wp->dungeons, 0, sizeof(DanDungeon[DUNGEON_MAX]));
+        memset(dan_wp->dungeons, 0, sizeof(DanDungeon[DUNGEON_MAX]));
     }
 
     // Prepare pit text to be read
@@ -92,7 +92,7 @@ static int custom_evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
         char itemName[64];
         spm::parse::parseTagGet1("<item>", spm::parse::PARSE_VALUE_TYPE_STRING, itemName);
         s32 itemId = spm::itemdrv::itemTypeNameToId(itemName);
-        if (msl::string::strcmp(itemName, "ITEM_ID_NULL") != 0 && msl::string::strcmp(itemName, "NULL") != 0)
+        if (strcmp(itemName, "ITEM_ID_NULL") != 0 && strcmp(itemName, "NULL") != 0)
             assertf(itemId != 0, "Invalid item name [%s]", itemName);
         dan_wp->dungeons[no].item = itemId;
 

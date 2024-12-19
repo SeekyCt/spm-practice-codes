@@ -1,7 +1,7 @@
 #include <common.h>
 #include <spm/swdrv.h>
 #include <spm/system.h>
-#include <msl/stdio.h>
+#include <stdio.h>
 
 #include "scriptvarmenu.h"
 #include "scriptvarlog.h"

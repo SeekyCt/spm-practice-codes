@@ -5,8 +5,8 @@
 #include <spm/seqdrv.h>
 #include <spm/wpadmgr.h>
 #include <wii/wpad.h>
-#include <msl/stdio.h>
-#include <msl/string.h>
+#include <stdio.h>
+#include <string.h>
 
 #include "mod_ui_base/colours.h"
 #include "mod_ui_base/menuwindow.h"

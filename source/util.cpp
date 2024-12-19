@@ -6,7 +6,7 @@
 #include <spm/spmario.h>
 #include <wii/dvd.h>
 #include <wii/os.h>
-#include <msl/string.h>
+#include <string.h>
 
 #include "util.h"
 
@@ -125,9 +125,9 @@ bool check3d()
 
 char * cloneString(const char * str)
 {
-    size_t len = msl::string::strlen(str);
+    size_t len = strlen(str);
     char * newStr = new char[len + 1]; // include terminating null
-    msl::string::strcpy(newStr, str);
+    strcpy(newStr, str);
     return newStr;
 }
 
@@ -149,8 +149,8 @@ bool fileExists(const char * path)
 
 bool isPitEnemyRoom()
 {
-    return msl::string::strncmp(spm::spmario::gp->mapName, "dan_0", 5) == 0  // Flipside 
-        || msl::string::strncmp(spm::spmario::gp->mapName, "dan_4", 5) == 0; // Flopside
+    return strncmp(spm::spmario::gp->mapName, "dan_0", 5) == 0  // Flipside 
+        || strncmp(spm::spmario::gp->mapName, "dan_4", 5) == 0; // Flopside
 }
 
 }

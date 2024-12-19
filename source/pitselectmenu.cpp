@@ -10,8 +10,8 @@
 #include <spm/spmario.h>
 #include <spm/wpadmgr.h>
 #include <wii/wpad.h>
-#include <msl/string.h>
-#include <msl/stdio.h>
+#include <string.h>
+#include <stdio.h>
 
 #include "evt_cmd.h"
 #include "pitselectmenu.h"
@@ -289,7 +289,7 @@ PitSelectMenu::PitSelectMenu()
     scriptVarLogOnOff(false);
 
     // Try set to current floor, default to flipside 1 if not in pit
-    if (msl::string::strncmp(spm::spmario::gp->mapName, "dan", 3) == 0)
+    if (strncmp(spm::spmario::gp->mapName, "dan", 3) == 0)
     {
         int gsw1 = spm::evtmgr_cmd::evtGetValue(nullptr, GSW(1));
         if (gsw1 > 100)

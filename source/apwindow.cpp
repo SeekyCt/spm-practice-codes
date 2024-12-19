@@ -2,8 +2,8 @@
 #include <spm/animdrv.h>
 #include <spm/camdrv.h>
 #include <wii/mtx.h>
-#include <msl/stdio.h>
-#include <msl/string.h>
+#include <stdio.h>
+#include <string.h>
 
 #include "apwindow.h"
 #include "consolewindow.h"
@@ -39,11 +39,11 @@ PyConsoleErr APWindow::cmd_start(s32 argc, const char ** argv)
     
     const char * name = argv[0];
 
-    if (msl::string::strlen(name) >= 32)
+    if (strlen(name) >= 32)
         return PyConsoleErr::BAD_ARGS;
     
     char path[32 + 3];
-    msl::stdio::sprintf(path, "a/%s", name);
+    sprintf(path, "a/%s", name);
     if (!fileExists(path))
         return PyConsoleErr::BAD_ARGS;
     
@@ -75,7 +75,7 @@ PyConsoleErr APWindow::cmd_pos(s32 argc, const char ** argv)
     f32 coords[3];
     for (s32 i = 0; i < 3; i++)
     {
-        if (msl::stdio::sscanf(argv[i], "%f", &coords[i]) != 1)
+        if (sscanf(argv[i], "%f", &coords[i]) != 1)
             return PyConsoleErr::BAD_ARGS;
     }
     
@@ -92,7 +92,7 @@ PyConsoleErr APWindow::cmd_scale(s32 argc, const char ** argv)
     f32 scale[3];
     for (s32 i = 0; i < 3; i++)
     {
-        if (msl::stdio::sscanf(argv[i], "%f", &scale[i]) != 1)
+        if (sscanf(argv[i], "%f", &scale[i]) != 1)
             return PyConsoleErr::BAD_ARGS;
     }
     
@@ -114,7 +114,7 @@ PyConsoleErr APWindow::cmd_anim(s32 argc, const char ** argv)
     for (i = 0; i < header->animCount; i++)
     {
         spm::animdrv::AnimationModelFileAnimTableEntry * anim = header->anims + i;
-        if (msl::string::strcmp(anim->name, name) == 0)
+        if (strcmp(anim->name, name) == 0)
         {
             found = true;
             break;
@@ -123,7 +123,7 @@ PyConsoleErr APWindow::cmd_anim(s32 argc, const char ** argv)
     if (!found)
         return PyConsoleErr::BAD_ARGS;
     
-    if (mApAnimName != nullptr && msl::string::strcmp(mApAnimName, name) == 0)
+    if (mApAnimName != nullptr && strcmp(mApAnimName, name) == 0)
         mApRestartAnim = true;
     mApAnimName = header->anims[i].name;
 
@@ -140,11 +140,11 @@ PyConsoleErr APWindow::cmd_anim_idx(s32 argc, const char ** argv)
     spm::animdrv::AnimationModelFileHeader * header = spm::animdrv::animPoseGetAnimBaseDataPtr(mApId);    
 
     u32 idx;
-    if (msl::stdio::sscanf(argv[0], "%u", &idx) != 1 || idx >= header->animCount)
+    if (sscanf(argv[0], "%u", &idx) != 1 || idx >= header->animCount)
         return PyConsoleErr::BAD_ARGS;
     
     const char * name = header->anims[idx].name;
-    if (mApAnimName != nullptr && msl::string::strcmp(mApAnimName, name) == 0)
+    if (mApAnimName != nullptr && strcmp(mApAnimName, name) == 0)
         mApRestartAnim = true;
     mApAnimName = name;
 

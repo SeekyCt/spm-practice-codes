@@ -86,6 +86,10 @@ CFLAGS = ' '.join([
     "-Wextra", # Enable even more warnings
     "-Wshadow", # Enable variable shadowing warning
     "-Werror", # Error on warnings
+
+    "-DUSE_STL", # Tell spm-headers to use C++ stl
+
+    "-Wno-format-overflow", # TODO: this is a valid warning, should be fixed and enabled
 ])
 
 # C++ flags

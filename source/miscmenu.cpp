@@ -1,5 +1,5 @@
 #include <common.h>
-#include <msl/stdio.h>
+#include <stdio.h>
 
 #include "mod_ui_base/colours.h"
 #include "miscmenu.h"

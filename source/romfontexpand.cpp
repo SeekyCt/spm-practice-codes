@@ -2,7 +2,7 @@
 #include <spm/memory.h>
 #include <spm/romfont.h>
 #include <wii/os.h>
-#include <msl/string.h>
+#include <string.h>
 
 #include "util.h"
 
@@ -47,7 +47,7 @@ void romfontExpand()
     int originalCount = romfont_wp->entryCount;
     romfont_wp->entryCount += NEW_CHAR_COUNT;
     RomfontEntry * newEntries = new RomfontEntry[romfont_wp->entryCount];
-    msl::string::memcpy(newEntries, romfont_wp->entries, sizeof(RomfontEntry) * romfont_wp->entryCount);
+    memcpy(newEntries, romfont_wp->entries, sizeof(RomfontEntry) * romfont_wp->entryCount);
 
     // Add new characters
     for (u32 i = 0; i < NEW_CHAR_COUNT; i++)

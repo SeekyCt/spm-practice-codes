@@ -1,5 +1,5 @@
 #include <common.h>
-#include <msl/stdio.h>
+#include <stdio.h>
 
 #include "hudmenu.h"
 #include "nandsettings.h"
@@ -9,12 +9,12 @@ namespace mod {
 
 void HudMenu::updateDelayStr()
 {
-    msl::stdio::sprintf(mDelayStr, "%d", gSettings->xyzInterval);
+    sprintf(mDelayStr, "%d", gSettings->xyzInterval);
 }
 
 void HudMenu::updateDecimalPlaceStr()
 {
-    msl::stdio::sprintf(mDecimalPlaceStr, "%d", gSettings->xyzDP);
+    sprintf(mDecimalPlaceStr, "%d", gSettings->xyzDP);
 }
 
 void HudMenu::optionToggle(MenuButton * button, bool &setting)

@@ -17,8 +17,8 @@
 #include <spm/wpadmgr.h>
 #include <spm/rel/machi.h>
 #include <wii/wpad.h>
-#include <msl/string.h>
-#include <msl/stdio.h>
+#include <string.h>
+#include <stdio.h>
 
 #include "evt_cmd.h"
 #include "mapselectmenu.h"
@@ -70,7 +70,7 @@ void MapSelectMenu::updateGroupDisp()
 void MapSelectMenu::updateMapDisp()
 {
     // Format map number to string and display
-    msl::stdio::sprintf(mMapStr, "%02d", mMap);
+    sprintf(mMapStr, "%02d", mMap);
 }
 
 void MapSelectMenu::updateEntranceDisp()
@@ -138,7 +138,7 @@ void MapSelectMenu::mapUp(MenuScroller * button, void * param)
     {
         map = groups[group].firstId;
     }
-    else if (msl::string::strcmp(groups[group].name, "mac") == 0)
+    else if (strcmp(groups[group].name, "mac") == 0)
     {
         // mac is missing 10, 13, 20-21, 23-29
         switch (map)
@@ -179,7 +179,7 @@ void MapSelectMenu::mapDown(MenuScroller * scroller, void * param)
     {
         map = groups[group].count;
     }
-    else if (msl::string::strcmp(groups[group].name, "mac") == 0)
+    else if (strcmp(groups[group].name, "mac") == 0)
     {
         // mac is missing 10, 13, 20-21, 23-29
         switch (map)
@@ -329,13 +329,13 @@ EVT_END()
 void MapSelectMenu::_doMapChange()
 {
     // Build map string
-    msl::stdio::sprintf(sFullMapStr, "%s_%02d", groups[mGroup].name, mMap);
+    sprintf(sFullMapStr, "%s_%02d", groups[mGroup].name, mMap);
 
     // Prepare door string
     if (mEntrance == 0)
-        msl::string::strcpy(sDoorStr, "");
+        strcpy(sDoorStr, "");
     else
-        msl::string::strcpy(sDoorStr, groups[mGroup].entranceNames[mMap - 1]->names[mEntrance - 1]);
+        strcpy(sDoorStr, groups[mGroup].entranceNames[mMap - 1]->names[mEntrance - 1]);
     
     // Set Normal Transition
     spm::fadedrv::fadeSetMapChangeTransition(2, 1);
@@ -374,7 +374,7 @@ int getMapGroup(const char * map)
     for (int i = 0; i < (s32) ARRAY_SIZEOF(groups); i++)
     {
         // Return the index if the map matches the group
-        if (msl::string::strncmp(map, groups[i].name, 3) == 0)
+        if (strncmp(map, groups[i].name, 3) == 0)
             return i;
     }
 
@@ -389,10 +389,10 @@ MapSelectMenu::MapSelectMenu()
     if (mGroup != -1)
     {
         // Extract current map number if group is valid
-        msl::stdio::sscanf(spm::spmario::gp->mapName + 4, "%d", &mMap);
+        sscanf(spm::spmario::gp->mapName + 4, "%d", &mMap);
 
         // dan has special handling since only the unused maps are available here
-        if (msl::string::strncmp(spm::spmario::gp->mapName, "dan", 3) == 0)
+        if (strncmp(spm::spmario::gp->mapName, "dan", 3) == 0)
         {
             if ((mMap < 11) || (mMap > 14))
                 mMap = 11;
@@ -503,28 +503,28 @@ static EntranceNameList * scanScript(const int * script)
 
                     // Without severe refactoring this is how we're gonna do it
                     for (int i = 0; i < othersCount; i++)
-                        if (msl::string::strcmp(others[i], entrance) == 0)
+                        if (strcmp(others[i], entrance) == 0)
                         {
                             exists = true;
                             break;
                         }
                     
                     for (int i = 0; i < dokanCount; i++)
-                        if (msl::string::strcmp(dokans[i].name, entrance) == 0)
+                        if (strcmp(dokans[i].name, entrance) == 0)
                         {
                             exists = true;
                             break;
                         }
                     
                     for (int i = 0; i < mapDoorCount; i++)
-                        if (msl::string::strcmp(mapDoors[i].name_l, entrance) == 0)
+                        if (strcmp(mapDoors[i].name_l, entrance) == 0)
                         {
                             exists = true;
                             break;
                         }
                     
                     for (int i = 0; i < elvCount; i++)
-                        if (msl::string::strcmp(elvs[i].name, entrance) == 0)
+                        if (strcmp(elvs[i].name, entrance) == 0)
                         {
                             exists = true;
                             break;
@@ -577,7 +577,7 @@ void MapSelectMenu::scanEntrances()
         {
             // Generate map name string
             char name[32];
-            msl::stdio::sprintf(name, "%s_%02d", groups[i].name, j + 1);
+            sprintf(name, "%s_%02d", groups[i].name, j + 1);
 
             // Generate list for this map
             spm::map_data::MapData * md = spm::map_data::mapDataPtr(name);

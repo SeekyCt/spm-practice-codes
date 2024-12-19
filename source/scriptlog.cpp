@@ -1,7 +1,7 @@
 #include <common.h>
 #include <spm/evtmgr.h>
 #include <wii/os.h>
-#include <msl/stdio.h>
+#include <stdio.h>
 
 #include "consolewindow.h"
 #include "mod.h"

@@ -4,8 +4,8 @@
 #include <spm/system.h>
 #include <wii/nand.h>
 #include <wii/os.h>
-#include <msl/stdio.h>
-#include <msl/string.h>
+#include <stdio.h>
+#include <string.h>
 
 #include "evt_cmd.h"
 #include "evtnandapi.h"
@@ -160,7 +160,7 @@ s32 evt_nandsettings_handle_read_output(spm::evtmgr::EvtEntry * entry, bool firs
     {
         case 1:
             NandSettingsV1 v1;
-            msl::string::memcpy(&v1, gSettings, sizeof(v1));
+            memcpy(&v1, gSettings, sizeof(v1));
             wii::os::OSReport("nandsettings: updating settings v1->2.\n");
 
             // Move relocated settings

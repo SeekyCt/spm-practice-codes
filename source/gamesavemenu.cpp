@@ -9,7 +9,7 @@
 #include <spm/seq_mapchange.h>
 #include <spm/seqdrv.h>
 #include <spm/spmario.h>
-#include <msl/string.h>
+#include <string.h>
 
 #include "mod_ui_base/centredbutton.h"
 #include "evt_cmd.h"
@@ -58,8 +58,8 @@ static bool reloadSave(MenuButton * button, void * param)
     
     // Unload current map
     spm::seq_mapchange::_unload(spm::spmario::gp->mapName, nullptr, nullptr);
-    msl::string::strcpy(spm::spmario::gp->mapName, "");
-    msl::string::strcpy(spm::spmario::gp->doorName, "");
+    strcpy(spm::spmario::gp->mapName, "");
+    strcpy(spm::spmario::gp->doorName, "");
 
     // Backup save slot
     s32 slot = spm::spmario::gp->saveFileId;
@@ -263,7 +263,7 @@ void GameSaveMenu::pitSavePatch()
         [](s32 saveId)
         {
             nandUpdateSaveReal(saveId);
-            if (msl::string::strncmp(spm::spmario::gp->mapName, "dan", 3) == 0)
+            if (strncmp(spm::spmario::gp->mapName, "dan", 3) == 0)
             {
                 spm::nandmgr::SaveFile * save = spm::nandmgr::nandGetSaveFiles() + saveId;
                 save->spmarioGlobals.gsw[1] -= 1;

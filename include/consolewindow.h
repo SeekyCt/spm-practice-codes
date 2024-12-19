@@ -6,7 +6,7 @@
 #pragma once
 
 #include <common.h>
-#include <msl/stdio.h>
+#include <stdio.h>
 #include <wii/gx.h>
 
 #include "mod_ui_base/window.h"
@@ -43,18 +43,18 @@ public:
     #define CONSOLE_PUSH_FMT(format, ...)                                                \
         do                                                                               \
         {                                                                                \
-            size_t _fmt_size = msl::stdio::snprintf(nullptr, 0, format, __VA_ARGS__);    \
+            size_t _fmt_size = snprintf(nullptr, 0, format, __VA_ARGS__);    \
             char * _fmt_str = new char[_fmt_size + 1];                                   \
-            msl::stdio::sprintf(_fmt_str, format, __VA_ARGS__);                          \
+            sprintf(_fmt_str, format, __VA_ARGS__);                          \
             mod::ConsoleWindow::push(_fmt_str, nullptr, mod::ConsoleWindow::autoFreeCb); \
         } while (0)
 
     #define CONSOLE_PUSH_FMT_CLR(colour, format, ...)                                   \
         do                                                                              \
         {                                                                               \
-            size_t _fmt_size = msl::stdio::snprintf(nullptr, 0, format, __VA_ARGS__);   \
+            size_t _fmt_size = snprintf(nullptr, 0, format, __VA_ARGS__);   \
             char * _fmt_str = new char[_fmt_size + 1];                                  \
-            msl::stdio::sprintf(_fmt_str, format, __VA_ARGS__);                         \
+            sprintf(_fmt_str, format, __VA_ARGS__);                         \
             mod::ConsoleWindow::push(_fmt_str, colour, mod::ConsoleWindow::autoFreeCb); \
         } while (0)
 

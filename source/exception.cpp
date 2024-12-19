@@ -8,7 +8,7 @@
 #include <wii/mtx.h>
 #include <wii/os.h>
 #include <wii/vi.h>
-#include <msl/string.h>
+#include <string.h>
 
 #include "mod_ui_base/colours.h"
 #include "mod.h"
@@ -169,10 +169,10 @@ extern "C" void exceptionOSReport(const char * msg)
     wii::os::OSReport(msg);
 
     // Store message to be drawn to screen
-    size_t len = msl::string::strlen(msg);
+    size_t len = strlen(msg);
     if ((head + len) >= sizeof(exceptionText))
         return;    
-    msl::string::strcpy(exceptionText + head, msg);
+    strcpy(exceptionText + head, msg);
     head += len;
 }
 
