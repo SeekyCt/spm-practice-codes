@@ -1,2 +1,3 @@
 ninja_syntax
 PyYAML
+pyelf2rel==1.0.3

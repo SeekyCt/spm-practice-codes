@@ -20,14 +20,24 @@ extern void main();
 
 }
 
+namespace clibcompat {
+
+extern void init();
+
+}
+
 void _prolog()
 {
+    // Initialise C standard library support
+    clibcompat::init();
+
     // Run global constructors
     for (PFN_voidfunc *ctor = _ctors_start; ctor != _ctors_end && *ctor; ++ctor)
     {
         (*ctor)();
     }
-    
+
+
     // Run mod main
     mod::main();
 }

@@ -35,14 +35,7 @@ SPM_HEADERS = "spm-headers"
 DEVKITPPC = os.environ.get("DEVKITPPC")
 assert DEVKITPPC is not None, "Error: DEVKITPPC environment variable not set"
 CC = os.path.join("$devkitppc", "bin", "powerpc-eabi-gcc")
-
-# Elf2rel
-ELF2REL = os.environ.get("ELF2REL")
-if ELF2REL is None:
-    TTYDTOOLS = os.environ.get("TTYDTOOLS")
-    if TTYDTOOLS is not None:
-        ELF2REL = os.path.join(TTYDTOOLS, "bin", "elf2rel")
-assert ELF2REL is not None, "Error: ELF2REL environment variable not set"
+CXX = os.path.join("$devkitppc", "bin", "powerpc-eabi-g++")
 
 ##############
 # Tool Flags #
@@ -62,7 +55,7 @@ INCLUDES = ' '.join(
 # Passed to C, C++ and asm compilation, and the linker
 MACHDEP = ' '.join([
     "-mno-sdata", # Disable SDA sections since not main binary
-    "-mgcn", # Use ogc linker
+    "-D__gamecube__",
     "-DGEKKO", # CPU preprocessor define
     "-mcpu=750", # Set CPU to 750cl
     "-meabi", # Set ppc abi to eabi
@@ -86,6 +79,7 @@ CFLAGS = ' '.join([
     "-Wextra", # Enable even more warnings
     "-Wshadow", # Enable variable shadowing warning
     "-Werror", # Error on warnings
+    "-fmax-errors=3", # Don't print endless errors
 
     "-DUSE_STL", # Tell spm-headers to use C++ stl
 
@@ -114,16 +108,11 @@ ASFLAGS = ' '.join([
 LDFLAGS = ' '.join([
     "$machdep",
 
-    # sysbase
-    # stdc++
-    # supc++
-
     "-lstdc++",
     "-lm",
-    "-lc",
-    "-lsysbase",
+    "-Wl,--start-group,-lsysbase,-lc,--end-group",
     "-lgcc",
-    "-r", # Partially link (elf2rel finishes)
+    "-r", # Partially link (pyelf2rel finishes)
     "-e _prolog", # Set entry to _prolog
     "-u _prolog", # Require _prolog to be defined
     "-u _epilog", # Require _epilog to be defined
@@ -160,9 +149,10 @@ def emit_vars(n: Writer):
     # Devkitppc
     n.variable("devkitppc", DEVKITPPC)
     n.variable("cc", CC)
+    n.variable("cxx", CXX)
 
-    # Elf2rel
-    n.variable("elf2rel", ELF2REL)
+    # pyelf2rel
+    n.variable("pyelf2rel", "pyelf2rel")
 
     # Tool flags
     n.variable("includes", INCLUDES)
@@ -192,7 +182,7 @@ def emit_rules(n: Writer):
     #     verflags: defines for the region being compiled
     n.rule(
         "cxx",
-        command = "$cc -MMD -MT $out -MF $out.d $cxxflags $verflags -c $in -o $out",
+        command = "$cxx -MMD -MT $out -MF $out.d $cxxflags $verflags -c $in -o $out",
         depfile = "$out.d",
         deps = "gcc",
         description = "CXX $out"
@@ -228,7 +218,7 @@ def emit_rules(n: Writer):
     #     map: map file output path
     n.rule(
         "ld",
-        command = "$cc $in $ldflags -o $out -Wl,-Map,$map",
+        command = "$cxx $in $ldflags $ldscripts -o $out -Wl,-Map,$map",
         description = "LD $out"
     )
 
@@ -236,9 +226,9 @@ def emit_rules(n: Writer):
     # Variables to pass in:
     #     lst: lst symbol file input path
     n.rule(
-        "elf2rel",
-        command = "$elf2rel $in -s $lst",
-        description = "elf2rel $out"
+        "pyelf2rel",
+        command = "$pyelf2rel $in $lst --missing-weak=ignore",
+        description = "pyelf2rel $out"
     )
     n.newline()
 
@@ -268,7 +258,6 @@ def emit_build(n: Writer, ver: str):
     for path in find_files(SRCDIR):
         # Get output name
         ofile = os.path.join("$builddir", ver, path + ".o")
-        ofiles.append(ofile)
 
         # Choose rule based on file extension
         _, ext = os.path.splitext(path)
@@ -295,8 +284,13 @@ def emit_build(n: Writer, ver: str):
                 rule = "as",
                 inputs = path
             )
+        elif ext in (".h", ".hpp", ".md"):
+            # Headers / Documentation
+            continue
         else:
             assert False, f"Unknown file type {ext} for {path}"
+
+        ofiles.append(ofile)
 
     # Emit asset builds
     with open(ASSETS_YML) as f:
@@ -335,9 +329,13 @@ def emit_build(n: Writer, ver: str):
     n.build(
         elf_name,
         rule = "ld",
-        inputs = ofiles + ldfiles,
+        inputs = ofiles,
         implicit_outputs = map_name,
-        variables = { "map" : map_name }
+        variables = {
+            "map" : map_name,
+            "ldscripts" : ' '.join([f"-T{path}" for path in ldfiles])
+        },
+        implicit=ldfiles
     )
 
     # Emit rel build
@@ -346,7 +344,7 @@ def emit_build(n: Writer, ver: str):
     lst_name = os.path.join("$spm_headers", "linker", f"spm.{lst_ver}.lst")
     n.build(
         rel_name,
-        rule = "elf2rel",
+        rule = "pyelf2rel",
         inputs = elf_name,
         implicit = lst_name,
         variables = { "lst" : lst_name }

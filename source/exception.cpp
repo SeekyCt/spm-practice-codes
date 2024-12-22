@@ -106,16 +106,13 @@ extern "C" void exceptionMessageHandler(char * msg)
     // spm::spmario_snd::spsndExit();
 
     // Stop all other threads
-    wii::os::OSThread * p = wii::os::OS_CURRENT_THREAD->linkActive.prev;
+    // TODO: this is probably pointless
+    wii::os::OSThread * curThread = wii::os::OSGetCurrentThread();
+    wii::os::OSThread * p = wii::os::OS_THREAD_QUEUE.head;
     while (p != nullptr)
     {
-        wii::os::OSSuspendThread(p);
-        p = p->linkActive.prev;
-    }
-    p = wii::os::OS_CURRENT_THREAD->linkActive.next;
-    while (p != nullptr)
-    {
-        wii::os::OSSuspendThread(p);
+        if (p != curThread)
+            wii::os::OSSuspendThread(p);
         p = p->linkActive.next;
     }
 
