@@ -47,7 +47,10 @@ enum Heap
 /* 0x5 */ HEAP_WPAD,
 /* 0x6 */ HEAP_SOUND,
 /* 0x7 */ HEAP_SMART,
-/* 0x8 */ HEAP_MEM2_UNUSED
+#ifdef SPM_KR0
+/* 0x8 */ HEAP_FONT,
+#endif
+/* 0x8 / 0x9 */ HEAP_MEM2_UNUSED
 };
 
 enum HeapSizeType
