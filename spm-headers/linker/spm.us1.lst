@@ -475,3 +475,5 @@
 8056CA30:nandmgr_wp
 802391E0:spsndSFXOn
 8017C55C:loadMain
+
+803ebd68:memory_size_table
