@@ -127,7 +127,7 @@
 803E8DC8:seq_data
 801A5634:__memAlloc
 801A56B8:__memFree
-803EAA08:size_table
+803EAA08:memory_size_table
 8056D188:memory_wp
 8056D18C:memory_swp
 802350B8:wpadGetButtonsHeld
