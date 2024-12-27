@@ -533,7 +533,7 @@
 801a62f0:__memFree
 801a6e34:__dl__FPv
 // data
-8042a408:size_table
+8042a408:memory_size_table
 // sdata
 805ae168:memory_wp
 805ae16c:memory_swp
