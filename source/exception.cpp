@@ -31,7 +31,7 @@ extern "C" {
 static bool inException = false;
 static char exceptionText[4096];
 static u32 head = 0;
-static void (*__OSUnhandledExceptionReal)(s32 p1, s32 p2, s32 p3, s32 p4);
+static void (*__OSUnhandledExceptionReal)(u8 exception, wii::os::OSContext * context, u32 dsisr, u32 dar);
 static spm::evtmgr::EvtScriptCode * lastScript = nullptr;
 static s32 (*evtmgrCmdReal)(spm::evtmgr::EvtEntry * entry) = nullptr;
 
@@ -106,17 +106,17 @@ extern "C" void exceptionMessageHandler(char * msg)
     // spm::spmario_snd::spsndExit();
 
     // Stop all other threads
-    wii::os::OSThread * p = wii::os::currentThread->prev;
+    wii::os::OSThread * p = wii::os::OS_CURRENT_THREAD->linkActive.prev;
     while (p != nullptr)
     {
         wii::os::OSSuspendThread(p);
-        p = p->prev;
+        p = p->linkActive.prev;
     }
-    p = wii::os::currentThread->next;
+    p = wii::os::OS_CURRENT_THREAD->linkActive.next;
     while (p != nullptr)
     {
         wii::os::OSSuspendThread(p);
-        p = p->next;
+        p = p->linkActive.next;
     }
 
     // Print to OSReport
@@ -215,11 +215,11 @@ void exceptionPatch()
     writeBranchLink(wii::os::__OSUnhandledException, 0x2d0, exceptionOSReportForwarder);
     writeBranch(wii::os::__OSUnhandledException, 0x2d4, exceptionDraw);
     __OSUnhandledExceptionReal = patch::hookFunction(wii::os::__OSUnhandledException,
-        [](s32 p1, s32 p2, s32 p3, s32 p4)
+        [](u8 exception, wii::os::OSContext * context, u32 dsisr, u32 dar)
         {
             checkExceptionFlags();
             inException = true;
-            __OSUnhandledExceptionReal(p1, p2, p3, p4);
+            __OSUnhandledExceptionReal(exception, context, dsisr, dar);
         }
     );
     wii::os::__OSUnhandledException_msg1[73] = '\n';
