@@ -27,7 +27,7 @@ typedef struct {
     GXColor bgGradientBottom;
     u8 _50[0x5c-0x50];
 } SeqLoadSubWork;
-SIZE_ASSERT(SeqLoadSubWork, 0x5c);
+SIZE_ASSERT(SeqLoadSubWork, 0x5c)
 
 DECOMP_STATIC(SeqLoadSubWork* seq_load_sub_wp)
 

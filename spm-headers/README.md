@@ -27,7 +27,7 @@ The `SKIP_PPCDIS` preprocessor define will stop `ppcdis.h` being included.
 
 ## Mods
 
-For use in mods, the `include` and `mod` folder should be added to the include path and an lst from `linker` should be used. If including your compiler's C++ standard library, the preprocessor define `USE_STL` should be used.
+For use in mods, the `include` and `mod` folder should be added to the include path and an lst from `linker` should be used. Mods should include their compiler's standard library headers (do not use `-nostdinc`), though linking it is not required (so `-nostdlib` is fine).
 
 # Licensing
 
