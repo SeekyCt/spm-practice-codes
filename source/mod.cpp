@@ -135,6 +135,7 @@ void spmarioMainPatch()
             PyConsole::main();
 #endif
             Window::windowMain();
+            void heapui(); heapui();
             spmarioMainReal();
         }
     );
@@ -224,6 +225,9 @@ void main()
     HitboxMenu::hitboxPatch();
 
     loadMainPatch();
+
+    void heapInfo();
+    heapInfo();
 
     /*
         Uncomment this if you'd like to load another mod alongside practice codes
