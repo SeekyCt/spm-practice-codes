@@ -120,7 +120,7 @@ s32 pow(s32 val, s32 power)
 bool check3d()
 {
     spm::camdrv::CamEntry * cam = spm::camdrv::camGetPtr(spm::camdrv::CAM_ID_3D);
-    return !cam->isOrtho;
+    return !cam->projectionType;
 }
 
 char * cloneString(const char * str)

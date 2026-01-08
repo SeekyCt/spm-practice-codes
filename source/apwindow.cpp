@@ -170,12 +170,12 @@ void APWindow::disp()
         return;
 
     wii::mtx::Mtx34 mtx;
-    wii::mtx::PSMTXScale(&mtx, mApScale.x, mApScale.y, mApScale.z);
-    wii::mtx::PSMTXTransApply(&mtx, &mtx, mApPos.x, mApPos.y, mApPos.z);
+    wii::mtx::PSMTXScale(mtx, mApScale.x, mApScale.y, mApScale.z);
+    wii::mtx::PSMTXTransApply(mtx, mtx, mApPos.x, mApPos.y, mApPos.z);
 
-    spm::animdrv::animPoseDrawMtx(mApId, &mtx, 1, 0.0f, 1.0f);
-    spm::animdrv::animPoseDrawMtx(mApId, &mtx, 2, 0.0f, 1.0f);
-    spm::animdrv::animPoseDrawMtx(mApId, &mtx, 3, 0.0f, 1.0f);
+    spm::animdrv::animPoseDrawMtx(mApId, mtx, 1, 0.0f, 1.0f);
+    spm::animdrv::animPoseDrawMtx(mApId, mtx, 2, 0.0f, 1.0f);
+    spm::animdrv::animPoseDrawMtx(mApId, mtx, 3, 0.0f, 1.0f);
 }
 
 APWindow::APWindow()

@@ -69,7 +69,6 @@ MACHDEP = ' '.join([
     "-mhard-float", # Enable hardware floats
     "-nostdlib", # Don't link std lib
     "-mregnames", # Enable r prefix for registers in asm
-    "-nostdinc", # Disable including std lib headers
     "-ffreestanding", # Tell compiler environment isn't hosted
 ])
 

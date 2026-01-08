@@ -31,7 +31,7 @@ extern "C" {
 static bool inException = false;
 static char exceptionText[4096];
 static u32 head = 0;
-static void (*__OSUnhandledExceptionReal)(s32 p1, s32 p2, s32 p3, s32 p4);
+static void (*__OSUnhandledExceptionReal)(u8 p1, wii::os::OSContext * p2, u32 p3, u32 p4);
 static spm::evtmgr::EvtScriptCode * lastScript = nullptr;
 static s32 (*evtmgrCmdReal)(spm::evtmgr::EvtEntry * entry) = nullptr;
 
@@ -106,17 +106,17 @@ extern "C" void exceptionMessageHandler(char * msg)
     // spm::spmario_snd::spsndExit();
 
     // Stop all other threads
-    wii::os::OSThread * p = wii::os::currentThread->prev;
+    wii::os::OSThread * p = wii::os::OS_CURRENT_THREAD->link.prev;
     while (p != nullptr)
     {
         wii::os::OSSuspendThread(p);
-        p = p->prev;
+        p = p->link.prev;
     }
-    p = wii::os::currentThread->next;
+    p = wii::os::OS_CURRENT_THREAD->link.next;
     while (p != nullptr)
     {
         wii::os::OSSuspendThread(p);
-        p = p->next;
+        p = p->link.next;
     }
 
     // Print to OSReport
@@ -144,8 +144,8 @@ extern "C" void exceptionMessageHandler(char * msg)
         // Start frame
         wii::mtx::Mtx44 mtx;
         wii::DEMOInit::DEMOBeforeRender();
-        wii::mtx::C_MTXOrtho(&mtx, SCREEN_TOP, SCREEN_BOTTOM, -304.0f, 304.0f, 1.0f, 1000.0f);
-        wii::gx::GXSetProjection(&mtx, 1);
+        wii::mtx::C_MTXOrtho(mtx, SCREEN_TOP, SCREEN_BOTTOM, -304.0f, 304.0f, 1.0f, 1000.0f);
+        wii::gx::GXSetProjection(mtx, wii::gx::GX_ORTHOGRAPHIC);
 
         // Draw game & mod version header
         drawTitle(scale);
@@ -215,7 +215,7 @@ void exceptionPatch()
     writeBranchLink(wii::os::__OSUnhandledException, 0x2d0, exceptionOSReportForwarder);
     writeBranch(wii::os::__OSUnhandledException, 0x2d4, exceptionDraw);
     __OSUnhandledExceptionReal = patch::hookFunction(wii::os::__OSUnhandledException,
-        [](s32 p1, s32 p2, s32 p3, s32 p4)
+        [](u8 p1, wii::os::OSContext * p2, u32 p3, u32 p4)
         {
             checkExceptionFlags();
             inException = true;
