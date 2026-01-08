@@ -23,7 +23,7 @@ s32 relLoaderTwiceEvtId = 0;
 static s32 (*loadMainReal)();
 void loadMainPatch()
 {
-    loadMainReal = patch::hookFunction(spm::seq_load_sub::loadMain,
+    loadMainReal = patch::hookFunction(spm::seq_load_sub::seq_load_sub_loadMain,
         []()
         {
             if (!spm::evtmgr::evtCheckID(relLoaderTwiceEvtId) && spm::seq_load_sub::seq_load_sub_wp->state == SEQ_LOAD_STATE_REL_LOADER_TWICE) {
