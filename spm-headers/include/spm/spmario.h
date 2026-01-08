@@ -29,7 +29,7 @@ typedef struct
 /* 0x0008 */ s32 language; // not read from save file
 /* 0x000C */ u32 discIsEjected;
 /* 0x0010 */ u32 systemLevelFlags;
-/* 0x0014 */ u8 unknown_0x14[0x18 - 0x14];
+/* 0x0014 */ u32 frameCounter;
 /* 0x0018 */ u16 framebufferWidth;
 /* 0x001A */ u16 framebufferHeight;
 /* 0x001C */ f32 gameSpeed;
@@ -46,7 +46,8 @@ typedef struct
 /* 0x00E0 */ u32 unknown_0xe0; // not read from save file
 /* 0x00E4 */ u8 unknown_0xe4[0xf8 - 0xe4];
 /* 0x00F8 */ OSTime time;
-/* 0x0100 */ u8 unknown_0x100[0x110 - 0x100];
+/* 0x0100 */ OSTime timePlayed;
+/* 0x0108 */ u8 unknown_0x108[0x110 - 0x108];
 /* 0x0110 */ OSTime lastSaveLoadTime;
 /* 0x0118 */ u8 unknown_0x118[0x138 - 0x118];
 /* 0x0138 */ OSTime lastButtonPressTime; // uncertain

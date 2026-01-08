@@ -11,6 +11,7 @@
 
 CPP_WRAPPER(spm::camdrv)
 
+USING(wii::gx::GXProjectionType)
 USING(wii::mtx::Vec3)
 USING(wii::mtx::Mtx34)
 USING(wii::mtx::Mtx44)
@@ -63,7 +64,7 @@ typedef struct _CamEntry
 /* 0x0F8 */ f32 left;
 /* 0x0FC */ f32 right;
 /* 0x100 */ u8 unknown_0x100[0x158 - 0x100];
-/* 0x158 */ s32 isOrtho;
+/* 0x158 */ GXProjectionType projectionType;
 /* 0x15C */ Vec3 pos;
 /* 0x168 */ Vec3 target;
 /* 0x174 */ Vec3 up;
@@ -73,7 +74,8 @@ typedef struct _CamEntry
 /* 0x18C */ f32 aspect;
 /* 0x190 */ f32 near;
 /* 0x194 */ f32 far;
-/* 0x198 */ u8 unknown_0x198[0x20c - 0x198];
+/* 0x198 */ s32 isOrthoToggle; //overwrites isOrthro every frame, change this if you want to make the world look 3d, not isOrthro
+/* 0x19C */ u8 unknown_0x19c[0x20c - 0x19c];
 /* 0x20C */ Vec3 zoomStartPos;
 /* 0x218 */ Vec3 zoomStartTarget;
 /* 0x224 */ Vec3 zoomDestPos;
@@ -116,7 +118,7 @@ CamEntry * camEntryPersp(f32 fovY, f32 aspect, f32 near, f32 far, f32 param_5,
 CamEntry * camEntryOrtho(f32 top, f32 bottom, f32 left, f32 right, f32 near,
                          f32 far, s32 cam_no, CamDispFunc * callback);
 
-UNKNOWN_FUNCTION(func_800550f8);
+UNKNOWN_FUNCTION(func_800550f8)
 
 /*
     Updates all cameras
@@ -158,25 +160,25 @@ CamEntry * camGetCurPtr();
 */
 int camGetCurNo();
 
-UNKNOWN_FUNCTION(func_80055b58);
-UNKNOWN_FUNCTION(func_80055bb4);
-UNKNOWN_FUNCTION(func_80055c10);
-UNKNOWN_FUNCTION(func_80055ce0);
-UNKNOWN_FUNCTION(func_80056948);
+UNKNOWN_FUNCTION(func_80055b58)
+UNKNOWN_FUNCTION(func_80055bb4)
+UNKNOWN_FUNCTION(func_80055c10)
+UNKNOWN_FUNCTION(func_80055ce0)
+UNKNOWN_FUNCTION(func_80056948)
 
 /*
     CamDispFunc for the 3d camera
 */
 void cam3dMain(CamEntry * cp);
 
-UNKNOWN_FUNCTION(func_80057cb0);
-UNKNOWN_FUNCTION(func_80057cc8);
-UNKNOWN_FUNCTION(func_80057ce0);
-UNKNOWN_FUNCTION(func_80057da0);
-UNKNOWN_FUNCTION(func_80057e4c);
-UNKNOWN_FUNCTION(func_80057ec4);
-UNKNOWN_FUNCTION(func_80057ee8);
-UNKNOWN_FUNCTION(func_80058128);
+UNKNOWN_FUNCTION(func_80057cb0)
+UNKNOWN_FUNCTION(func_80057cc8)
+UNKNOWN_FUNCTION(func_80057ce0)
+UNKNOWN_FUNCTION(func_80057da0)
+UNKNOWN_FUNCTION(func_80057e4c)
+UNKNOWN_FUNCTION(func_80057ec4)
+UNKNOWN_FUNCTION(func_80057ee8)
+UNKNOWN_FUNCTION(func_80058128)
 
 /*
     Converts coordinates in the world to where they appear on screen
@@ -188,24 +190,24 @@ void getScreenPoint(Vec3 * worldPos, Vec3 * screenPosOut);
 */
 bool camCheck3d(s32 camId);
 
-UNKNOWN_FUNCTION(func_80058388);
-UNKNOWN_FUNCTION(func_800583b4);
-UNKNOWN_FUNCTION(func_80058404);
-UNKNOWN_FUNCTION(func_8005869c);
-UNKNOWN_FUNCTION(func_800586c8);
-UNKNOWN_FUNCTION(func_80058700);
-UNKNOWN_FUNCTION(func_800587a0);
-UNKNOWN_FUNCTION(func_80058800);
-UNKNOWN_FUNCTION(func_8005881c);
-UNKNOWN_FUNCTION(func_80058840);
+UNKNOWN_FUNCTION(func_80058388)
+UNKNOWN_FUNCTION(func_800583b4)
+UNKNOWN_FUNCTION(func_80058404)
+UNKNOWN_FUNCTION(func_8005869c)
+UNKNOWN_FUNCTION(func_800586c8)
+UNKNOWN_FUNCTION(func_80058700)
+UNKNOWN_FUNCTION(func_800587a0)
+UNKNOWN_FUNCTION(func_80058800)
+UNKNOWN_FUNCTION(func_8005881c)
+UNKNOWN_FUNCTION(func_80058840)
 
 /*
     Just returns false, unclear purpose
 */
 bool camUnusedCheck();
 
-UNKNOWN_FUNCTION(func_8005885c);
-UNKNOWN_FUNCTION(func_80058b14);
-UNKNOWN_FUNCTION(func_80058c80);
+UNKNOWN_FUNCTION(func_8005885c)
+UNKNOWN_FUNCTION(func_80058b14)
+UNKNOWN_FUNCTION(func_80058c80)
 
 CPP_WRAPPER_END()

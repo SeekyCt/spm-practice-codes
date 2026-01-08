@@ -19,15 +19,15 @@ It is recommended to use this with [git subrepo](https://github.com/ingydotnet/g
 
 ## Decomp
 
-For use in decomp, the `include` and `decomp` folders should be added to the include path, and the preprocessor define `DECOMP` should be used.
-
-### Testing
-
-The `SKIP_PPCDIS` preprocessor define will stop `ppcdis.h` being included.
+For use in decomp, the `include`, `include_cpp` and `decomp` folders should be added to the include path, and the preprocessor define `DECOMP` should be used.
 
 ## Mods
 
-For use in mods, the `include` and `mod` folder should be added to the include path and an lst from `linker` should be used. If including your compiler's C++ standard library, the preprocessor define `USE_STL` should be used.
+For use in mods, the `include` and `mod` folders should be added to the include path and an lst from `linker` should be used. Mods should include their compiler's standard library headers (do not use `-nostdinc`), though linking it is not required (so `-nostdlib` is fine).
+
+Optionally, you may wish to add the preprocessor define `RELAX_NAMESPACING` to allow omitting the namespaces (for example, `spm::memory::MemWork` becomes `MemWork`).
+
+**Warning**: NW4R headers are probably unsafe to use with GCC currently
 
 # Licensing
 

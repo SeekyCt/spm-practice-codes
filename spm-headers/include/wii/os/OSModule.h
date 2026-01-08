@@ -6,6 +6,16 @@ CPP_WRAPPER(wii::os)
 
 typedef void (RelExportFunc)();
 
+typedef struct
+{
+    union
+    {
+        u32 offset;
+        void * address;
+    };
+    u32 size;
+} RelSection;
+
 // Unions are offsets in file then pointers after OSLink
 typedef struct _RelHeader
 {
@@ -16,7 +26,7 @@ typedef struct _RelHeader
     union
     {
         u32 sectionInfoOffset;
-        void * sectionInfo;
+        RelSection * sectionInfo;
     };
     union
     {
@@ -65,14 +75,14 @@ SIZE_ASSERT(RelHeader, 0x4c)
 FIXED_ADDR(RelHeader *, firstRel, 0x800030c8);
 FIXED_ADDR(RelHeader *, lastRel, 0x800030cc);
 
-UNKNOWN_FUNCTION(OSNotifyLink);
-UNKNOWN_FUNCTION(OSNotifyUnlink);
-UNKNOWN_FUNCTION(OSNotifyPreLink);
-UNKNOWN_FUNCTION(OSNotifyPostLink);
-UNKNOWN_FUNCTION(Relocate);
-UNKNOWN_FUNCTION(Link);
+UNKNOWN_FUNCTION(OSNotifyLink)
+UNKNOWN_FUNCTION(OSNotifyUnlink)
+UNKNOWN_FUNCTION(OSNotifyPreLink)
+UNKNOWN_FUNCTION(OSNotifyPostLink)
+UNKNOWN_FUNCTION(Relocate)
+UNKNOWN_FUNCTION(Link)
 bool OSLink(RelHeader * relFile, void * bss);
-UNKNOWN_FUNCTION(Undo);
-UNKNOWN_FUNCTION(OSUnlink);
+UNKNOWN_FUNCTION(Undo)
+UNKNOWN_FUNCTION(OSUnlink)
 
 CPP_WRAPPER_END()

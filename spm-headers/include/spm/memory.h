@@ -23,10 +23,28 @@ USING(spm::filemgr::_FileEntry)
 USING(wii::gx::GXTexObj)
 USING(wii::mem::MEMHeapHandle)
 
-#define MEM1_HEAP_COUNT 3
-#define MEM2_HEAP_COUNT 6
-#define HEAP_COUNT 9
-#define SMART_HEAP_ID 7
+#ifdef SPM_KR0
+    #define MEMORY_C_VERSION 3
+#elif (defined SPM_EU0) || (defined SPM_EU1)
+    #define MEMORY_C_VERSION 2
+#else
+    #define MEMORY_C_VERSION 1
+#endif
+
+#if MEMORY_C_VERSION >= 3
+    #define MEM1_HEAP_COUNT 3
+    #define MEM2_HEAP_COUNT 7
+    #define HEAP_COUNT 10
+#elif MEMORY_C_VERSION == 2
+    #define MEM1_HEAP_COUNT 3
+    #define MEM2_HEAP_COUNT 6
+    #define HEAP_COUNT 9
+#else // == 1
+    #define MEM1_HEAP_COUNT 5
+    #define MEM2_HEAP_COUNT 4
+    #define HEAP_COUNT 9
+#endif
+
 #define SMART_ALLOCATION_MAX 2048
 
 enum Heap
@@ -39,13 +57,28 @@ enum Heap
 /* 0x5 */ HEAP_WPAD,
 /* 0x6 */ HEAP_SOUND,
 /* 0x7 */ HEAP_SMART,
-/* 0x8 */ HEAP_MEM2_UNUSED
+#ifdef SPM_KR0
+/* 0x8 */ HEAP_FONT,
+#endif
+/* 0x8 / 0x9 */ HEAP_MEM2_UNUSED
 };
 
 enum HeapSizeType
 {
 /* 0x0 */ HEAPSIZE_PERCENT_REMAINING,
 /* 0x1 */ HEAPSIZE_ABSOLUTE_KB
+};
+
+enum SmartAllocType
+{
+/* 0x0 */ SMART_TYPE_0,
+/* 0x1 */ SMART_TYPE_1,
+/* 0x2 */ SMART_TYPE_2,
+/* 0x3 */ SMART_TYPE_3,
+
+    // On smartFree, demotes to type 3 instead of freeing
+    // For smartAutoFree, is freed when type 3 is freed
+/* 0x4 */ SMART_TYPE_4
 };
 
 typedef struct
@@ -55,7 +88,7 @@ typedef struct
 } HeapSize;
 SIZE_ASSERT(HeapSize, 0x8)
 
-DECOMP_STATIC(HeapSize memory_size_table[9])
+DECOMP_STATIC(HeapSize memory_size_table[HEAP_COUNT])
 
 typedef struct
 {
@@ -63,7 +96,11 @@ typedef struct
 /* 0x24 */ void * heapStart[HEAP_COUNT]; // pointer to the start of the heap
 /* 0x48 */ void * heapEnd[HEAP_COUNT]; // pointer to the end of the heap
 } MemWork;
+#ifdef SPM_KR0
+SIZE_ASSERT(MemWork, 0x78)
+#else
 SIZE_ASSERT(MemWork, 0x6c)
+#endif
 
 DECOMP_STATIC(MemWork memory_work)
 DECOMP_STATIC(MemWork * memory_wp)

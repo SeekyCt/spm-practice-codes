@@ -35,41 +35,57 @@ typedef struct _MEMEXPHeap
 } MEMEXPHeap;
 SIZE_ASSERT(MEMEXPHeap, 0x50)
 
+typedef struct
+{
+/* 0x0 */ void * alloc;
+/* 0x4 */ void * free;
+} MEMAllocatorFunc;
+SIZE_ASSERT(MEMAllocatorFunc, 8)
+
+typedef struct
+{
+/* 0x0 */ MEMAllocatorFunc * func;
+/* 0x4 */ void * heap;
+/* 0x8 */ u32 heapP0;
+/* 0x8 */ u32 heapP1;
+} MEMAllocator;
+SIZE_ASSERT(MEMAllocator, 0x10)
+
 #define MEM_FLAG_FILL_0 (1 << 0) // initialise allocated memory as 0
 #define MEM_FLAG_THREAD_CONTROL (1 << 2) // use mutexes for access when handling heap
 
 typedef void * MEMHeapHandle;
 
-UNKNOWN_FUNCTION(FindContainHeap_);
-UNKNOWN_FUNCTION(MEMiInitHeapHead);
-UNKNOWN_FUNCTION(MEMiFinalizeHeap);
+UNKNOWN_FUNCTION(FindContainHeap_)
+UNKNOWN_FUNCTION(MEMiInitHeapHead)
+UNKNOWN_FUNCTION(MEMiFinalizeHeap)
 MEMHeapHandle MEMFindContainHeap(void * ptr);
-UNKNOWN_FUNCTION(AllocUsedBlockFromFreeBlock_);
-UNKNOWN_FUNCTION(AllocFromHead_);
-UNKNOWN_FUNCTION(AllocFromTail_);
-UNKNOWN_FUNCTION(RecycleRegion_);
+UNKNOWN_FUNCTION(AllocUsedBlockFromFreeBlock_)
+UNKNOWN_FUNCTION(AllocFromHead_)
+UNKNOWN_FUNCTION(AllocFromTail_)
+UNKNOWN_FUNCTION(RecycleRegion_)
 MEMHeapHandle MEMCreateExpHeapEx(void * memory, size_t size, s32 flags);
 void MEMDestroyExpHeap(MEMHeapHandle handle);
 void * MEMAllocFromExpHeapEx(MEMHeapHandle handle, size_t size, u32 alignment);
 void MEMFreeToExpHeap(MEMHeapHandle handle, void * ptr);
 size_t MEMGetAllocatableSizeForExpHeapEx(MEMHeapHandle handle, u32 alignment);
 size_t MEMGetSizeForMBlockExpHeap(void * ptr);
-UNKNOWN_FUNCTION(MEMCreateFrmHeapEx);
-UNKNOWN_FUNCTION(MEMDestroyFrmHeap);
-UNKNOWN_FUNCTION(MEMAllocFromFrmHeapEx);
-UNKNOWN_FUNCTION(MEMFreeToFrmHeap);
-UNKNOWN_FUNCTION(MEMGetAllocatableSizeForFrmHeapEx);
-UNKNOWN_FUNCTION(AllocatorAllocForExpHeap_);
-UNKNOWN_FUNCTION(AllocatorFreeForExpHeap_);
-UNKNOWN_FUNCTION(AllocatorAllocForFrmHeap_);
-UNKNOWN_FUNCTION(AllocatorFreeForFrmHeap_);
-UNKNOWN_FUNCTION(MEMAllocFromAllocator);
-UNKNOWN_FUNCTION(MEMFreeToAllocator);
-UNKNOWN_FUNCTION(MEMInitAllocatorForExpHeap);
-UNKNOWN_FUNCTION(MEMInitAllocatorForFrmHeap);
-UNKNOWN_FUNCTION(MEMInitList);
-UNKNOWN_FUNCTION(MEMAppendListObject);
-UNKNOWN_FUNCTION(MEMRemoveListObject);
-UNKNOWN_FUNCTION(MEMGetNextListObject);
+UNKNOWN_FUNCTION(MEMCreateFrmHeapEx)
+UNKNOWN_FUNCTION(MEMDestroyFrmHeap)
+UNKNOWN_FUNCTION(MEMAllocFromFrmHeapEx)
+UNKNOWN_FUNCTION(MEMFreeToFrmHeap)
+UNKNOWN_FUNCTION(MEMGetAllocatableSizeForFrmHeapEx)
+UNKNOWN_FUNCTION(AllocatorAllocForExpHeap_)
+UNKNOWN_FUNCTION(AllocatorFreeForExpHeap_)
+UNKNOWN_FUNCTION(AllocatorAllocForFrmHeap_)
+UNKNOWN_FUNCTION(AllocatorFreeForFrmHeap_)
+void * MEMAllocFromAllocator(MEMAllocator * allocator, size_t size);
+UNKNOWN_FUNCTION(MEMFreeToAllocator)
+void MEMInitAllocatorForExpHeap(MEMAllocator * allocator, MEMHeapHandle heap, u32 alignment);
+UNKNOWN_FUNCTION(MEMInitAllocatorForFrmHeap)
+UNKNOWN_FUNCTION(MEMInitList)
+UNKNOWN_FUNCTION(MEMAppendListObject)
+UNKNOWN_FUNCTION(MEMRemoveListObject)
+UNKNOWN_FUNCTION(MEMGetNextListObject)
 
 CPP_WRAPPER_END()

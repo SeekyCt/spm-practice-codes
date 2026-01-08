@@ -1,2 +1,7 @@
 build
 build.ninja
+*.bat
+.vscode
+.cache
+compile_commands.json
+venv

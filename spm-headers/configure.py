@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from argparse import ArgumentParser
 from io import StringIO
 import os
@@ -9,7 +11,7 @@ from ninja_syntax import Writer
 
 parser = ArgumentParser()
 parser.add_argument("tests", type=str, nargs="*", help="Tests to run" \
-                    "(mod_ctx, old_mod_ctx, decomp_ctx, mod_ctx_shuffle, test_mod_individual)")
+                    "(mod_ctx, decomp_ctx, mod_ctx_shuffle, test_mod_individual)")
 parser.add_argument("--regions", type=str, nargs="+", help="Regions to test")
 parser.add_argument("--seed", type=int, default=1, help="Shuffling seed")
 parser.add_argument("--shuffle", type=int, default=50, help="Number of randomised orders to test")
@@ -29,6 +31,8 @@ n.variable("builddir", "build")
 n.variable("incdir", "include")
 
 n.variable("seed", args.seed)
+
+n.variable("validate_lst", f"{PYTHON} tools/validate_lst.py")
 
 n.variable("incgen", f"{PYTHON} tools/incgen.py")
 n.variable("incgen_single", f"{PYTHON} tools/incgen_single.py")
@@ -104,6 +108,7 @@ n.variable(
     ' '.join([
         "-lang c++",
         "-W all",
+        "-W err",
         "-fp fmadd",
         "-Cpp_exceptions off",
         "-O4",
@@ -157,6 +162,11 @@ n.rule(
     description = "Decomp CC $in",
     deps = "gcc",
     depfile = "$out.d"
+)
+
+n.rule(
+    "validate_lst",
+    ALLOW_CHAIN + "$validate_lst $in && touch $out"
 )
 
 ##########
@@ -230,21 +240,21 @@ def find_headers(dirname: str, base=None) -> List[str]:
 
     return ret
 
-# Test the headers in the spm-utils modding setup
+# Test the headers in the modding setup
 def test_mod_ctx(regions: List[str]):
     compile_regions(os.path.join("$builddir", "{region}", "mod.o"), "$mod_source", regions,
-                    MOD_INCLUDES, ["USE_STL"])
-
-# Test the headers in the old modding setup
-def test_old_mod_ctx(regions: List[str]):
-    compile_regions(os.path.join("$builddir", "{region}", "old_mod.o"), "$mod_source", regions,
                     MOD_INCLUDES, [])
+
+# Test the headers in the relaxed namespace modding setup
+def test_rns_mod_ctx(regions: List[str]):
+    compile_regions(os.path.join("$builddir", "{region}", "rns_mod.o"), "$mod_source", regions,
+                    MOD_INCLUDES, ["RELAX_NAMESPACING"])
 
 # Test the headers in the decomp setup
 def test_decomp_ctx(regions: List[str]):
     assert args.codewarrior, "Error: decomp_ctx test requires --codewarrior"
     compile_regions(os.path.join("$builddir", "{region}", "decomp.o"), "$decomp_source", regions,
-                    DECOMP_INCLUDES, ["DECOMP", "SKIP_PPCDIS"], True)
+                    DECOMP_INCLUDES, ["DECOMP"], True)
 
 # Test shuffled include orders
 def test_mod_ctx_shuffle(regions: List[str]):
@@ -253,7 +263,7 @@ def test_mod_ctx_shuffle(regions: List[str]):
         source = os.path.join("$builddir", f"shuffle_{args.seed}", f"{i}.cpp")
         incgen(source, MOD_INCLUDES, i)
         compile_regions(os.path.join("$builddir", "{region}", f"shuffle_mod_{args.seed}_{i}.o"),
-                        source, regions, MOD_INCLUDES, ["USE_STL"])
+                        source, regions, MOD_INCLUDES, [])
 
 # Test individual headers
 def test_mod_individual(regions: List[str]):
@@ -262,18 +272,36 @@ def test_mod_individual(regions: List[str]):
         source = os.path.join("$builddir", "individual", f"{name}.c")
         incgen_single(source, header)
         compile_regions(os.path.join("$builddir", "{region}", "individual", f"{name}.o"), source,
-                        regions, MOD_INCLUDES, ["USE_STL", "SPM_EU0"])
+                        regions, MOD_INCLUDES, ["SPM_EU0"])
+
+def lst_path(region: str) -> str:
+    if region == "eu1":
+        region = "eu0"
+    return os.path.join("linker", f"spm.{region}.lst")
+
+def test_lsts(regions: List[str]):
+    for region in regions:
+        path = lst_path(region)
+
+        dest = os.path.join("$builddir", "lsts", f"{region}.ok")
+
+        n.build(
+            dest,
+            "validate_lst",
+            [path],
+        )
 
 test_fns = {
     "mod_ctx" : test_mod_ctx,
-    "old_mod_ctx" : test_old_mod_ctx,
+    "rns_mod_ctx" : test_rns_mod_ctx,
     "decomp_ctx" : test_decomp_ctx,
     "mod_ctx_shuffle" : test_mod_ctx_shuffle,
     "test_mod_individual" : test_mod_individual,
+    "validate_lst" : test_lsts,
 }
 
 incgen("$mod_source", MOD_INCLUDES)
-default_tests = ["mod_ctx", "old_mod_ctx"]
+default_tests = ["mod_ctx", "rns_mod_ctx", "validate_lst"]
 
 if args.codewarrior:
     incgen("$decomp_source", DECOMP_INCLUDES)

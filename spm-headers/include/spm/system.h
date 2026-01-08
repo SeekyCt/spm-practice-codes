@@ -39,6 +39,14 @@ typedef f32 (IntplUserFunc)(s32, s32, f32, f32);
 // assertf dan.c line 144 is incompatible with !(condition)
 // assertf dvdmgr.c line 51 is incompatible with bool check = (condition); !check
 
+// TODO: better name
+#define _assert(line, condition) \
+    do \
+    { \
+        bool check = (condition); \
+        if (!check) __assert(__FILE__, line, #condition); \
+    } while (0)
+
 #define assert(line, condition, message) \
     do \
     { \
@@ -89,9 +97,8 @@ s32 NORETURN ATTRIBUTE_FORMAT(printf, 4, 5) __assert2(
 
 /*
     Rounds a float to an int
-    Deadstripped, always inlined
 */
-s32 roundi(f32 x);
+STRIPPED(s32 roundi(f32 x))
 
 /*
     Adjusts an angle to be 0 <= x < 360
@@ -144,9 +151,8 @@ void sysRandInit();
 
 /*
     Gets the current screen draw token
-    Deadstripped, always inlined
 */
-u16 sysGetToken();
+STRIPPED(u16 sysGetToken())
 
 /*
     Waits until the next screen draw, or max 100ms

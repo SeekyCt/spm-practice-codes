@@ -25,20 +25,31 @@ USING(wii::tpl::TPLHeader)
 
 enum FileType
 {
-/* 0x0 */ FILETYPE_0, // home button bins, rel (comp & decomp), setup dats, win/card.dat,
-                      // lyt/title.bin, camera_road.bin
+/* 0x0 */ FILETYPE_GENERIC, // No relocations
 /* 0x1 */ FILETYPE_1,
 /* 0x2 */ FILETYPE_2,
 /* 0x3 */ FILETYPE_3,
 /* 0x4 */ FILETYPE_TPL, // not used for bg tpls?
-/* 0x5 */ FILETYPE_5, // a/%s (no dash)
+/* 0x5 */ FILETYPE_ANIMPOSE, // a/%s (no dash)
 /* 0x6 */ FILETYPE_6,
 /* 0x7 */ FILETYPE_7,
 /* 0x8 */ FILETYPE_8,
 /* 0x9 */ FILETYPE_9,
 /* 0xA */ FILETYPE_10,
-/* 0xB */ FILETYPE_11 // eff/%s/%s.dat, eff/%seffdata.dat
+/* 0xB */ FILETYPE_EFFDAT, // eff/%s/%s.dat, eff/%seffdata.dat
+/* 0xC */ FILETYPE_12
 };
+
+enum FileState
+{
+/* 0x0 */ FILE_EMPTY,
+/* 0x1 */ FILE_ALLOC_CALLED,
+/* 0x2 */ FILE_WAITING_GARBAGE,
+/* 0x3 */ FILE_ASYNC_CALLED
+};
+
+struct _FileEntry;
+typedef void (FilemgrCallback)(struct _FileEntry * entry);
 
 typedef struct _FileEntry
 {
@@ -51,7 +62,7 @@ typedef struct _FileEntry
 /* 0xA0 */ u32 length;
 /* 0xA4 */ struct _SmartAllocation * sp; // smart pointer to file data
 /* 0xA8 */ struct _FileEntry * next; // next entry in free or allocated list
-/* 0xAC */ void * readDoneCb;
+/* 0xAC */ FilemgrCallback * readDoneCb;
 /* 0xB0 */ DVDEntry * dvdEntry;
 } FileEntry;
 SIZE_ASSERT(FileEntry, 0xb4)
@@ -87,12 +98,12 @@ void PackTexPalette(TPLHeader * palette);
 /*
     Converts self-pointers in file data to offsets to allow safe moving
 */
-void fileGarbageDataAdrClear(FileEntry * entry);
+DECOMP_STATIC(void fileGarbageDataAdrClear(FileEntry * entry))
 
 /*
     Converts offsets in file data back to self-pointers
 */
-void fileGarbageDataAdrSet(void * data, s32 fileType);
+DECOMP_STATIC(void fileGarbageDataAdrSet(void * data, s32 fileType))
 
 /*
     Safely moves memory containing file data, preserving any self-pointers
@@ -109,7 +120,7 @@ void _fileGarbage(s32);
 */
 FileEntry * fileAllocf(s32 fileType, const char * format, ...);
 FileEntry * fileAlloc(const char * path, s32 fileType);
-FileEntry * _fileAlloc(const char * path, s32 fileType, s32 p3);
+DECOMP_STATIC(FileEntry * _fileAlloc(const char * path, s32 fileType, s32 unused))
 
 /*
     Unloads a file
@@ -123,7 +134,7 @@ DECOMP_STATIC(void filemgr_dvdReadDoneCallback(s32 result, DVDFileInfo * fileInf
     Returns a null pointer if the file isn't loaded yet
 */
 ATTRIBUTE_FORMAT(printf, 3, 4)
-FileEntry * fileAsyncf(s32 fileType, s32 p2, const char * format, ...);
-FileEntry * fileAsync(const char * path, s32 fileType, s32 p3);
+FileEntry * fileAsyncf(s32 fileType, FilemgrCallback * readDoneCb, const char * format, ...);
+FileEntry * fileAsync(const char * path, s32 fileType, FilemgrCallback * readDoneCb);
 
 CPP_WRAPPER_END()

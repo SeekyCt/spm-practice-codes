@@ -140,90 +140,90 @@ SIZE_ASSERT(MarioPaneBoundary, 0x8)
 */
 typedef bool (MarioPaneChangeFunc)(s32 newPane);
 
-enum MarioMotionId
-{
-/* 0x00 */ MOT_STAY, // Standing still
-/* 0x01 */ MOT_WALK, // Walking slowly
-/* 0x02 */ MOT_DASH, // Walking at full speed
-/* 0x03 */ MOT_JUMP, // Jumping normally
-/* 0x04 */ MOT_CROUCH, // Crouching
-/* 0x05 */ MOT_5,
-/* 0x06 */ MOT_SPRING, // Jumping off spring object
-/* 0x07 */ MOT_7,
-/* 0x08 */ MOT_8,
-/* 0x09 */ MOT_BOUNCE, // Jumping off of an NPC
-/* 0x0A */ MOT_FALL, // Falling in the air
-/* 0x0B */ MOT_11,
-/* 0x0C */ MOT_12,
-/* 0x0D */ MOT_13,
-/* 0x0E */ MOT_THUDLEY_AIR, // In the air while using thudley
-/* 0x0F */ MOT_THUDLEY_LAND, // Landing whlie using thudley
-/* 0x10 */ MOT_HAMMER, // Using cudge
-/* 0x11 */ MOT_JABARA, // Luigi spring jump(?)
-/* 0x12 */ MOT_SLIT, // Thin with slim
-/* 0x13 */ MOT_TALK, // Talking to an NPC
-/* 0x14 */ MOT_20,
-/* 0x15 */ MOT_21,
-/* 0x16 */ MOT_22,
-/* 0x17 */ MOT_FORCE_RESET, // ? TTYD name
-/* 0x18 */ MOT_24,
-/* 0x19 */ MOT_BOTTOMLESS, // Respawning from falling
-/* 0x1A */ MOT_FLIP_AIR, // Flip into midair
-/* 0x1B */ MOT_DAMAGE, // Taking damage
-/* 0x1C */ MOT_28,
-/* 0x1D */ MOT_29,
-/* 0x1E */ MOT_30,
-/* 0x1F */ MOT_31,
-/* 0x20 */ MOT_32,
-/* 0x21 */ MOT_33,
-/* 0x22 */ MOT_34,
-/* 0x23 */ MOT_35,
-/* 0x24 */ MOT_GRAB, // Throwing thoreau
-/* 0x25 */ MOT_BOMB, // Placing boomer
-/* 0x26 */ MOT_FLEEP, // Using fleep
-/* 0x27 */ MOT_SHRINK, // Shrinking with dottie
-/* 0x28 */ MOT_GROW, // Growing with dottie
-/* 0x29 */ MOT_PICCOLO, // Using piccolo
-/* 0x2A */ MOT_BARRY, // Using barry
-/* 0x2B */ MOT_43,
-/* 0x2C */ MOT_CARRIE_MOUNT, // Mounting carrie
-/* 0x2D */ MOT_CARRIE_DISMOUNT, // Dismounting carrie
-/* 0x2E */ MOT_46,
-/* 0x2F */ MOT_47,
-/* 0x30 */ MOT_48,
-/* 0x31 */ MOT_49,
-/* 0x32 */ MOT_50,
-/* 0x33 */ MOT_51,
-/* 0x34 */ MOT_52,
-/* 0x35 */ MOT_53,
-/* 0x36 */ MOT_54,
-/* 0x37 */ MOT_55,
-/* 0x38 */ MOT_56,
-/* 0x39 */ MOT_57,
-/* 0x3A */ MOT_58,
-/* 0x3B */ MOT_59,
-/* 0x3C */ MOT_60,
-/* 0x3D */ MOT_61,
-/* 0x3E */ MOT_62,
-/* 0x3F */ MOT_63,
-/* 0x40 */ MOT_64,
-/* 0x41 */ MOT_65,
-/* 0x42 */ MOT_66,
-/* 0x43 */ MOT_67,
-/* 0x44 */ MOT_68,
-/* 0x45 */ MOT_SWIM, // Off-ground underwater
-/* 0x46 */ MOT_70,
-/* 0x47 */ MOT_CHAR_CHANGE, // Changing character
-/* 0x48 */ MOT_FAIRY_CHANGE, // Changing pixl
-/* 0x49 */ MOT_FLIP, // Flipping to 2d/3d
-/* 0x4A */ MOT_GLIDE, // Peach parasol glide
-/* 0x4B */ MOT_GUARD, // Peach parasol guard
-/* 0x4C */ MOT_FIRE, // Bowser fire
-/* 0x4D */ MOT_77
-};
+#define MOT_STAY 0x00 // Standing still
+#define MOT_WALK 0x01 // Walking slowly
+#define MOT_DASH 0x02 // Walking at full speed
+#define MOT_JUMP 0x03 // Jumping normally
+#define MOT_CROUCH 0x04 // Crouching
+#define MOT_SLIDE 0x05 // Sliding off of a slope
+#define MOT_JUMP_EVT 0x06 // Called by evt_mario_jump_to for actions such as jumping on red trampolines & POW Block hits
+#define MOT_SPRING 0x07 // Blue trampolines, 7-3 clouds
+#define MOT_HIT_SUI 0x08 // Hitting a switch object (mobj_sui)
+#define MOT_BOUNCE 0x09 // Jumping off of an NPC
+#define MOT_FALL 0x0A // Falling in the air
+#define MOT_11 0x0B
+#define MOT_12 0x0C
+#define MOT_13 0x0D
+#define MOT_THUDLEY_AIR 0x0E // In the air while using thudley
+#define MOT_THUDLEY_LAND 0x0F // Landing whlie using thudley
+#define MOT_HAMMER 0x10 // Using cudge
+#define MOT_JABARA 0x11 // Luigi spring jump(?)
+#define MOT_SLIT 0x12 // Thin with slim
+#define MOT_TALK 0x13 // Talking to an NPC
+#define MOT_HAZARD_RESPAWN_UNUSED 0x14 // Synonymous with the below; same mainfunc, always sets mot id to 21
+#define MOT_HAZARD_RESPAWN 0x15 // Jumping on spikes and respawning, i.e. 3-3, 3-4, 8-2
+#define MOT_MOT_HAZARD_RESPAWN_END 0x16 // Almost certainly unused; most of this behavior is just handled by the above anyway
+#define MOT_FORCE_RESET 0x17 // ? TTYD name, unused
+#define MOT_24 0x18
+#define MOT_BOTTOMLESS 0x19 // Respawning from falling
+#define MOT_FLIP_AIR 0x1A // Flip into midair
+#define MOT_DAMAGE 0x1B // Taking damage
+#define MOT_28 0x1C
+#define MOT_SUCK_IN 0x1D // Bleck big portal and Brobot L-Type sucking-in effect
+#define MOT_30 0x1E
+#define MOT_31 0x1F
+#define MOT_32 0x20
+#define MOT_33 0x21
+#define MOT_34 0x22
+#define MOT_35 0x23
+#define MOT_GRAB 0x24 // Throwing thoreau
+#define MOT_BOMB 0x25 // Placing boomer
+#define MOT_FLEEP 0x26 // Using fleep
+#define MOT_SHRINK 0x27 // Shrinking with dottie
+#define MOT_GROW 0x28 // Growing with dottie
+#define MOT_PICCOLO 0x29 // Using piccolo
+#define MOT_BARRY 0x2A // Using barry
+#define MOT_SPINDASH 0x2B
+#define MOT_CARRIE_MOUNT 0x2C // Mounting carrie
+#define MOT_CARRIE_DISMOUNT 0x2D // Dismounting carrie
+#define MOT_46 0x2E
+#define MOT_47 0x2F
+#define MOT_48 0x30
+#define MOT_49 0x31
+#define MOT_50 0x32
+#define MOT_51 0x33
+#define MOT_52 0x34
+#define MOT_53 0x35
+#define MOT_54 0x36
+#define MOT_55 0x37
+#define MOT_56 0x38
+#define MOT_57 0x39
+#define MOT_58 0x3A
+#define MOT_59 0x3B
+#define MOT_60 0x3C
+#define MOT_61 0x3D
+#define MOT_62 0x3E
+#define MOT_63 0x3F
+#define MOT_64 0x40
+#define MOT_65 0x41
+#define MOT_66 0x42
+#define MOT_67 0x43
+#define MOT_68 0x44
+#define MOT_SWIM 0x45 // Off-ground underwater
+#define MOT_SPACE_SWIM 0x46 // In space; 4-1/4-3
+#define MOT_CHAR_CHANGE 0x47 // Changing character
+#define MOT_FAIRY_CHANGE 0x48 // Changing pixl
+#define MOT_FLIP 0x49 // Flipping to 2d/3d
+#define MOT_GLIDE 0x4A // Peach parasol glide
+#define MOT_GUARD 0x4B // Peach parasol guard
+#define MOT_FIRE 0x4C // Bowser fire
+#define MOT_77 0x4D
 
 // Off ground, in water
 #define MARIO_MISC_FLAG_SWIM 0x20000000
+
+// Swimming in space (i.e. 4-1/4-3 state)
+#define MARIO_MISC_FLAG_SPACE_SWIM 0x400000
 
 // Squirps enabled
 #define MARIO_MISC_FLAG_SQUIRPS 0x200000
@@ -250,6 +250,9 @@ enum MarioMotionId
 
 // Lock facing direction towards facingTarget
 #define MARIO_DISP_FLAG_LOCK_FACING 0x20
+
+// Entering/exiting a door
+#define MARIO_DISP_FLAG_DOOR 0x80
 
 
 typedef struct
@@ -327,12 +330,16 @@ typedef struct
 /* 0x0039 */ u8 unknown_0x39[0x3b - 0x39];
 /* 0x003B */ u8 wallTimer;
 /* 0x003C */ s32 subMotionId; // values vary by motion id
-/* 0x0040 */ u8 unknown_0x40[0x50 - 0x40];
+/* 0x0040 */ u8 unknown_0x40[0x44 - 0x40];
+/* 0x0044 */ f32 unknown_0x44;
+/* 0x0048 */ f32 invincibilityTimer;
+/* 0x004C */ u8 unknown_0x4c[0x50 - 0x4c];
 /* 0x0050 */ f32 airTimer; // time in air
 /* 0x0054 */ f32 jumpPeakAirTime; // value of airTimer when reaching top of jump
 /* 0x0058 */ u8 unknown_0x58[0x5c - 0x58];
 /* 0x005C */ Vec3 position;
-/* 0x0068 */ u8 unknown_0x68[0xbc - 0x68];
+/* 0x0068 */ u8 unknown_0x68[0xb0 - 0x68];
+/* 0x00B0 */ Vec3 ttydRotation;
 /* 0x00BC */ Vec3 scale;
 /* 0x00C8 */ u8 unknown_0xc8[0x120 - 0xc8];
 /* 0x0120 */ s32 camId;
@@ -344,7 +351,9 @@ typedef struct
 /* 0x0150 */ f32 dashSpeed; // base dash speed
 /* 0x0154 */ u8 unknown_0x154[0x160 - 0x154];
 /* 0x0160 */ f32 lastGroundSpeed; // xzSpeed when last on ground
-/* 0x0164 */ u8 unknown_0x164[0x174 - 0x164];
+/* 0x0164 */ u8 unknown_0x164[0x168 - 0x164];
+/* 0x0168 */ f32 unknown_0x168;
+/* 0x016C */ u8 unknown_0x16c[0x174 - 0x16c];
 /* 0x0174 */ f32 directionWorld; // degrees
 /* 0x0178 */ f32 directionView; // degrees
 /* 0x017C */ u8 unknown_0x17c[0x180 - 0x17c];
@@ -361,10 +370,14 @@ typedef struct
         2 is stand on
         3 is jump from
         6 is head
+        9 is cudged obj that interrupts the hammer animation
         Others unknown
     */
 /* 0x01BC */ HitObj * hitObjs1[10];
-/* 0x01E4 */ u8 unknown_0x1e4[0x1fc - 0x1e4];
+/* 0x01E4 */ u8 unknown_0x1e4[0x1e8 - 0x1e4];
+/* 0x01E8 */ HitObj * cudgeFloorHitObj; // Updates for 1 frame during hammer action on a floor and then clears, value taken directly from below
+/* 0x01EC */ HitObj * cudgeFloorHitObj2; // Updates only when cudge is used (?)
+/* 0x01F0 */ u8 unknown_0x1ec[0x1fc - 0x1f0];
     /*
         0 is MOBJ interact
         Others unknown
@@ -397,7 +410,11 @@ typedef struct
 /* 0x0320 */ s16 held2Time;
 /* 0x0322 */ u8 unknown_0x322[0x348 - 0x322];
 /* 0x0348 */ s32 sfxIds[4];
-/* 0x0358 */ u8 unknown_0x358[0x3a4 - 0x358];
+/* 0x0358 */ u8 unknown_0x358[0x368 - 0x358];
+/* 0x0368 */ f32 unknown_0x368;
+/* 0x036C */ f32 unknown_0x36c;
+/* 0x0370 */ s32 unknown_0x370;
+/* 0x0374 */ u8 unknown_0x374[0x3a4 - 0x374];
     /*
         Info on entity caught with Thoreau
         catchType indicates the type of caught
@@ -426,7 +443,11 @@ typedef struct
 /* 0x0760 */ u8 unknown_0x760[0x9b8 - 0x760];
 /* 0x09B8 */ HitObj * hitObjHeadArray[20];
 /* 0x0A08 */ s32 numHitObjHeadArray; // number of pointers in the array above
-/* 0x0A0C */ u8 unknown_0xa0c[0xcd8 - 0xa0c];
+/* 0x0A0C */ u8 unknown_0xa0c[0xafc - 0xa0c];
+/* 0x0AFC */ HitObj * hitObj9Array[16];
+/* 0x0B3C */ u8 unknown_0xb3c[0xb7c - 0xb3c];
+/* 0x0B7C */ s32 hitobj_related1;
+/* 0x0B80 */ u8 unknown_0xb80[0xcd8 - 0xb80];
 /* 0x0CD8 */ MarioJumpFallPara jumpFallPara;
 /* 0x0D0C */ u8 unknown_0xd0c[0xd58 - 0xd0c];
 /* 0x05D8 */ MarioFairy fairy[10];
@@ -493,8 +514,6 @@ typedef struct
 } MarioMotFuncs;
 SIZE_ASSERT(MarioMotFuncs, 0x8)
 
-extern MarioMotFuncs marioMotTbl[78]; // index motion id
-
 DECOMP_STATIC(s64 mario_mainLastRunTime) // used to adjust marioGameSpeedScale for lag
 
 /*
@@ -504,24 +523,24 @@ DECOMP_STATIC(s64 mario_mainLastRunTime) // used to adjust marioGameSpeedScale f
 */
 DECOMP_STATIC(f32 mario_gameSpeedScale)
 
-UNKNOWN_FUNCTION(func_80121e18);
+UNKNOWN_FUNCTION(func_80121e18)
 
 /*
     Returns marioGameSpeedScale
 */
 f32 marioGetGameSpeedScale();
 
-UNKNOWN_FUNCTION(func_80121e58);
-UNKNOWN_FUNCTION(func_80121f40);
+UNKNOWN_FUNCTION(func_80121e58)
+UNKNOWN_FUNCTION(func_80121f40)
 
 /*
     Returns a pointer to the MarioWork instance
 */
 MarioWork * marioGetPtr();
 
-UNKNOWN_FUNCTION(func_80121f54);
-UNKNOWN_FUNCTION(func_8012217c);
-UNKNOWN_FUNCTION(func_801222a4);
+UNKNOWN_FUNCTION(func_80121f54)
+UNKNOWN_FUNCTION(func_8012217c)
+UNKNOWN_FUNCTION(func_801222a4)
 
 /*
     Changes the player's model
@@ -530,7 +549,7 @@ UNKNOWN_FUNCTION(func_801222a4);
 */
 void marioSetAnimGroup(s32 group);
 
-UNKNOWN_FUNCTION(func_8012244c);
+UNKNOWN_FUNCTION(func_8012244c)
 
 /*
     Re-reads the characterProperties for the current character into marioWork
@@ -626,7 +645,7 @@ bool marioChkSts(u32 mask);
 /*
     Removes references to a HitObj from hitObjs1 & hitObjs2
 */
-void marioResetHitObj(const char * name);  
+void marioResetHitObj(const char * name);
 
 /*
     Resets marioWork for a new save file
@@ -657,27 +676,27 @@ void marioInit();
 */
 void marioReInit();
 
-UNKNOWN_FUNCTION(func_80123f0c);
+UNKNOWN_FUNCTION(func_80123f0c)
 
 /*
     Updates respawn position if in a safe location to respawn
 */
 void marioUpdateRespawnPos();
 
-UNKNOWN_FUNCTION(func_80124374);
+UNKNOWN_FUNCTION(func_80124374)
 
 /*
     Updates the player
 */
 void marioMain();
 
-UNKNOWN_FUNCTION(func_80125854);
-UNKNOWN_FUNCTION(func_80125998);
-UNKNOWN_FUNCTION(func_80126034);
-UNKNOWN_FUNCTION(func_801265a0);
-UNKNOWN_FUNCTION(func_80126618);
-UNKNOWN_FUNCTION(func_8012662c);
-UNKNOWN_FUNCTION(func_80126688);
+UNKNOWN_FUNCTION(func_80125854)
+UNKNOWN_FUNCTION(func_80125998)
+UNKNOWN_FUNCTION(func_80126034)
+UNKNOWN_FUNCTION(func_801265a0)
+UNKNOWN_FUNCTION(func_80126618)
+UNKNOWN_FUNCTION(func_8012662c)
+UNKNOWN_FUNCTION(func_80126688)
 
 /*
     Sets the player's current animation
@@ -698,8 +717,8 @@ void marioPaperLightOff();
 */
 bool marioIsAnimFinished();
 
-UNKNOWN_FUNCTION(func_80126c98);
-UNKNOWN_FUNCTION(func_80126cfc);
+UNKNOWN_FUNCTION(func_80126c98)
+UNKNOWN_FUNCTION(func_80126cfc)
 
 /*
     Returns screen coordinates for a point in the 3d world
@@ -716,23 +735,23 @@ bool marioChkInScreen(s32 x, s32 y);
 */
 f32 marioGetScale();
 
-UNKNOWN_FUNCTION(func_80126e1c);
-UNKNOWN_FUNCTION(func_80126e6c);
+UNKNOWN_FUNCTION(func_80126e1c)
+UNKNOWN_FUNCTION(func_80126e6c)
 
 /*
     Updates the direction the player is facing
 */
 void marioMakeDispDir();
 
-UNKNOWN_FUNCTION(func_801275dc);
+UNKNOWN_FUNCTION(func_801275dc)
 
 /*
     Prepares for rendering the player
 */
 void marioPreDisp();
 
-UNKNOWN_FUNCTION(func_80127f5c);
-UNKNOWN_FUNCTION(func_801280f8);
+UNKNOWN_FUNCTION(func_80127f5c)
+UNKNOWN_FUNCTION(func_801280f8)
 
 /*
     Enables/disables effect flags
@@ -740,18 +759,18 @@ UNKNOWN_FUNCTION(func_801280f8);
 void marioEffectFlagOn(u8 mask);
 void marioEffectFlagOff(u8 mask);
 
-UNKNOWN_FUNCTION(func_80128378);
-UNKNOWN_FUNCTION(func_801289bc);
-UNKNOWN_FUNCTION(func_80128d1c);
+UNKNOWN_FUNCTION(func_80128378)
+UNKNOWN_FUNCTION(func_801289bc)
+UNKNOWN_FUNCTION(func_80128d1c)
 
 /*
     Renders the player
 */
 void marioDisp();
 
-UNKNOWN_FUNCTION(func_80128f2c);
-UNKNOWN_FUNCTION(func_80128fd4);
-UNKNOWN_FUNCTION(func_801291f8);
+UNKNOWN_FUNCTION(func_80128f2c)
+UNKNOWN_FUNCTION(func_80128fd4)
+UNKNOWN_FUNCTION(func_801291f8)
 
 /*
     Converts a front/rear animation name to its rear/front equivalent
@@ -759,14 +778,14 @@ UNKNOWN_FUNCTION(func_801291f8);
 DECOMP_STATIC(const char * mario_toRearPose(const char * name))
 DECOMP_STATIC(const char * mario_toFrontPose(const char * name))
 
-UNKNOWN_FUNCTION(func_801299f8);
-UNKNOWN_FUNCTION(func_80129d8c);
-UNKNOWN_FUNCTION(func_80129db8);
-UNKNOWN_FUNCTION(func_80129ddc);
-UNKNOWN_FUNCTION(func_80129dfc);
-UNKNOWN_FUNCTION(func_8012a064);
-UNKNOWN_FUNCTION(func_8012a168);
-UNKNOWN_FUNCTION(func_8012a354);
+UNKNOWN_FUNCTION(func_801299f8)
+UNKNOWN_FUNCTION(func_80129d8c)
+UNKNOWN_FUNCTION(func_80129db8)
+UNKNOWN_FUNCTION(func_80129ddc)
+UNKNOWN_FUNCTION(func_80129dfc)
+UNKNOWN_FUNCTION(func_8012a064)
+UNKNOWN_FUNCTION(func_8012a168)
+UNKNOWN_FUNCTION(func_8012a354)
 
 /*
     Calculates the damage the player will do to an enemy
@@ -809,21 +828,23 @@ void marioCalcCatchPos(Vec3 * posOut);
 */
 void marioDropCatch();
 
-UNKNOWN_FUNCTION(func_8012b018);
+void marioSetInvincibility(f32 frames, s32 flags);
+
+UNKNOWN_FUNCTION(func_8012b018)
 
 /*
     Returns whether the player is in 3d
 */
 bool marioCheck3d();
 
-UNKNOWN_FUNCTION(func_8012b090);
-UNKNOWN_FUNCTION(func_8012b218);
-UNKNOWN_FUNCTION(func_8012b2c4);
-UNKNOWN_FUNCTION(func_8012b370);
-UNKNOWN_FUNCTION(func_8012b39c);
-UNKNOWN_FUNCTION(func_8012b498);
-UNKNOWN_FUNCTION(func_8012b4ac);
-UNKNOWN_FUNCTION(func_8012b4f8);
+UNKNOWN_FUNCTION(func_8012b090)
+UNKNOWN_FUNCTION(func_8012b218)
+UNKNOWN_FUNCTION(func_8012b2c4)
+UNKNOWN_FUNCTION(func_8012b370)
+UNKNOWN_FUNCTION(func_8012b39c)
+UNKNOWN_FUNCTION(func_8012b498)
+UNKNOWN_FUNCTION(func_8012b4ac)
+UNKNOWN_FUNCTION(func_8012b4f8)
 
 /*
     Sets the player's gravity direction, see enum above
@@ -850,14 +871,14 @@ void marioApplyGravity(Vec3 * in, Vec3 * out);
 */
 void marioGravityDotProduct(Vec3 * in, Vec3 * out);
 
-UNKNOWN_FUNCTION(func_8012b7f8);
-UNKNOWN_FUNCTION(func_8012ba68);
-UNKNOWN_FUNCTION(func_8012bb80);
+UNKNOWN_FUNCTION(func_8012b7f8)
+UNKNOWN_FUNCTION(func_8012ba68)
+UNKNOWN_FUNCTION(func_8012bb80)
 
 /*
     Changes the active pane boundaries and updates which pane the player is in
 */
-void marioSetPaneBoundaries(MarioPaneBoundary * boundaries); 
+void marioSetPaneBoundaries(MarioPaneBoundary * boundaries);
 
 /*
     Calculates the pane of a vector position
@@ -870,22 +891,22 @@ s32 marioGetPaneForPos(Vec3 * pos);
 */
 void marioHandleSquash();
 
-UNKNOWN_FUNCTION(func_8012c0f8);
-UNKNOWN_FUNCTION(func_8012c188);
-UNKNOWN_FUNCTION(func_8012c218);
-UNKNOWN_FUNCTION(func_8012c948);
-UNKNOWN_FUNCTION(func_8012ca58);
-UNKNOWN_FUNCTION(func_8012caec);
-UNKNOWN_FUNCTION(func_8012cb00);
-UNKNOWN_FUNCTION(func_8012cb6c);
-UNKNOWN_FUNCTION(func_8012cbcc);
-UNKNOWN_FUNCTION(func_8012cc38);
-UNKNOWN_FUNCTION(func_8012cc98);
-UNKNOWN_FUNCTION(func_8012cd9c);
-UNKNOWN_FUNCTION(func_8012ce4c);
-UNKNOWN_FUNCTION(func_8012cea8);
-UNKNOWN_FUNCTION(func_8012cf20);
-UNKNOWN_FUNCTION(func_8012cf44);
+UNKNOWN_FUNCTION(func_8012c0f8)
+UNKNOWN_FUNCTION(func_8012c188)
+UNKNOWN_FUNCTION(func_8012c218)
+UNKNOWN_FUNCTION(func_8012c948)
+UNKNOWN_FUNCTION(func_8012ca58)
+UNKNOWN_FUNCTION(func_8012caec)
+UNKNOWN_FUNCTION(func_8012cb00)
+UNKNOWN_FUNCTION(func_8012cb6c)
+UNKNOWN_FUNCTION(func_8012cbcc)
+UNKNOWN_FUNCTION(func_8012cc38)
+UNKNOWN_FUNCTION(func_8012cc98)
+UNKNOWN_FUNCTION(func_8012cd9c)
+UNKNOWN_FUNCTION(func_8012ce4c)
+UNKNOWN_FUNCTION(func_8012cea8)
+UNKNOWN_FUNCTION(func_8012cf20)
+UNKNOWN_FUNCTION(func_8012cf44)
 
 /*
     Forces respawn position
@@ -907,8 +928,8 @@ void marioLockFacingDir(Vec3 * target);
 */
 void marioUnlockFacing();
 
-UNKNOWN_FUNCTION(func_8012d230);
-UNKNOWN_FUNCTION(func_8012d494);
+UNKNOWN_FUNCTION(func_8012d230)
+UNKNOWN_FUNCTION(func_8012d494)
 
 /*
     Spawns/removes Squirps following the player
@@ -916,7 +937,7 @@ UNKNOWN_FUNCTION(func_8012d494);
 void marioAddTamara();
 void marioRemoveTamara();
 
-UNKNOWN_FUNCTION(func_8012d8b4);
+UNKNOWN_FUNCTION(func_8012d8b4)
 
 /*
     Spawns/removes Luvbi following the player
@@ -924,9 +945,8 @@ UNKNOWN_FUNCTION(func_8012d8b4);
 void marioAddAngeko();
 void marioRemoveAngeko();
 
-UNKNOWN_FUNCTION(func_8012d98c);
-UNKNOWN_FUNCTION(func_8012d9fc);
+UNKNOWN_FUNCTION(func_8012d98c)
+UNKNOWN_FUNCTION(func_8012d9fc)
 bool func_8012dab0();
 
 CPP_WRAPPER_END()
-

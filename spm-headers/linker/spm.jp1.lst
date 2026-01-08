@@ -1,5 +1,5 @@
 // OS Globals
-800000e4:currentThread
+800000e4:OS_CURRENT_THREAD
 800030c8:firstRel
 800030cc:lastRel
 
@@ -127,7 +127,7 @@
 803BF198:seq_data
 801A566C:__memAlloc
 801A56F0:__memFree
-803C0DE8:size_table
+803C0DE8:memory_size_table
 80541A68:memory_wp
 80541A6C:memory_swp
 8023570C:wpadGetButtonsHeld
@@ -305,7 +305,7 @@
 801112F8:evt_shop_set_defs
 8014CB4C:pouchAddItem
 8014D148:pouchCheckHaveItem
-8017AFD8:getNextDanMapname
+8017AFD8:getDanMapName
 80183F64:pausewinEntry
 801843D4:pausewinMoveTo
 80184424:pausewinAppear
@@ -474,4 +474,12 @@
 805419D0:seq_load_sub_wp
 80541AB0:nandmgr_wp
 80239148:spsndSFXOn
-8017C538:loadMain
+8017C538:seq_load_sub_loadMain
+
+// 2025-09-27
+800677D8:fadeGetMapChangeInTransition
+800677E4:fadeGetMapChangeOutTransition
+80067804:fadeGetFadeOutLength
+80067810:fadeGetFadeInLength
+8006781C:fadeSetTransitionLengths
+80542128:fadedrv_wp
