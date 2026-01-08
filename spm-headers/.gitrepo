@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/SeekyCt/spm-headers.git
 	branch = spm-pc
-	commit = 5e9b9b35f4279f9a00f2bc7b5a10c484e721137b
-	parent = 3c9b9c39c07e422f5c05bd9855e467a83dcce8af
+	commit = a50acf9cd613b73a451af138b907313bea83abda
+	parent = ea36736e48ee1efef8ee2cfe9d966dd5c036eab6
 	method = rebase
 	cmdver = 0.4.9
