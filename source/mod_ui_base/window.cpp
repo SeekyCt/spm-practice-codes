@@ -151,7 +151,7 @@ void Window::drawBox(u16 GXTexMapID, const wii::gx::GXColor * colour, f32 x, f32
     // is used in GX2 to create an equivalent
     wii::mtx::Mtx34 mtx;
     wii::mtx::PSMTXIdentity(mtx);
-    spm::windowdrv::windowDispGX2_Waku_col(&mtx, GXTexMapID, colour, x, y, width, height,
+    spm::windowdrv::windowDispGX2_Waku_col(mtx, GXTexMapID, colour, x, y, width, height,
                                            curve);
 }
 
@@ -183,7 +183,7 @@ void Window::setupGX(s32 zMode)
 
     // Setup view matrix
     spm::camdrv::CamEntry * camera = spm::camdrv::camGetCurPtr();
-    wii::gx::GXLoadPosMtxImm(&camera->viewMtx, 0);
+    wii::gx::GXLoadPosMtxImm(camera->viewMtx, 0);
     wii::gx::GXSetCurrentMtx(0);
 }
 
@@ -392,7 +392,7 @@ void Window::drawTexture(wii::tpl::TPLHeader * tpl, u32 texId, f32 x, f32 y, f32
     wii::mtx::PSMTXScale(mtx, scale, scale, scale);
     wii::mtx::PSMTXTransApply(mtx, mtx, x + ((width / 2.0f) * scale), y - ((height / 2.0f) * scale), 0.0f);
 
-    spm::gxsub::gxsubDrawTextureMtx(texId, &mtx, colour);
+    spm::gxsub::gxsubDrawTextureMtx(texId, mtx, colour);
 }
 
 void Window::windowDisp(s32 camId, void * param)
