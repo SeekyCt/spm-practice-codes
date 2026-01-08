@@ -9,3 +9,4 @@ porting
 *.bat
 *.sh
 compile_commands.json
+venv
