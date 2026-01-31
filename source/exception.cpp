@@ -102,6 +102,9 @@ static f32 getBottomY(char * msg)
 
 extern "C" void exceptionMessageHandler(char * msg)
 {
+    // Print to OSReport
+    wii::os::OSReport("%s\n", msg);
+
     // spm::wpadmgr::wpadAllRumbleOff(0);
     // spm::spmario_snd::spsndExit();
 
@@ -118,9 +121,6 @@ extern "C" void exceptionMessageHandler(char * msg)
         wii::os::OSSuspendThread(p);
         p = p->link.next;
     }
-
-    // Print to OSReport
-    wii::os::OSReport("%s\n", msg);
 
     const f32 topY = 50.0f;
     f32 bottomY = getBottomY(msg);
