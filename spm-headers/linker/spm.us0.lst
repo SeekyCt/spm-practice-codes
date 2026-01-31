@@ -940,3 +940,6 @@
 800677F0:fadeGetFadeInLength
 800677FC:fadeSetTransitionLengths
 8056d848:fadedrv_wp
+
+8019d4cc:DVDMgrReadAsync
+80279308:DVDReadAsyncPrio

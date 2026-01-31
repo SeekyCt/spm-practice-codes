@@ -918,6 +918,7 @@
 // dvdmgr.c
 8019e08c:DVDMgrOpen
 8019e1e4:DVDMgrRead
+8019e2ac:DVDMgrReadAsync
 8019e2e0:DVDMgrClose
 8019e320:DVDMgrGetLength
 // more
@@ -1273,6 +1274,7 @@
 // dvdfs.c
     // text
 8027b910:DVDConvertPathToEntrynum
+8027bca4:DVDReadAsyncPrio
 // more
     // data
 805aec08:__DVDThreadQueue

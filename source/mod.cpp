@@ -47,6 +47,8 @@
 #include "titletextwindow.h"
 #include "xyzwindow.h"
 
+#pragma GCC diagnostic ignored "-Wunused-function"
+
 namespace mod {
 
 bool gIsDolphin;
@@ -176,9 +178,27 @@ static void checkForPatchedDisc()
     Entrypoint
 */
 
+void laggyDvdRead(wii::dvd::DVDFileInfo * fileInfo, void * addr, s32 length, s32 offset,
+          wii::dvd::DVDFICallback * callback, s32 priority)
+{
+    wii::dvd::DVDReadAsyncPrio(fileInfo, addr, length, offset, callback, priority);
+
+    auto start = wii::os::OSGetTime();
+    while (wii::os::OSGetTime() - start < OSMillisecondsToTicks(1000))
+    {
+        wii::os::OSYieldThread();
+    }
+}
+
 void main()
 {
-    wii::os::OSReport(MOD_VERSION": main running\n");
+    wii::os::OSReport("Disc test: main running!\n");
+
+#if DVDMGR_C_VERSION == 1
+    writeBranchLink(spm::dvdmgr::DVDMgrReadAsync, 0x48, laggyDvdRead);
+#else
+    writeBranch(spm::dvdmgr::DVDMgrReadAsync, 0x30, laggyDvdRead);
+#endif
 
     checkForDolphin();
     checkForRiivolution();
@@ -199,6 +219,7 @@ void main()
     if (gIs4_3)
         cam->pos.z = 1350.0f;
 
+#if 0
     ConsoleWindow::init();
     HPWindow::init();
     MapDoorWindow::init();
@@ -232,6 +253,7 @@ void main()
         to prevent anything you need being deadstripped
     */
     // tryChainload();
+#endif
 }
 
 }

@@ -483,3 +483,7 @@
 80067810:fadeGetFadeInLength
 8006781C:fadeSetTransitionLengths
 80542128:fadedrv_wp
+
+8019d504:DVDMgrReadAsync
+80279ab4:DVDReadAsyncPrio
+802754d0:OSYieldThread
